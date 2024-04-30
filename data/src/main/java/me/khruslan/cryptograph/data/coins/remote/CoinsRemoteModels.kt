@@ -1,4 +1,4 @@
-package me.khruslan.cryptograph.data.coins.rates
+package me.khruslan.cryptograph.data.coins.remote
 
 import kotlinx.serialization.Serializable
 

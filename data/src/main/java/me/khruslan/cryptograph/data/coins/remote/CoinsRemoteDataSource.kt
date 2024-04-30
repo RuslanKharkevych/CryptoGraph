@@ -1,4 +1,4 @@
-package me.khruslan.cryptograph.data.coins.rates
+package me.khruslan.cryptograph.data.coins.remote
 
 import kotlinx.serialization.json.Json
 import me.khruslan.cryptograph.data.BuildConfig
@@ -12,7 +12,7 @@ import okhttp3.Request
 import okhttp3.Response
 import java.io.IOException
 
-internal interface RatesRemoteDataSource {
+internal interface CoinsRemoteDataSource {
     fun getCoins(): List<CoinDto>
 }
 
@@ -23,7 +23,7 @@ private const val GET_COINS_REQUEST_URL = "$COINRANKING_BASE_URL/coins"
 private const val LIMIT_QUERY_PARAM = "limit"
 private const val LIMIT_QUERY_VALUE = "100"
 
-internal class CoinrankingService(private val client: OkHttpClient) : RatesRemoteDataSource {
+internal class CoinrankingService(private val client: OkHttpClient) : CoinsRemoteDataSource {
 
     private val jsonDeserializer = Json {
         ignoreUnknownKeys = true

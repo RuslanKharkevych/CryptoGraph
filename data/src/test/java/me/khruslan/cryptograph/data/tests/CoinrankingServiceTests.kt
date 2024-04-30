@@ -1,7 +1,7 @@
-package me.khruslan.cryptograph.data
+package me.khruslan.cryptograph.data.tests
 
 import com.google.common.truth.Truth.assertThat
-import me.khruslan.cryptograph.data.coins.rates.CoinrankingService
+import me.khruslan.cryptograph.data.coins.remote.CoinrankingService
 import me.khruslan.cryptograph.data.common.NetworkConnectionException
 import me.khruslan.cryptograph.data.common.ResponseDeserializationException
 import me.khruslan.cryptograph.data.common.UnsuccessfulResponseException
@@ -32,7 +32,7 @@ class CoinrankingServiceTests {
     private lateinit var coinrankingService: CoinrankingService
 
     @Before
-    fun init() {
+    fun setUp() {
         mockServer = MockWebServer()
         mockServer.start()
 
@@ -44,7 +44,7 @@ class CoinrankingServiceTests {
     }
 
     @After
-    fun shutdown() {
+    fun tearDown() {
         mockServer.shutdown()
     }
 

@@ -1,8 +1,10 @@
 plugins {
     alias(libs.plugins.androidApplication)
+    alias(libs.plugins.kapt)
     alias(libs.plugins.kotlinAndroid)
     alias(libs.plugins.kotlinSerialization)
     alias(libs.plugins.secrets)
+    id("io.objectbox")
 }
 
 android {
