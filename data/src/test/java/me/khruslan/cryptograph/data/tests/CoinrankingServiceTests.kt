@@ -1,7 +1,11 @@
 package me.khruslan.cryptograph.data.tests
 
 import com.google.common.truth.Truth.assertThat
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
+import kotlinx.coroutines.test.runTest
 import me.khruslan.cryptograph.data.coins.remote.CoinrankingService
+import me.khruslan.cryptograph.data.coins.remote.CoinsRemoteDataSource
 import me.khruslan.cryptograph.data.common.NetworkConnectionException
 import me.khruslan.cryptograph.data.common.ResponseDeserializationException
 import me.khruslan.cryptograph.data.common.UnsuccessfulResponseException
@@ -15,7 +19,6 @@ import okhttp3.mockwebserver.SocketPolicy
 import okio.buffer
 import okio.source
 import org.junit.After
-import org.junit.Assert.assertThrows
 import org.junit.Before
 import org.junit.Test
 import java.net.HttpURLConnection
@@ -26,10 +29,11 @@ private const val GET_COINS_SUCCESSFUL_RESPONSE = "$RESPONSES_ROOT_PATH/get-coin
 private const val GET_COINS_FAILED_RESPONSE = "$RESPONSES_ROOT_PATH/get-coins-failure.json"
 private const val GET_COINS_INVALID_RESPONSE = "$RESPONSES_ROOT_PATH/get-coins-invalid.json"
 
+@OptIn(ExperimentalCoroutinesApi::class)
 class CoinrankingServiceTests {
 
     private lateinit var mockServer: MockWebServer
-    private lateinit var coinrankingService: CoinrankingService
+    private lateinit var coinrankingService: CoinsRemoteDataSource
 
     @Before
     fun setUp() {
@@ -40,7 +44,8 @@ class CoinrankingServiceTests {
         val client = OkHttpClient.Builder()
             .addInterceptor(hostInterceptor)
             .build()
-        coinrankingService = CoinrankingService(client)
+        val dispatcher = UnconfinedTestDispatcher()
+        coinrankingService = CoinrankingService(client, dispatcher)
     }
 
     @After
@@ -49,7 +54,7 @@ class CoinrankingServiceTests {
     }
 
     @Test
-    fun `Get coins - success`() {
+    fun `Get coins - success`() = runTest {
         val mockResponse = MockResponse()
             .setResponseCode(HttpURLConnection.HTTP_OK)
             .setResponseFile(GET_COINS_SUCCESSFUL_RESPONSE)
@@ -60,37 +65,37 @@ class CoinrankingServiceTests {
     }
 
     @Test
-    fun `Get coins - failure`() {
+    fun `Get coins - failure`() = runTest {
         val mockResponse = MockResponse()
             .setResponseCode(HttpURLConnection.HTTP_NOT_FOUND)
             .setResponseFile(GET_COINS_FAILED_RESPONSE)
         mockServer.enqueue(mockResponse)
 
-        assertThrows(UnsuccessfulResponseException::class.java) {
-            coinrankingService.getCoins()
-        }
+        val result = runCatching { coinrankingService.getCoins() }
+        val exception = result.exceptionOrNull()
+        assertThat(exception).isInstanceOf(UnsuccessfulResponseException::class.java)
     }
 
     @Test
-    fun `Get coins - invalid response`() {
+    fun `Get coins - invalid response`() = runTest {
         val mockResponse = MockResponse()
             .setResponseCode(HttpURLConnection.HTTP_OK)
             .setResponseFile(GET_COINS_INVALID_RESPONSE)
         mockServer.enqueue(mockResponse)
 
-        assertThrows(ResponseDeserializationException::class.java) {
-            coinrankingService.getCoins()
-        }
+        val result = runCatching { coinrankingService.getCoins() }
+        val exception = result.exceptionOrNull()
+        assertThat(exception).isInstanceOf(ResponseDeserializationException::class.java)
     }
 
     @Test
-    fun `Get coins - network connection error`() {
+    fun `Get coins - network connection error`() = runTest {
         val mockResponse = MockResponse().setSocketPolicy(SocketPolicy.DISCONNECT_AT_START)
         mockServer.enqueue(mockResponse)
 
-        assertThrows(NetworkConnectionException::class.java) {
-            coinrankingService.getCoins()
-        }
+        val result = runCatching { coinrankingService.getCoins() }
+        val exception = result.exceptionOrNull()
+        assertThat(exception).isInstanceOf(NetworkConnectionException::class.java)
     }
 
     private fun MockResponse.setResponseFile(fileName: String): MockResponse {

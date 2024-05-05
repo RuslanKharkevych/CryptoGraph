@@ -1,6 +1,7 @@
 package me.khruslan.cryptograph.data.coins.remote
 
 import kotlinx.serialization.Serializable
+import me.khruslan.cryptograph.data.coins.Coin
 
 @Serializable
 internal data class CoinrankingResponse<T>(val data: T)
@@ -19,5 +20,21 @@ internal data class CoinDto(
     val change: String,
     val rank: Int,
     val sparkline: List<String?>,
-    val coinrankingUrl: String
+    val coinrankingUrl: String,
 )
+
+internal fun CoinDto.toCoin(isPinned: Boolean): Coin {
+    return Coin(
+        id = uuid,
+        symbol = symbol,
+        name = name,
+        color = color,
+        iconUrl = iconUrl,
+        price = price,
+        change = change,
+        rank = rank,
+        sparkline = sparkline.mapNotNull { it?.toFloatOrNull() },
+        coinrankingUrl = coinrankingUrl,
+        isPinned = isPinned
+    )
+}

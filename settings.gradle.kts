@@ -24,4 +24,5 @@ dependencyResolutionManagement {
 
 rootProject.name = "CryptoGraph"
 include(":app")
+include(":base")
 include(":data")

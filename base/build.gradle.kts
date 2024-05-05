@@ -1,14 +1,10 @@
 plugins {
     alias(libs.plugins.androidLibrary)
-    alias(libs.plugins.kapt)
     alias(libs.plugins.kotlinAndroid)
-    alias(libs.plugins.kotlinSerialization)
-    alias(libs.plugins.secrets)
-    id("io.objectbox")
 }
 
 android {
-    namespace = "me.khruslan.cryptograph.data"
+    namespace = "me.khruslan.cryptograph.base"
     compileSdk = 34
 
     defaultConfig {
@@ -38,20 +34,4 @@ android {
     buildFeatures {
         buildConfig = true
     }
-}
-
-dependencies {
-    api(project(":base"))
-    implementation(libs.coroutines)
-    implementation(libs.okhttp)
-    implementation(libs.serializationJson)
-    testImplementation(libs.coroutinesTest)
-    testImplementation(libs.junit)
-    testImplementation(libs.okhttp.mockwebserver)
-    testImplementation(libs.truth)
-    testImplementation(libs.turbine)
-}
-
-secrets {
-    propertiesFileName = "secrets.properties"
 }

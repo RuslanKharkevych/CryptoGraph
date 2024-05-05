@@ -1,6 +1,9 @@
 package me.khruslan.cryptograph.data.coins.remote
 
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
+import me.khruslan.cryptograph.base.Logger
 import me.khruslan.cryptograph.data.BuildConfig
 import me.khruslan.cryptograph.data.common.NetworkConnectionException
 import me.khruslan.cryptograph.data.common.ResponseDeserializationException
@@ -13,8 +16,10 @@ import okhttp3.Response
 import java.io.IOException
 
 internal interface CoinsRemoteDataSource {
-    fun getCoins(): List<CoinDto>
+    suspend fun getCoins(): List<CoinDto>
 }
+
+private const val LOG_TAG = "CoinrankingService"
 
 private const val COINRANKING_BASE_URL = "https://api.coinranking.com/v2"
 private const val ACCESS_TOKEN_HEADER = "x-access-token"
@@ -23,31 +28,38 @@ private const val GET_COINS_REQUEST_URL = "$COINRANKING_BASE_URL/coins"
 private const val LIMIT_QUERY_PARAM = "limit"
 private const val LIMIT_QUERY_VALUE = "100"
 
-internal class CoinrankingService(private val client: OkHttpClient) : CoinsRemoteDataSource {
+internal class CoinrankingService(
+    private val client: OkHttpClient,
+    private val dispatcher: CoroutineDispatcher
+) : CoinsRemoteDataSource {
 
     private val jsonDeserializer = Json {
         ignoreUnknownKeys = true
     }
 
-    override fun getCoins(): List<CoinDto> {
-        val requestUrl = GET_COINS_REQUEST_URL.toHttpUrl()
-            .newBuilder()
-            .addQueryParameter(LIMIT_QUERY_PARAM, LIMIT_QUERY_VALUE)
-            .build()
-        return executeRequest<CoinsDto>(requestUrl).coins
+    override suspend fun getCoins(): List<CoinDto> {
+        return withContext(dispatcher) {
+            val requestUrl = GET_COINS_REQUEST_URL.toHttpUrl()
+                .newBuilder()
+                .addQueryParameter(LIMIT_QUERY_PARAM, LIMIT_QUERY_VALUE)
+                .build()
+            executeRequest<CoinsDto>(requestUrl).coins
+        }
     }
 
     private inline fun <reified T> executeRequest(url: HttpUrl): T {
-        return try {
-            val request = Request.Builder()
-                .url(url)
-                .header(ACCESS_TOKEN_HEADER, BuildConfig.COINRANKING_API_KEY)
-                .build()
+        val request = Request.Builder()
+            .url(url)
+            .header(ACCESS_TOKEN_HEADER, BuildConfig.COINRANKING_API_KEY)
+            .build()
 
+        return try {
             client.newCall(request).execute().use { response ->
                 deserializeResponse<T>(response)
             }
         } catch (e: IOException) {
+            val requestInfo = request.toString().maskAuthHeader()
+            Logger.warning(LOG_TAG, "Failed to execute request: $requestInfo", e)
             throw NetworkConnectionException(e)
         }
     }
@@ -56,11 +68,22 @@ internal class CoinrankingService(private val client: OkHttpClient) : CoinsRemot
         return try {
             val responseBody = requireNotNull(response.body).string()
             if (!response.isSuccessful) {
-                throw UnsuccessfulResponseException(response.code, responseBody)
+                val exception = UnsuccessfulResponseException(responseBody)
+                Logger.error(LOG_TAG, "Response failed: $response", exception)
+                throw exception
             }
             jsonDeserializer.decodeFromString<CoinrankingResponse<T>>(responseBody).data
         } catch (e: IllegalArgumentException) {
+            Logger.error(LOG_TAG, "Failed to deserialize response: $response", e)
             throw ResponseDeserializationException(e)
+        }
+    }
+
+    private fun String.maskAuthHeader(): String {
+        val pattern = Regex("($ACCESS_TOKEN_HEADER:)[\\w-]+")
+        return pattern.replace(this) { result ->
+            val prefix = result.groupValues[1]
+            "$prefix**"
         }
     }
 }
