@@ -26,7 +26,7 @@ internal class FakeCoinsRepository : CoinsRepository {
         _coins.update { coins ->
             coins.map {
                 it.copy(isPinned = if (it.id == id) true else it.isPinned)
-            }
+            }.sorted()
         }
     }
 
@@ -35,7 +35,7 @@ internal class FakeCoinsRepository : CoinsRepository {
         _coins.update { coins ->
             coins.map {
                 it.copy(isPinned = if (it.id == id) false else it.isPinned)
-            }
+            }.sorted()
         }
     }
 
@@ -45,6 +45,10 @@ internal class FakeCoinsRepository : CoinsRepository {
 
     private fun checkIfDataIsValid() {
         if (isDatabaseCorrupted) throw object : DataException(ErrorType.Database) {}
+    }
+
+    private fun List<Coin>.sorted(): List<Coin> {
+        return sortedWith(compareByDescending<Coin> { it.isPinned }.thenBy { it.rank })
     }
 }
 

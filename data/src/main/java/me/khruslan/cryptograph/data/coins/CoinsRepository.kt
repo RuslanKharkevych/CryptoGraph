@@ -27,7 +27,7 @@ internal class CoinsRepositoryImpl(
                 allCoins.map { coinDto ->
                     val isPinned = pinnedCoins.any { it.coinUuid == coinDto.uuid }
                     coinDto.toCoin(isPinned)
-                }
+                }.sortedWith(compareByDescending<Coin> { it.isPinned }.thenBy { it.rank })
             }
         }
 

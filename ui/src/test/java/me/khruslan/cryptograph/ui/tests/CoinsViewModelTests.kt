@@ -51,8 +51,8 @@ internal class CoinsViewModelTests {
         viewModel.pinCoin(id = STUB_COINS[1].id)
 
         val expectedCoins = listOf(
-            STUB_COINS[0],
             STUB_COINS[1].copy(isPinned = true),
+            STUB_COINS[0],
             STUB_COINS[2]
         )
         val expectedListState = CoinsListState.Data(expectedCoins)

@@ -32,12 +32,17 @@ internal class CoinsRepositoryTests {
 
     @Test
     fun `Pin coin`() = runTest {
-        val coin = STUB_COINS[1]
-        coinsRepository.pinCoin(coin.id)
+        val coinId = STUB_COINS[1].id
+        coinsRepository.pinCoin(coinId)
 
         coinsRepository.coins.test {
-            val expectedCoin = coin.copy(isPinned = true)
-            assertThat(awaitItem()).contains(expectedCoin)
+            val expectedCoins = listOf(
+                STUB_COINS[1].copy(isPinned = true),
+                STUB_COINS[0],
+                STUB_COINS[2]
+            )
+            val actualCoins = awaitItem()
+            assertThat(expectedCoins).isEqualTo(actualCoins)
         }
     }
 
