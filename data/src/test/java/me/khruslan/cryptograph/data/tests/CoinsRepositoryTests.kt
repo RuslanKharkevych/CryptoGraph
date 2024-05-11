@@ -5,34 +5,34 @@ import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.test.runTest
 import me.khruslan.cryptograph.data.coins.CoinsRepository
 import me.khruslan.cryptograph.data.coins.CoinsRepositoryImpl
-import me.khruslan.cryptograph.data.mocks.InMemoryCoinsStore
-import me.khruslan.cryptograph.data.mocks.MOCK_COINS
-import me.khruslan.cryptograph.data.mocks.MockCoinsService
+import me.khruslan.cryptograph.data.fakes.FakeCoinsService
+import me.khruslan.cryptograph.data.fakes.FakeCoinsStore
+import me.khruslan.cryptograph.data.fakes.STUB_COINS
 import org.junit.Before
 import org.junit.Test
 
-class CoinsRepositoryTests {
+internal class CoinsRepositoryTests {
 
     private lateinit var coinsRepository: CoinsRepository
 
     @Before
     fun setUp() {
         coinsRepository = CoinsRepositoryImpl(
-            localDataSource = InMemoryCoinsStore(),
-            remoteDataSource = MockCoinsService()
+            localDataSource = FakeCoinsStore(),
+            remoteDataSource = FakeCoinsService()
         )
     }
 
     @Test
     fun `Get coins`() = runTest {
         coinsRepository.coins.test {
-            assertThat(awaitItem()).isEqualTo(MOCK_COINS)
+            assertThat(awaitItem()).isEqualTo(STUB_COINS)
         }
     }
 
     @Test
     fun `Pin coin`() = runTest {
-        val coin = MOCK_COINS[1]
+        val coin = STUB_COINS[1]
         coinsRepository.pinCoin(coin.id)
 
         coinsRepository.coins.test {
@@ -43,12 +43,12 @@ class CoinsRepositoryTests {
 
     @Test
     fun `Unpin coin`() = runTest {
-        val coinId = MOCK_COINS[2].id
+        val coinId = STUB_COINS[2].id
         coinsRepository.pinCoin(coinId)
         coinsRepository.unpinCoin(coinId)
 
         coinsRepository.coins.test {
-            assertThat(awaitItem()).isEqualTo(MOCK_COINS)
+            assertThat(awaitItem()).isEqualTo(STUB_COINS)
         }
     }
 }

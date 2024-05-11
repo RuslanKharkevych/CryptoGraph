@@ -15,7 +15,7 @@ import org.junit.Test
 import java.util.UUID
 
 @OptIn(ExperimentalCoroutinesApi::class)
-class CoinsStoreTests {
+internal class CoinsStoreTests {
 
     @get:Rule
     val objectBoxRule = ObjectBoxRule()

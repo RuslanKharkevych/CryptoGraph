@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- region Common -->
+    <string name="database_error_msg">Failed to load data. Please try again</string>
+    <string name="network_error_msg">Failed to load data. Please check your Internet connection and try again</string>
+    <string name="server_error_msg">Failed to load data at this time. Please try again later</string>
+    <!-- endregion Common -->
+
+    <!-- region Coins -->
+    <string name="pin_coin_warning_msg">Failed to pin the coin. Please try again</string>
+    <string name="unpin_coin_warning_msg">Failed to unpin the coin. Please try again</string>
+    <!-- endregion Coins -->
+</resources>

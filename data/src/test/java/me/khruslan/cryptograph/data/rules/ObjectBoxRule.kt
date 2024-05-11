@@ -9,9 +9,9 @@ import org.junit.runner.Description
 
 private const val DB_NAME = "test-db"
 
-class ObjectBoxRule : TestWatcher() {
+internal class ObjectBoxRule : TestWatcher() {
 
-    lateinit var boxStore: BoxStore
+    private lateinit var boxStore: BoxStore
 
     override fun starting(description: Description?) {
         boxStore = MyObjectBox.builder()

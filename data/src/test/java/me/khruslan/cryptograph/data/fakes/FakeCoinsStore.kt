@@ -1,11 +1,11 @@
-package me.khruslan.cryptograph.data.mocks
+package me.khruslan.cryptograph.data.fakes
 
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 import me.khruslan.cryptograph.data.coins.local.CoinsLocalDataSource
 import me.khruslan.cryptograph.data.coins.local.PinnedCoinDto
 
-internal class InMemoryCoinsStore : CoinsLocalDataSource {
+internal class FakeCoinsStore : CoinsLocalDataSource {
     override val pinnedCoins = MutableStateFlow<List<PinnedCoinDto>>(emptyList())
 
     override suspend fun pinCoin(uuid: String) {

@@ -30,7 +30,7 @@ private const val GET_COINS_FAILED_RESPONSE = "$RESPONSES_ROOT_PATH/get-coins-fa
 private const val GET_COINS_INVALID_RESPONSE = "$RESPONSES_ROOT_PATH/get-coins-invalid.json"
 
 @OptIn(ExperimentalCoroutinesApi::class)
-class CoinrankingServiceTests {
+internal class CoinrankingServiceTests {
 
     private lateinit var mockServer: MockWebServer
     private lateinit var coinrankingService: CoinsRemoteDataSource

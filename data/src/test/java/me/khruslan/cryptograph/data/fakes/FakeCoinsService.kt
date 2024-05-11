@@ -1,14 +1,14 @@
-package me.khruslan.cryptograph.data.mocks
+package me.khruslan.cryptograph.data.fakes
 
 import me.khruslan.cryptograph.data.coins.Coin
 import me.khruslan.cryptograph.data.coins.remote.CoinDto
 import me.khruslan.cryptograph.data.coins.remote.CoinsRemoteDataSource
 
-internal class MockCoinsService : CoinsRemoteDataSource {
-    override suspend fun getCoins() = MOCK_DTO_COINS
+internal class FakeCoinsService : CoinsRemoteDataSource {
+    override suspend fun getCoins() = STUB_DTO_COINS
 }
 
-internal val MOCK_COINS = listOf(
+internal val STUB_COINS = listOf(
     Coin(
         id = "Qwsogvtv82FCd",
         symbol = "BTC",
@@ -50,7 +50,7 @@ internal val MOCK_COINS = listOf(
     )
 )
 
-private val MOCK_DTO_COINS = listOf(
+private val STUB_DTO_COINS = listOf(
     CoinDto(
         uuid = "Qwsogvtv82FCd",
         symbol = "BTC",

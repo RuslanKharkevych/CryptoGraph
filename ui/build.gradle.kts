@@ -1,18 +1,16 @@
 plugins {
     alias(libs.plugins.androidLibrary)
-    alias(libs.plugins.kapt)
     alias(libs.plugins.kotlinAndroid)
-    alias(libs.plugins.kotlinSerialization)
-    alias(libs.plugins.secrets)
-    id("io.objectbox")
 }
 
 android {
-    namespace = "me.khruslan.cryptograph.data"
+    namespace = "me.khruslan.cryptograph.ui"
     compileSdk = 34
 
     defaultConfig {
         minSdk = 21
+
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
     }
 
@@ -26,6 +24,14 @@ android {
         }
     }
 
+    buildFeatures {
+        compose = true
+    }
+
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.5.13"
+    }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
@@ -34,24 +40,18 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
-
-    buildFeatures {
-        buildConfig = true
-    }
 }
 
 dependencies {
     implementation(project(":base"))
+    implementation(project(":data"))
+    implementation(libs.compose.compiler)
+    implementation(libs.compose.foundation)
+    implementation(libs.compose.runtime)
+    implementation(libs.compose.ui)
     implementation(libs.coroutines)
-    implementation(libs.okhttp)
-    implementation(libs.serializationJson)
+    implementation(libs.lifecycleViewModel)
     testImplementation(libs.coroutinesTest)
     testImplementation(libs.junit)
-    testImplementation(libs.okhttp.mockwebserver)
     testImplementation(libs.truth)
-    testImplementation(libs.turbine)
-}
-
-secrets {
-    propertiesFileName = "secrets.properties"
 }
