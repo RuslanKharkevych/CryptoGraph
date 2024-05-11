@@ -1,13 +1,16 @@
 [versions]
+activityCompose = "1.9.0"
 agp = "8.4.0"
-appcompat = "1.6.1"
 compose = "1.6.7"
 composeCompiler = "1.5.13"
+composeMaterial3 = "1.2.1"
 coroutines = "1.8.0"
 junit = "4.13.2"
+koin = "3.5.6"
 kotlin = "1.9.23"
 lifecycle = "2.7.0"
 material = "1.12.0"
+navigationCompose = "2.7.7"
 objectbox = "3.8.0"
 okhttp = "4.12.0"
 secrets = "2.0.1"
@@ -16,16 +19,20 @@ truth = "1.4.2"
 turbine = "1.1.0"
 
 [libraries]
-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
+activityCompose = { group = "androidx.activity", name = "activity-compose", version.ref = "activityCompose" }
 compose-compiler = { group = "androidx.compose.compiler", name = "compiler", version.ref = "composeCompiler" }
 compose-foundation = { group = "androidx.compose.foundation", name = "foundation", version.ref = "compose" }
+compose-material3 = { group = "androidx.compose.material3", name = "material3", version.ref = "composeMaterial3" }
 compose-runtime = { group = "androidx.compose.runtime", name = "runtime", version.ref = "compose" }
 compose-ui = { group = "androidx.compose.ui", name = "ui", version.ref = "compose" }
 coroutines = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "coroutines" }
 coroutinesTest = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "coroutines" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
+koin-android = { group = "io.insert-koin", name = "koin-android", version.ref = "koin" }
+koin-composeNavigation = { group = "io.insert-koin", name = "koin-androidx-compose-navigation", version.ref = "koin" }
 lifecycleViewModel = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-compose", version.ref = "lifecycle" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
+navigationCompose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigationCompose" }
 objectbox = { group = "io.objectbox", name = "objectbox-gradle-plugin", version.ref = "objectbox" }
 okhttp = { group = "com.squareup.okhttp3", name = "okhttp", version.ref = "okhttp" }
 okhttp-mockwebserver = { group = "com.squareup.okhttp3", name = "mockwebserver", version.ref = "okhttp" }

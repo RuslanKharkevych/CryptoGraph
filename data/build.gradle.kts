@@ -43,6 +43,7 @@ android {
 dependencies {
     implementation(project(":base"))
     implementation(libs.coroutines)
+    implementation(libs.koin.android)
     implementation(libs.okhttp)
     implementation(libs.serializationJson)
     testImplementation(libs.coroutinesTest)

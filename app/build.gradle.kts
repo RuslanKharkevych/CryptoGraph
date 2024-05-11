@@ -34,9 +34,15 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
+
+    buildFeatures {
+        buildConfig = true
+    }
 }
 
 dependencies {
-    implementation(libs.appcompat)
+    implementation(project(":data"))
+    implementation(project(":ui"))
+    implementation(libs.koin.android)
     implementation(libs.material)
 }

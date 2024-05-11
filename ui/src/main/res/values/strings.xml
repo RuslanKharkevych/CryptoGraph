@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- region Common -->
+    <string name="app_name" translatable="false">CryptoGraph</string>
     <string name="database_error_msg">Failed to load data. Please try again</string>
     <string name="network_error_msg">Failed to load data. Please check your Internet connection and try again</string>
     <string name="server_error_msg">Failed to load data at this time. Please try again later</string>
