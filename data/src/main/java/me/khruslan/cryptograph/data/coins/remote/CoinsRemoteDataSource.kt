@@ -8,12 +8,14 @@ import me.khruslan.cryptograph.data.BuildConfig
 import me.khruslan.cryptograph.data.common.NetworkConnectionException
 import me.khruslan.cryptograph.data.common.ResponseDeserializationException
 import me.khruslan.cryptograph.data.common.UnsuccessfulResponseException
+import okhttp3.CacheControl
 import okhttp3.HttpUrl
 import okhttp3.HttpUrl.Companion.toHttpUrl
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response
 import java.io.IOException
+import java.util.concurrent.TimeUnit
 
 internal interface CoinsRemoteDataSource {
     suspend fun getCoins(): List<CoinDto>
@@ -23,6 +25,7 @@ private const val LOG_TAG = "CoinrankingService"
 
 private const val COINRANKING_BASE_URL = "https://api.coinranking.com/v2"
 private const val ACCESS_TOKEN_HEADER = "x-access-token"
+private const val CACHE_MAX_STALE_SECONDS = 3600
 
 private const val GET_COINS_REQUEST_URL = "$COINRANKING_BASE_URL/coins"
 private const val LIMIT_QUERY_PARAM = "limit"
@@ -30,12 +33,16 @@ private const val LIMIT_QUERY_VALUE = "100"
 
 internal class CoinrankingService(
     private val client: OkHttpClient,
-    private val dispatcher: CoroutineDispatcher
+    private val dispatcher: CoroutineDispatcher,
 ) : CoinsRemoteDataSource {
 
     private val jsonDeserializer = Json {
         ignoreUnknownKeys = true
     }
+
+    private val cacheControl = CacheControl.Builder()
+        .maxStale(CACHE_MAX_STALE_SECONDS, TimeUnit.SECONDS)
+        .build()
 
     override suspend fun getCoins(): List<CoinDto> {
         return withContext(dispatcher) {
@@ -51,6 +58,7 @@ internal class CoinrankingService(
         val request = Request.Builder()
             .url(url)
             .header(ACCESS_TOKEN_HEADER, BuildConfig.COINRANKING_API_KEY)
+            .cacheControl(cacheControl)
             .build()
 
         return try {

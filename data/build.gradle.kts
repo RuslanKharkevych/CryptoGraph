@@ -42,13 +42,16 @@ android {
 
 dependencies {
     implementation(project(":base"))
+
     implementation(libs.coroutines)
     implementation(libs.koin.android)
     implementation(libs.okhttp)
+    implementation(libs.okhttp.loggingInterceptor)
     implementation(libs.serializationJson)
+
     testImplementation(libs.coroutinesTest)
     testImplementation(libs.junit)
-    testImplementation(libs.okhttp.mockwebserver)
+    testImplementation(libs.okhttp.mockWebServer)
     testImplementation(libs.truth)
     testImplementation(libs.turbine)
 }
