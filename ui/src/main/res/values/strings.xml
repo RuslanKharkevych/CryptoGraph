@@ -5,10 +5,19 @@
     <string name="database_error_msg">Failed to load data. Please try again</string>
     <string name="network_error_msg">Failed to load data. Please check your Internet connection and try again</string>
     <string name="server_error_msg">Failed to load data at this time. Please try again later</string>
+    <string name="retry_btn_desc">Retry</string>
     <!-- endregion Common -->
 
     <!-- region Coins -->
+    <string name="notifications_action_desc">Notifications</string>
+    <string name="preferences_action_desc">Preferences</string>
+    <string name="coin_icon_desc">%s icon</string>
+    <string name="pin_coin_btn_desc">Pin coin</string>
+    <string name="unpin_coin_btn_desc">Unpin coin</string>
     <string name="pin_coin_warning_msg">Failed to pin the coin. Please try again</string>
     <string name="unpin_coin_warning_msg">Failed to unpin the coin. Please try again</string>
+    <string name="trending_up_icon_desc">Trending up</string>
+    <string name="trending_down_icon_desc">Trending down</string>
+    <string name="trending_flat_icon_desc">Trending flat</string>
     <!-- endregion Coins -->
 </resources>

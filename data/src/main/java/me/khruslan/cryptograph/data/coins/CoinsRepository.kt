@@ -4,8 +4,8 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flow
 import me.khruslan.cryptograph.data.coins.local.CoinsLocalDataSource
+import me.khruslan.cryptograph.data.coins.mapper.CoinsMapper
 import me.khruslan.cryptograph.data.coins.remote.CoinsRemoteDataSource
-import me.khruslan.cryptograph.data.coins.remote.toCoin
 
 interface CoinsRepository {
     val coins: Flow<List<Coin>>
@@ -15,7 +15,8 @@ interface CoinsRepository {
 
 internal class CoinsRepositoryImpl(
     private val localDataSource: CoinsLocalDataSource,
-    private val remoteDataSource: CoinsRemoteDataSource
+    private val remoteDataSource: CoinsRemoteDataSource,
+    private val mapper: CoinsMapper,
 ) : CoinsRepository {
 
     override val coins: Flow<List<Coin>>
@@ -24,10 +25,7 @@ internal class CoinsRepositoryImpl(
             val pinnedCoinsFlow = localDataSource.pinnedCoins
 
             return allCoinsFlow.combine(pinnedCoinsFlow) { allCoins, pinnedCoins ->
-                allCoins.map { coinDto ->
-                    val isPinned = pinnedCoins.any { it.coinUuid == coinDto.uuid }
-                    coinDto.toCoin(isPinned)
-                }.sortedWith(compareByDescending<Coin> { it.isPinned }.thenBy { it.rank })
+                mapper.mapCoins(allCoins, pinnedCoins)
             }
         }
 

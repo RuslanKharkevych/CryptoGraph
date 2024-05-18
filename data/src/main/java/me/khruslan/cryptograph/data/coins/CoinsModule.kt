@@ -4,6 +4,7 @@ import io.objectbox.BoxStore
 import io.objectbox.kotlin.boxFor
 import kotlinx.coroutines.Dispatchers
 import me.khruslan.cryptograph.data.coins.local.CoinsStore
+import me.khruslan.cryptograph.data.coins.mapper.CoinsMapperImpl
 import me.khruslan.cryptograph.data.coins.remote.CoinrankingService
 import me.khruslan.cryptograph.data.common.buildHttpClient
 import me.khruslan.cryptograph.data.common.objectBoxModule
@@ -21,6 +22,9 @@ internal val coinsModule = module {
             remoteDataSource = CoinrankingService(
                 client = buildHttpClient(androidContext()),
                 dispatcher = Dispatchers.IO
+            ),
+            mapper = CoinsMapperImpl(
+                dispatcher = Dispatchers.Default
             )
         )
     }

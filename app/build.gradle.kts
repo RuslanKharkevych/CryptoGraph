@@ -9,7 +9,7 @@ android {
 
     defaultConfig {
         applicationId = "me.khruslan.cryptograph"
-        minSdk = 21
+        minSdk = 23
         targetSdk = 34
         versionCode = 1
         versionName = "1.0.0"
@@ -41,8 +41,11 @@ android {
 }
 
 dependencies {
+    implementation(project(":base"))
     implementation(project(":data"))
     implementation(project(":ui"))
+
+    implementation(libs.coil.compose)
     implementation(libs.koin.android)
     implementation(libs.material)
 }

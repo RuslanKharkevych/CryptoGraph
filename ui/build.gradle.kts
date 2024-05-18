@@ -8,7 +8,7 @@ android {
     compileSdk = 34
 
     defaultConfig {
-        minSdk = 21
+        minSdk = 23
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
@@ -25,6 +25,7 @@ android {
     }
 
     buildFeatures {
+        buildConfig = true
         compose = true
     }
 
@@ -45,16 +46,23 @@ android {
 dependencies {
     implementation(project(":base"))
     implementation(project(":data"))
+
     implementation(libs.activityCompose)
+    implementation(libs.coil.compose)
+    implementation(libs.coil.svg)
     implementation(libs.compose.compiler)
     implementation(libs.compose.foundation)
     implementation(libs.compose.material3)
     implementation(libs.compose.runtime)
     implementation(libs.compose.ui)
+    debugImplementation(libs.compose.uiTooling)
+    implementation(libs.compose.uiToolingPreview)
     implementation(libs.coroutines)
     implementation(libs.koin.composeNavigation)
     implementation(libs.lifecycleViewModel)
     implementation(libs.navigationCompose)
+    implementation(libs.vico)
+
     testImplementation(libs.coroutinesTest)
     testImplementation(libs.junit)
     testImplementation(libs.truth)
