@@ -2,8 +2,10 @@ package me.khruslan.cryptograph.ui.coins
 
 import androidx.annotation.StringRes
 import androidx.compose.material.icons.Icons
-import androidx.compose.ui.graphics.Color
 import me.khruslan.cryptograph.data.coins.ChangeTrend
+import me.khruslan.cryptograph.ui.DarkGreen
+import me.khruslan.cryptograph.ui.DarkRed
+import me.khruslan.cryptograph.ui.DarkYellow
 import me.khruslan.cryptograph.ui.R
 import me.khruslan.cryptograph.ui.common.TrendingDown
 import me.khruslan.cryptograph.ui.common.TrendingFlat
@@ -24,10 +26,9 @@ internal val ChangeTrend.contendDescRes
         ChangeTrend.STEADY_OR_UNKNOWN -> R.string.trending_flat_icon_desc
     }
 
-// TODO: Update colors
 internal val ChangeTrend.color
     get() = when (this) {
-        ChangeTrend.UP -> Color.Green
-        ChangeTrend.DOWN -> Color.Red
-        ChangeTrend.STEADY_OR_UNKNOWN -> Color.Yellow
+        ChangeTrend.UP -> DarkGreen
+        ChangeTrend.DOWN -> DarkRed
+        ChangeTrend.STEADY_OR_UNKNOWN -> DarkYellow
     }

@@ -123,7 +123,8 @@ private fun TopBar(
         title = {
             Text(
                 text = stringResource(R.string.app_name),
-                style = MaterialTheme.typography.titleLarge
+                style = MaterialTheme.typography.titleLarge,
+                fontWeight = FontWeight.Medium
             )
         },
         actions = {
@@ -292,13 +293,12 @@ private fun CoinPriceAndChange(
     ) {
         Text(
             text = price,
-            style = MaterialTheme.typography.bodyLarge,
-            fontWeight = FontWeight.Medium,
+            style = MaterialTheme.typography.labelLarge,
             maxLines = 1
         )
         Spacer(modifier = Modifier.width(8.dp))
         Icon(
-            modifier = Modifier.size(20.dp),
+            modifier = Modifier.size(16.dp),
             imageVector = changeTrend.icon,
             contentDescription = stringResource(changeTrend.contendDescRes),
             tint = changeTrend.color
@@ -306,7 +306,7 @@ private fun CoinPriceAndChange(
         Spacer(modifier = Modifier.width(4.dp))
         Text(
             text = change,
-            style = MaterialTheme.typography.bodyMedium,
+            style = MaterialTheme.typography.labelMedium,
             color = changeTrend.color,
             maxLines = 1
         )
