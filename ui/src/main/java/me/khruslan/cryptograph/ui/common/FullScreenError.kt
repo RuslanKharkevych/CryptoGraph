@@ -43,7 +43,8 @@ internal fun FullScreenError(message: String, onRetryClick: () -> Unit) {
         Text(
             text = message,
             textAlign = TextAlign.Center,
-            style = MaterialTheme.typography.titleLarge
+            style = MaterialTheme.typography.headlineSmall,
+            color = MaterialTheme.colorScheme.onBackground
         )
     }
 }

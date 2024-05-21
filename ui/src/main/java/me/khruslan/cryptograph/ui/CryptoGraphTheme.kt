@@ -69,6 +69,9 @@ private val NunitoFontFamily = FontFamily(
 private val DefaultTypography = Typography()
 
 private val CryptoGraphTypography = Typography(
+    headlineLarge = DefaultTypography.headlineLarge.copy(fontFamily = NunitoFontFamily),
+    headlineMedium = DefaultTypography.headlineMedium.copy(fontFamily = NunitoFontFamily),
+    headlineSmall = DefaultTypography.headlineSmall.copy(fontFamily = NunitoFontFamily),
     titleLarge = DefaultTypography.titleLarge.copy(fontFamily = Exo2FontFamily),
     titleMedium = DefaultTypography.titleMedium.copy(fontFamily = Exo2FontFamily),
     titleSmall = DefaultTypography.titleSmall.copy(fontFamily = Exo2FontFamily),

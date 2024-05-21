@@ -11,7 +11,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Notifications
@@ -39,7 +40,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.patrykandpatrick.vico.compose.chart.Chart
@@ -54,6 +54,7 @@ import me.khruslan.cryptograph.ui.R
 import me.khruslan.cryptograph.ui.common.CurrencyBitcoin
 import me.khruslan.cryptograph.ui.common.FullScreenError
 import me.khruslan.cryptograph.ui.common.FullScreenLoader
+import me.khruslan.cryptograph.ui.common.PreviewScreenSizesLightDark
 import me.khruslan.cryptograph.ui.common.StarOutline
 import me.khruslan.cryptograph.ui.common.previewPlaceholder
 import me.khruslan.cryptograph.ui.common.toColor
@@ -152,7 +153,7 @@ private fun CoinsList(
     onPinButtonClick: (coinId: String) -> Unit,
     onUnpinButtonClick: (coinId: String) -> Unit,
 ) {
-    LazyColumn {
+    LazyVerticalGrid(columns = GridCells.Adaptive(400.dp)) {
         items(
             count = coins.count(),
             key = { index -> coins[index].id }
@@ -327,7 +328,7 @@ private fun Sparkline(sparkline: List<Double>) {
 }
 
 @Composable
-@PreviewLightDark
+@PreviewScreenSizesLightDark
 private fun CoinsScreenPreview() {
     var coins by remember { mutableStateOf(COINS) }
     val coinsState = remember {

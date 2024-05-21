@@ -16,8 +16,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import me.khruslan.cryptograph.ui.CryptoGraphTheme
+import me.khruslan.cryptograph.ui.R
 import kotlin.math.PI
 import kotlin.math.abs
 import kotlin.math.cos
@@ -34,7 +36,10 @@ internal fun FullScreenLoader() {
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
-        Canvas(modifier = Modifier.fillMaxSize(0.5f)) {
+        Canvas(
+            modifier = Modifier.fillMaxSize(0.5f),
+            contentDescription = stringResource(R.string.loader_desc)
+        ) {
             val maxDotRadius = size.minDimension / 10
             val loaderRadius = size.minDimension / 2 - maxDotRadius
 
