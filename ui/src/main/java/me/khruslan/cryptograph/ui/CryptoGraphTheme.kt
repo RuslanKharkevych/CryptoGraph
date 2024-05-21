@@ -7,10 +7,9 @@ import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.googlefonts.Font
-import androidx.compose.ui.text.googlefonts.GoogleFont
 
 @Composable
 internal fun CryptoGraphTheme(content: @Composable () -> Unit) {
@@ -32,38 +31,14 @@ internal val DarkGreen = Color(0xFF00796B)
 internal val DarkRed = Color(0xFFB71C1C)
 internal val DarkYellow = Color(0xFF827717)
 
-private val GoogleFontProvider = GoogleFont.Provider(
-    providerAuthority = "com.google.android.gms.fonts",
-    providerPackage = "com.google.android.gms",
-    certificates = R.array.com_google_android_gms_fonts_certs
-)
-
-private val Exo2Font = GoogleFont("Exo 2")
-private val NunitoFont = GoogleFont("Nunito")
-
 private val Exo2FontFamily = FontFamily(
-    Font(
-        googleFont = Exo2Font,
-        fontProvider = GoogleFontProvider,
-        weight = FontWeight.Medium
-    )
+    Font(R.font.exo2_medium, FontWeight.Medium)
 )
 
 private val NunitoFontFamily = FontFamily(
-    Font(
-        googleFont = NunitoFont,
-        fontProvider = GoogleFontProvider
-    ),
-    Font(
-        googleFont = NunitoFont,
-        fontProvider = GoogleFontProvider,
-        weight = FontWeight.Medium
-    ),
-    Font(
-        googleFont = NunitoFont,
-        fontProvider = GoogleFontProvider,
-        weight = FontWeight.Bold
-    )
+    Font(R.font.nunito_regular),
+    Font(R.font.nunito_medium, FontWeight.Medium),
+    Font(R.font.nunito_bold, FontWeight.Bold)
 )
 
 private val DefaultTypography = Typography()
