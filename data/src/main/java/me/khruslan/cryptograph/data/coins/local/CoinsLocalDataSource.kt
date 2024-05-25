@@ -11,15 +11,15 @@ import kotlinx.coroutines.withContext
 import me.khruslan.cryptograph.base.Logger
 import me.khruslan.cryptograph.data.common.DatabaseException
 
+private const val LOG_TAG = "CoinsLocalDataSource"
+
 internal interface CoinsLocalDataSource {
     val pinnedCoins: Flow<List<PinnedCoinDto>>
     suspend fun pinCoin(uuid: String)
     suspend fun unpinCoin(uuid: String)
 }
 
-private const val LOG_TAG = "CoinsStore"
-
-internal class CoinsStore(
+internal class CoinsLocalDataSourceImpl(
     private val box: Box<PinnedCoinDto>,
     private val dispatcher: CoroutineDispatcher
 ) : CoinsLocalDataSource {

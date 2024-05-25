@@ -17,11 +17,7 @@ import okhttp3.Response
 import java.io.IOException
 import java.util.concurrent.TimeUnit
 
-internal interface CoinsRemoteDataSource {
-    suspend fun getCoins(): List<CoinDto>
-}
-
-private const val LOG_TAG = "CoinrankingService"
+private const val LOG_TAG = "CoinsRemoteDataSource"
 
 private const val COINRANKING_BASE_URL = "https://api.coinranking.com/v2"
 private const val ACCESS_TOKEN_HEADER = "x-access-token"
@@ -31,7 +27,11 @@ private const val GET_COINS_REQUEST_URL = "$COINRANKING_BASE_URL/coins"
 private const val LIMIT_QUERY_PARAM = "limit"
 private const val LIMIT_QUERY_VALUE = "100"
 
-internal class CoinrankingService(
+internal interface CoinsRemoteDataSource {
+    suspend fun getCoins(): List<CoinDto>
+}
+
+internal class CoinsRemoteDataSourceImpl(
     private val client: OkHttpClient,
     private val dispatcher: CoroutineDispatcher,
 ) : CoinsRemoteDataSource {

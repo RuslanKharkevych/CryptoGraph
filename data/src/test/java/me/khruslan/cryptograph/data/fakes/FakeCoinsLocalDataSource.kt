@@ -5,7 +5,7 @@ import kotlinx.coroutines.flow.update
 import me.khruslan.cryptograph.data.coins.local.CoinsLocalDataSource
 import me.khruslan.cryptograph.data.coins.local.PinnedCoinDto
 
-internal class FakeCoinsStore : CoinsLocalDataSource {
+internal class FakeCoinsLocalDataSource : CoinsLocalDataSource {
     override val pinnedCoins = MutableStateFlow<List<PinnedCoinDto>>(emptyList())
 
     override suspend fun pinCoin(uuid: String) {

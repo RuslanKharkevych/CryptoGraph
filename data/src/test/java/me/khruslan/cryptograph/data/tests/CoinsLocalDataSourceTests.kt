@@ -6,7 +6,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
 import me.khruslan.cryptograph.data.coins.local.CoinsLocalDataSource
-import me.khruslan.cryptograph.data.coins.local.CoinsStore
+import me.khruslan.cryptograph.data.coins.local.CoinsLocalDataSourceImpl
 import me.khruslan.cryptograph.data.coins.local.PinnedCoinDto
 import me.khruslan.cryptograph.data.rules.ObjectBoxRule
 import org.junit.Before
@@ -15,16 +15,16 @@ import org.junit.Test
 import java.util.UUID
 
 @OptIn(ExperimentalCoroutinesApi::class)
-internal class CoinsStoreTests {
+internal class CoinsLocalDataSourceTests {
 
     @get:Rule
     val objectBoxRule = ObjectBoxRule()
 
-    private lateinit var coinsStore: CoinsLocalDataSource
+    private lateinit var dataSource: CoinsLocalDataSource
 
     @Before
     fun setUp() {
-        coinsStore = CoinsStore(
+        dataSource = CoinsLocalDataSourceImpl(
             box = objectBoxRule.getBox(),
             dispatcher = UnconfinedTestDispatcher()
         )
@@ -33,9 +33,9 @@ internal class CoinsStoreTests {
     @Test
     fun `Pin coin`() = runTest {
         val uuid = UUID.randomUUID().toString()
-        coinsStore.pinCoin(uuid)
+        dataSource.pinCoin(uuid)
 
-        coinsStore.pinnedCoins.test {
+        dataSource.pinnedCoins.test {
             val expectedCoin = PinnedCoinDto(id = 1, coinUuid = uuid)
             assertThat(awaitItem()).contains(expectedCoin)
         }
@@ -44,10 +44,10 @@ internal class CoinsStoreTests {
     @Test
     fun `Unpin coin`() = runTest {
         val uuid = UUID.randomUUID().toString()
-        coinsStore.pinCoin(uuid)
-        coinsStore.unpinCoin(uuid)
+        dataSource.pinCoin(uuid)
+        dataSource.unpinCoin(uuid)
 
-        coinsStore.pinnedCoins.test {
+        dataSource.pinnedCoins.test {
             assertThat(awaitItem()).isEmpty()
         }
     }

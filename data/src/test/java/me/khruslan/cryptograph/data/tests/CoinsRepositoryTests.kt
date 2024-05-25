@@ -6,28 +6,28 @@ import kotlinx.coroutines.test.runTest
 import me.khruslan.cryptograph.data.coins.CoinsRepository
 import me.khruslan.cryptograph.data.coins.CoinsRepositoryImpl
 import me.khruslan.cryptograph.data.fakes.FakeCoinsMapper
-import me.khruslan.cryptograph.data.fakes.FakeCoinsService
-import me.khruslan.cryptograph.data.fakes.FakeCoinsStore
+import me.khruslan.cryptograph.data.fakes.FakeCoinsRemoteDataSource
+import me.khruslan.cryptograph.data.fakes.FakeCoinsLocalDataSource
 import me.khruslan.cryptograph.data.fixtures.COINS
 import org.junit.Before
 import org.junit.Test
 
 internal class CoinsRepositoryTests {
 
-    private lateinit var coinsRepository: CoinsRepository
+    private lateinit var repository: CoinsRepository
 
     @Before
     fun setUp() {
-        coinsRepository = CoinsRepositoryImpl(
-            localDataSource = FakeCoinsStore(),
-            remoteDataSource = FakeCoinsService(),
+        repository = CoinsRepositoryImpl(
+            localDataSource = FakeCoinsLocalDataSource(),
+            remoteDataSource = FakeCoinsRemoteDataSource(),
             mapper = FakeCoinsMapper()
         )
     }
 
     @Test
     fun `Get coins`() = runTest {
-        coinsRepository.coins.test {
+        repository.coins.test {
             assertThat(COINS).isEqualTo(awaitItem())
         }
     }
@@ -35,9 +35,9 @@ internal class CoinsRepositoryTests {
     @Test
     fun `Pin coin`() = runTest {
         val coinId = COINS[1].id
-        coinsRepository.pinCoin(coinId)
+        repository.pinCoin(coinId)
 
-        coinsRepository.coins.test {
+        repository.coins.test {
             val expectedCoins = listOf(COINS[1].copy(isPinned = true), COINS[0], COINS[2])
             val actualCoins = awaitItem()
             assertThat(actualCoins).isEqualTo(expectedCoins)
@@ -47,10 +47,10 @@ internal class CoinsRepositoryTests {
     @Test
     fun `Unpin coin`() = runTest {
         val coinId = COINS[2].id
-        coinsRepository.pinCoin(coinId)
-        coinsRepository.unpinCoin(coinId)
+        repository.pinCoin(coinId)
+        repository.unpinCoin(coinId)
 
-        coinsRepository.coins.test {
+        repository.coins.test {
             assertThat(COINS).isEqualTo(awaitItem())
         }
     }

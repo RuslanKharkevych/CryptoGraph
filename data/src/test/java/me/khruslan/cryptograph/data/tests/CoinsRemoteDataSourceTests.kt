@@ -4,7 +4,7 @@ import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
-import me.khruslan.cryptograph.data.coins.remote.CoinrankingService
+import me.khruslan.cryptograph.data.coins.remote.CoinsRemoteDataSourceImpl
 import me.khruslan.cryptograph.data.coins.remote.CoinsRemoteDataSource
 import me.khruslan.cryptograph.data.common.NetworkConnectionException
 import me.khruslan.cryptograph.data.common.ResponseDeserializationException
@@ -30,10 +30,10 @@ private const val GET_COINS_FAILED_RESPONSE = "$RESPONSES_ROOT_PATH/get-coins-fa
 private const val GET_COINS_INVALID_RESPONSE = "$RESPONSES_ROOT_PATH/get-coins-invalid.json"
 
 @OptIn(ExperimentalCoroutinesApi::class)
-internal class CoinrankingServiceTests {
+internal class CoinsRemoteDataSourceTests {
 
     private lateinit var mockServer: MockWebServer
-    private lateinit var coinrankingService: CoinsRemoteDataSource
+    private lateinit var dataSource: CoinsRemoteDataSource
 
     @Before
     fun setUp() {
@@ -45,7 +45,7 @@ internal class CoinrankingServiceTests {
             .addInterceptor(hostInterceptor)
             .build()
         val dispatcher = UnconfinedTestDispatcher()
-        coinrankingService = CoinrankingService(client, dispatcher)
+        dataSource = CoinsRemoteDataSourceImpl(client, dispatcher)
     }
 
     @After
@@ -60,7 +60,7 @@ internal class CoinrankingServiceTests {
             .setResponseFile(GET_COINS_SUCCESSFUL_RESPONSE)
         mockServer.enqueue(mockResponse)
 
-        val coins = coinrankingService.getCoins()
+        val coins = dataSource.getCoins()
         assertThat(coins).isNotEmpty()
     }
 
@@ -71,7 +71,7 @@ internal class CoinrankingServiceTests {
             .setResponseFile(GET_COINS_FAILED_RESPONSE)
         mockServer.enqueue(mockResponse)
 
-        val result = runCatching { coinrankingService.getCoins() }
+        val result = runCatching { dataSource.getCoins() }
         val exception = result.exceptionOrNull()
         assertThat(exception).isInstanceOf(UnsuccessfulResponseException::class.java)
     }
@@ -83,7 +83,7 @@ internal class CoinrankingServiceTests {
             .setResponseFile(GET_COINS_INVALID_RESPONSE)
         mockServer.enqueue(mockResponse)
 
-        val result = runCatching { coinrankingService.getCoins() }
+        val result = runCatching { dataSource.getCoins() }
         val exception = result.exceptionOrNull()
         assertThat(exception).isInstanceOf(ResponseDeserializationException::class.java)
     }
@@ -93,7 +93,7 @@ internal class CoinrankingServiceTests {
         val mockResponse = MockResponse().setSocketPolicy(SocketPolicy.DISCONNECT_AT_START)
         mockServer.enqueue(mockResponse)
 
-        val result = runCatching { coinrankingService.getCoins() }
+        val result = runCatching { dataSource.getCoins() }
         val exception = result.exceptionOrNull()
         assertThat(exception).isInstanceOf(NetworkConnectionException::class.java)
     }

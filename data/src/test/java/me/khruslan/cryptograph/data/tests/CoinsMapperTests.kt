@@ -15,19 +15,19 @@ import org.junit.Test
 @OptIn(ExperimentalCoroutinesApi::class)
 internal class CoinsMapperTests {
 
-    private lateinit var coinsMapper: CoinsMapper
+    private lateinit var mapper: CoinsMapper
 
     @Before
     fun setUp() {
         val dispatcher = UnconfinedTestDispatcher()
-        coinsMapper = CoinsMapperImpl(dispatcher)
+        mapper = CoinsMapperImpl(dispatcher)
     }
 
     @Test
     fun `Maps coins`() = runTest {
         val pinnedCoins = listOf(PinnedCoinDto(coinUuid = COINS[1].id))
         val expectedCoins = listOf(COINS[1].copy(isPinned = true), COINS[0], COINS[2])
-        val actualCoins = coinsMapper.mapCoins(DTO_COINS, pinnedCoins)
+        val actualCoins = mapper.mapCoins(DTO_COINS, pinnedCoins)
         assertThat(actualCoins).isEqualTo(expectedCoins)
     }
 }
