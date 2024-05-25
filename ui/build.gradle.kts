@@ -61,6 +61,7 @@ dependencies {
     implementation(libs.koin.composeNavigation)
     implementation(libs.lifecycleViewModel)
     implementation(libs.navigationCompose)
+    implementation(libs.splashScreen)
     implementation(libs.vico)
 
     testImplementation(libs.coroutinesTest)
