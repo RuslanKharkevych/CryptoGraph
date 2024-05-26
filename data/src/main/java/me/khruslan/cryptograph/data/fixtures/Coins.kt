@@ -2,8 +2,10 @@ package me.khruslan.cryptograph.data.fixtures
 
 import me.khruslan.cryptograph.data.coins.ChangeTrend
 import me.khruslan.cryptograph.data.coins.Coin
+import me.khruslan.cryptograph.data.coins.CoinPrice
 import me.khruslan.cryptograph.data.coins.remote.CoinDto
 import me.khruslan.cryptograph.data.coins.remote.CoinPriceDto
+import java.time.LocalDate
 
 val PREVIEW_COINS: List<Coin>
     get() {
@@ -358,21 +360,41 @@ internal val STUB_DTO_COINS: List<CoinDto>
         return stubDtoCoins!!
     }
 
+internal val STUB_COIN_HISTORY: List<CoinPrice>
+    get() {
+        if (stubCoinHistory != null) return stubCoinHistory!!
+        stubCoinHistory = listOf(
+            CoinPrice(
+                price = 69290.58547403838,
+                date = LocalDate.of(2024, 5, 26)
+            ),
+            CoinPrice(
+                price = 68548.86589620463,
+                date = LocalDate.of(2024, 5, 25)
+            ),
+            CoinPrice(
+                price = 67958.47091146026,
+                date = LocalDate.of(2024, 5, 24)
+            )
+        )
+        return stubCoinHistory!!
+    }
+
 internal val STUB_DTO_COIN_HISTORY: List<CoinPriceDto>
     get() {
         if (stubDtoCoinHistory != null) return stubDtoCoinHistory!!
         stubDtoCoinHistory = listOf(
             CoinPriceDto(
                 price = "69290.58547403838",
-                timestamp = 1716681600
+                timestamp = 1716681600L
             ),
             CoinPriceDto(
                 price = "68548.86589620463",
-                timestamp = 1716595200
+                timestamp = 1716595200L
             ),
             CoinPriceDto(
                 price = "67958.47091146026",
-                timestamp = 1716508800
+                timestamp = 1716508800L
             )
         )
         return stubDtoCoinHistory!!
@@ -382,4 +404,5 @@ private var previewCoins: List<Coin>? = null
 private var stubCoins: List<Coin>? = null
 private var stubDtoCoins: List<CoinDto>? = null
 
+private var stubCoinHistory: List<CoinPrice>? = null
 private var stubDtoCoinHistory: List<CoinPriceDto>? = null

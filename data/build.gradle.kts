@@ -27,6 +27,7 @@ android {
     }
 
     compileOptions {
+        isCoreLibraryDesugaringEnabled = true
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
@@ -44,6 +45,7 @@ dependencies {
     implementation(project(":base"))
 
     implementation(libs.coroutines)
+    coreLibraryDesugaring(libs.desugaring)
     implementation(libs.koin.android)
     implementation(libs.okhttp)
     implementation(libs.okhttp.loggingInterceptor)

@@ -9,8 +9,10 @@ import me.khruslan.cryptograph.data.fakes.FakeCoinsMapper
 import me.khruslan.cryptograph.data.fakes.FakeCoinsRemoteDataSource
 import me.khruslan.cryptograph.data.fakes.FakeCoinsLocalDataSource
 import me.khruslan.cryptograph.data.fixtures.STUB_COINS
+import me.khruslan.cryptograph.data.fixtures.STUB_COIN_HISTORY
 import org.junit.Before
 import org.junit.Test
+import java.util.UUID
 
 internal class CoinsRepositoryTests {
 
@@ -57,5 +59,12 @@ internal class CoinsRepositoryTests {
         repository.coins.test {
             assertThat(STUB_COINS).isEqualTo(awaitItem())
         }
+    }
+
+    @Test
+    fun `Get coin history`() = runTest {
+        val coinId = UUID.randomUUID().toString()
+        val history = repository.getCoinHistory(coinId)
+        assertThat(history).isEqualTo(STUB_COIN_HISTORY)
     }
 }

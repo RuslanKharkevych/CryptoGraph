@@ -11,6 +11,7 @@ interface CoinsRepository {
     val coins: Flow<List<Coin>>
     suspend fun pinCoin(id: String)
     suspend fun unpinCoin(id: String)
+    suspend fun getCoinHistory(id: String): List<CoinPrice>
 }
 
 internal class CoinsRepositoryImpl(
@@ -35,5 +36,10 @@ internal class CoinsRepositoryImpl(
 
     override suspend fun unpinCoin(id: String) {
         localDataSource.unpinCoin(id)
+    }
+
+    override suspend fun getCoinHistory(id: String): List<CoinPrice> {
+        val history = remoteDataSource.getCoinHistory(id)
+        return mapper.mapCoinHistory(history)
     }
 }

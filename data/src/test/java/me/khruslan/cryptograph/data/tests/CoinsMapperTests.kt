@@ -8,9 +8,12 @@ import me.khruslan.cryptograph.data.coins.local.PinnedCoinDto
 import me.khruslan.cryptograph.data.coins.mapper.CoinsMapper
 import me.khruslan.cryptograph.data.coins.mapper.CoinsMapperImpl
 import me.khruslan.cryptograph.data.coins.remote.CoinDto
+import me.khruslan.cryptograph.data.coins.remote.CoinPriceDto
 import me.khruslan.cryptograph.data.common.DataValidationException
 import me.khruslan.cryptograph.data.fixtures.STUB_COINS
+import me.khruslan.cryptograph.data.fixtures.STUB_COIN_HISTORY
 import me.khruslan.cryptograph.data.fixtures.STUB_DTO_COINS
+import me.khruslan.cryptograph.data.fixtures.STUB_DTO_COIN_HISTORY
 import org.junit.Before
 import org.junit.Test
 
@@ -42,6 +45,24 @@ internal class CoinsMapperTests {
         val allCoins = emptyList<CoinDto>()
         val pinnedCoins = emptyList<PinnedCoinDto>()
         val result = runCatching { mapper.mapCoins(allCoins, pinnedCoins) }
+        val exception = result.exceptionOrNull()
+        assertThat(exception).isInstanceOf(DataValidationException::class.java)
+    }
+
+    @Test
+    fun `Map coin history - success`() = runTest {
+        val history = mapper.mapCoinHistory(STUB_DTO_COIN_HISTORY)
+        assertThat(history).isEqualTo(STUB_COIN_HISTORY)
+    }
+
+    @Test
+    fun `Map coin history - validation error`() = runTest {
+        val history = listOf(
+            CoinPriceDto(price = null, timestamp = 1716681600L),
+            CoinPriceDto(price = "invalid-price", timestamp = 1716595200L),
+            CoinPriceDto(price = "67958.47091146026", timestamp = Long.MAX_VALUE)
+        )
+        val result = runCatching { mapper.mapCoinHistory(history) }
         val exception = result.exceptionOrNull()
         assertThat(exception).isInstanceOf(DataValidationException::class.java)
     }

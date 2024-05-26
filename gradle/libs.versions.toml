@@ -6,6 +6,7 @@ compose = "1.6.7"
 composeCompiler = "1.5.13"
 composeMaterial3 = "1.2.1"
 coroutines = "1.8.0"
+desugaring = "2.0.4"
 junit = "4.13.2"
 koin = "3.5.6"
 kotlin = "1.9.23"
@@ -34,6 +35,7 @@ compose-uiTooling = { group = "androidx.compose.ui", name = "ui-tooling", versio
 compose-uiToolingPreview = { group = "androidx.compose.ui", name = "ui-tooling-preview", version.ref = "compose" }
 coroutines = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "coroutines" }
 coroutinesTest = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "coroutines" }
+desugaring = { group = "com.android.tools", name = "desugar_jdk_libs", version.ref = "desugaring" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 koin-android = { group = "io.insert-koin", name = "koin-android", version.ref = "koin" }
 koin-composeNavigation = { group = "io.insert-koin", name = "koin-androidx-compose-navigation", version.ref = "koin" }

@@ -1,5 +1,7 @@
 package me.khruslan.cryptograph.data.coins
 
+import java.time.LocalDate
+
 data class Coin(
     val id: String,
     val symbol: String,
@@ -19,3 +21,8 @@ enum class ChangeTrend {
     DOWN,
     STEADY_OR_UNKNOWN
 }
+
+data class CoinPrice(
+    val price: Double,
+    val date: LocalDate
+)
