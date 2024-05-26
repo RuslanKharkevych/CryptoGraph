@@ -7,6 +7,7 @@ import me.khruslan.cryptograph.data.coins.ChangeTrend
 import me.khruslan.cryptograph.data.coins.Coin
 import me.khruslan.cryptograph.data.coins.local.PinnedCoinDto
 import me.khruslan.cryptograph.data.coins.remote.CoinDto
+import me.khruslan.cryptograph.data.common.DataValidationException
 import java.math.BigDecimal
 import java.math.RoundingMode
 
@@ -26,10 +27,19 @@ internal class CoinsMapperImpl(private val dispatcher: CoroutineDispatcher) : Co
         pinnedCoins: List<PinnedCoinDto>,
     ): List<Coin> {
         return withContext(dispatcher) {
+            validateCoins(allCoins)
             allCoins.map { coinDto ->
                 val isPinned = pinnedCoins.any { it.coinUuid == coinDto.uuid }
                 mapCoin(coinDto, isPinned)
             }.sortedWith(compareByDescending<Coin> { it.isPinned }.thenBy { it.rank })
+        }
+    }
+
+    private fun validateCoins(coins: List<CoinDto>) {
+        if (coins.isEmpty()) {
+            val exception = DataValidationException("No coins found")
+            Logger.error(LOG_TAG, "Failed to map coins", exception)
+            throw exception
         }
     }
 

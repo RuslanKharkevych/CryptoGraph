@@ -5,6 +5,7 @@
     <string name="database_error_msg">Failed to load data. Please try again</string>
     <string name="network_error_msg">Failed to load data. Please check your Internet connection and try again</string>
     <string name="server_error_msg">Failed to load data at this time. Please try again later</string>
+    <string name="internal_error_msg">Something went wrong. Please try again later</string>
     <string name="loader_desc">Loading data, please wait</string>
     <string name="retry_btn_desc">Retry</string>
     <!-- endregion Common -->

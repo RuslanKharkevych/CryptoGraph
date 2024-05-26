@@ -32,4 +32,12 @@ internal class UtilsTests {
         val actualDisplayMessageRes = exception.displayMessageRes
         assertThat(expectedDisplayMessageRes).isEqualTo(actualDisplayMessageRes)
     }
+
+    @Test
+    fun `Get display message - internal error`() {
+        val exception = object : DataException(ErrorType.Internal) {}
+        val expectedDisplayMessageRes = R.string.internal_error_msg
+        val actualDisplayMessageRes = exception.displayMessageRes
+        assertThat(expectedDisplayMessageRes).isEqualTo(actualDisplayMessageRes)
+    }
 }

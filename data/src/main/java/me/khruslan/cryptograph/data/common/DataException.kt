@@ -9,7 +9,8 @@ abstract class DataException(
 enum class ErrorType {
     Network,
     Server,
-    Database
+    Database,
+    Internal
 }
 
 internal class NetworkConnectionException(cause: Throwable) :
@@ -23,6 +24,9 @@ internal class ResponseDeserializationException(cause: Throwable) :
 
 internal class DatabaseException(cause: Throwable) :
     DataException(ErrorType.Database, cause)
+
+internal class DataValidationException(message: String) :
+    DataException(ErrorType.Internal, message = message)
 
 private fun String.trimWhitespace(): String {
     val pattern = Regex("\\s+")

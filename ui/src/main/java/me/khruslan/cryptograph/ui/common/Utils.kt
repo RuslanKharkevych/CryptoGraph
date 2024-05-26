@@ -18,6 +18,7 @@ internal val DataException.displayMessageRes
         ErrorType.Network -> R.string.network_error_msg
         ErrorType.Server -> R.string.server_error_msg
         ErrorType.Database -> R.string.database_error_msg
+        ErrorType.Internal -> R.string.internal_error_msg
     }
 
 internal fun String?.toColor(): Color {
