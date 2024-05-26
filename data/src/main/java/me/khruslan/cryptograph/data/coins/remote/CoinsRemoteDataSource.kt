@@ -27,8 +27,14 @@ private const val GET_COINS_REQUEST_URL = "$COINRANKING_BASE_URL/coins"
 private const val LIMIT_QUERY_PARAM = "limit"
 private const val LIMIT_QUERY_VALUE = "100"
 
+private const val GET_COIN_HISTORY_REQUEST_URL = "https://api.coinranking.com/v2/coin/:uuid/history"
+private const val UUID_PATH_PARAM = ":uuid"
+private const val TIME_PERIOD_QUERY_PARAM = "timePeriod"
+private const val TIME_PERIOD_QUERY_VALUE = "5y"
+
 internal interface CoinsRemoteDataSource {
     suspend fun getCoins(): List<CoinDto>
+    suspend fun getCoinHistory(uuid: String): List<CoinPriceDto>
 }
 
 internal class CoinsRemoteDataSourceImpl(
@@ -51,6 +57,18 @@ internal class CoinsRemoteDataSourceImpl(
                 .addQueryParameter(LIMIT_QUERY_PARAM, LIMIT_QUERY_VALUE)
                 .build()
             executeRequest<CoinsDto>(requestUrl).coins
+        }
+    }
+
+    override suspend fun getCoinHistory(uuid: String): List<CoinPriceDto> {
+        return withContext(dispatcher) {
+            val requestUrl = GET_COIN_HISTORY_REQUEST_URL
+                .replace(UUID_PATH_PARAM, uuid)
+                .toHttpUrl()
+                .newBuilder()
+                .addQueryParameter(TIME_PERIOD_QUERY_PARAM, TIME_PERIOD_QUERY_VALUE)
+                .build()
+            executeRequest<CoinHistoryDto>(requestUrl).history
         }
     }
 

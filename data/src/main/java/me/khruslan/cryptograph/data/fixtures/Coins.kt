@@ -3,6 +3,7 @@ package me.khruslan.cryptograph.data.fixtures
 import me.khruslan.cryptograph.data.coins.ChangeTrend
 import me.khruslan.cryptograph.data.coins.Coin
 import me.khruslan.cryptograph.data.coins.remote.CoinDto
+import me.khruslan.cryptograph.data.coins.remote.CoinPriceDto
 
 val PREVIEW_COINS: List<Coin>
     get() {
@@ -357,6 +358,28 @@ internal val STUB_DTO_COINS: List<CoinDto>
         return stubDtoCoins!!
     }
 
+internal val STUB_DTO_COIN_HISTORY: List<CoinPriceDto>
+    get() {
+        if (stubDtoCoinHistory != null) return stubDtoCoinHistory!!
+        stubDtoCoinHistory = listOf(
+            CoinPriceDto(
+                price = "69290.58547403838",
+                timestamp = 1716681600
+            ),
+            CoinPriceDto(
+                price = "68548.86589620463",
+                timestamp = 1716595200
+            ),
+            CoinPriceDto(
+                price = "67958.47091146026",
+                timestamp = 1716508800
+            )
+        )
+        return stubDtoCoinHistory!!
+    }
+
 private var previewCoins: List<Coin>? = null
 private var stubCoins: List<Coin>? = null
 private var stubDtoCoins: List<CoinDto>? = null
+
+private var stubDtoCoinHistory: List<CoinPriceDto>? = null

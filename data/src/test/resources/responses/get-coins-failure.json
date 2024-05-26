@@ -1,5 +1,5 @@
 {
   "status": "fail",
-  "type": "VALIDATION_ERROR",
-  "message": "The request could not be validated"
+  "code": "UNAUTHORIZED",
+  "message": "Invalid API key, see the authentication section of the documentation to see how to authorize correctly: https://developers.coinranking.com/api/documentation#4-authentication"
 }

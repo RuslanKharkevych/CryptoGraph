@@ -23,11 +23,17 @@ import org.junit.Before
 import org.junit.Test
 import java.net.HttpURLConnection
 import java.nio.charset.StandardCharsets
+import java.util.UUID
 
-private const val RESPONSES_ROOT_PATH = "responses"
-private const val GET_COINS_SUCCESSFUL_RESPONSE = "$RESPONSES_ROOT_PATH/get-coins-success.json"
-private const val GET_COINS_FAILED_RESPONSE = "$RESPONSES_ROOT_PATH/get-coins-failure.json"
-private const val GET_COINS_INVALID_RESPONSE = "$RESPONSES_ROOT_PATH/get-coins-invalid.json"
+private const val ROOT_PATH = "responses"
+
+private const val GET_COINS_SUCCESSFUL_RESPONSE = "$ROOT_PATH/get-coins-success.json"
+private const val GET_COINS_FAILED_RESPONSE = "$ROOT_PATH/get-coins-failure.json"
+private const val GET_COINS_INVALID_RESPONSE = "$ROOT_PATH/get-coins-invalid.json"
+
+private const val GET_COIN_HISTORY_SUCCESSFUL_RESPONSE = "$ROOT_PATH/get-coin-history-success.json"
+private const val GET_COIN_HISTORY_FAILED_RESPONSE = "$ROOT_PATH/get-coin-history-failure.json"
+private const val GET_COIN_HISTORY_INVALID_RESPONSE = "$ROOT_PATH/get-coin-history-invalid.json"
 
 @OptIn(ExperimentalCoroutinesApi::class)
 internal class CoinsRemoteDataSourceTests {
@@ -67,7 +73,7 @@ internal class CoinsRemoteDataSourceTests {
     @Test
     fun `Get coins - failure`() = runTest {
         val mockResponse = MockResponse()
-            .setResponseCode(HttpURLConnection.HTTP_NOT_FOUND)
+            .setResponseCode(HttpURLConnection.HTTP_UNAUTHORIZED)
             .setResponseFile(GET_COINS_FAILED_RESPONSE)
         mockServer.enqueue(mockResponse)
 
@@ -94,6 +100,55 @@ internal class CoinsRemoteDataSourceTests {
         mockServer.enqueue(mockResponse)
 
         val result = runCatching { dataSource.getCoins() }
+        val exception = result.exceptionOrNull()
+        assertThat(exception).isInstanceOf(NetworkConnectionException::class.java)
+    }
+
+    @Test
+    fun `Get coin history - success`() = runTest {
+        val mockResponse = MockResponse()
+            .setResponseCode(HttpURLConnection.HTTP_OK)
+            .setResponseFile(GET_COIN_HISTORY_SUCCESSFUL_RESPONSE)
+        mockServer.enqueue(mockResponse)
+
+        val uuid = UUID.randomUUID().toString()
+        val history = dataSource.getCoinHistory(uuid)
+        assertThat(history).isNotEmpty()
+    }
+
+    @Test
+    fun `Get coin history - failure`() = runTest {
+        val mockResponse = MockResponse()
+            .setResponseCode(HttpURLConnection.HTTP_NOT_FOUND)
+            .setResponseFile(GET_COIN_HISTORY_FAILED_RESPONSE)
+        mockServer.enqueue(mockResponse)
+
+        val uuid = "invalid-uuid"
+        val result = runCatching { dataSource.getCoinHistory(uuid) }
+        val exception = result.exceptionOrNull()
+        assertThat(exception).isInstanceOf(UnsuccessfulResponseException::class.java)
+    }
+
+    @Test
+    fun `Get coin history - invalid response`() = runTest {
+        val mockResponse = MockResponse()
+            .setResponseCode(HttpURLConnection.HTTP_OK)
+            .setResponseFile(GET_COIN_HISTORY_INVALID_RESPONSE)
+        mockServer.enqueue(mockResponse)
+
+        val uuid = UUID.randomUUID().toString()
+        val result = runCatching { dataSource.getCoinHistory(uuid) }
+        val exception = result.exceptionOrNull()
+        assertThat(exception).isInstanceOf(ResponseDeserializationException::class.java)
+    }
+
+    @Test
+    fun `Get coin history - network connection error`() = runTest {
+        val mockResponse = MockResponse().setSocketPolicy(SocketPolicy.DISCONNECT_AT_START)
+        mockServer.enqueue(mockResponse)
+
+        val uuid = UUID.randomUUID().toString()
+        val result = runCatching { dataSource.getCoinHistory(uuid) }
         val exception = result.exceptionOrNull()
         assertThat(exception).isInstanceOf(NetworkConnectionException::class.java)
     }

@@ -20,3 +20,12 @@ internal data class CoinDto(
     val rank: Int,
     val sparkline: List<String?>,
 )
+
+@Serializable
+internal data class CoinHistoryDto(val history: List<CoinPriceDto>)
+
+@Serializable
+internal data class CoinPriceDto(
+    val price: String?,
+    val timestamp: Long
+)

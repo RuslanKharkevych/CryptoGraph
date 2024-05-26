@@ -1,0 +1,5 @@
+{
+  "status": "fail",
+  "type": "VALIDATION_ERROR",
+  "message": "Uuid should be a valid UUID"
+}
