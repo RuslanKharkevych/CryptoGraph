@@ -48,7 +48,7 @@ import com.patrykandpatrick.vico.compose.chart.scroll.rememberChartScrollSpec
 import com.patrykandpatrick.vico.core.entry.entryModelOf
 import me.khruslan.cryptograph.data.coins.ChangeTrend
 import me.khruslan.cryptograph.data.coins.Coin
-import me.khruslan.cryptograph.data.fixtures.COINS
+import me.khruslan.cryptograph.data.fixtures.PREVIEW_COINS
 import me.khruslan.cryptograph.ui.CryptoGraphTheme
 import me.khruslan.cryptograph.ui.R
 import me.khruslan.cryptograph.ui.common.CurrencyBitcoin
@@ -330,7 +330,7 @@ private fun Sparkline(sparkline: List<Double>) {
 @Composable
 @PreviewScreenSizesLightDark
 private fun CoinsScreenPreview() {
-    var coins by remember { mutableStateOf(COINS) }
+    var coins by remember { mutableStateOf(PREVIEW_COINS) }
     val coinsState = remember {
         MutableCoinsState().apply {
             listState = CoinsListState.Data(coins)

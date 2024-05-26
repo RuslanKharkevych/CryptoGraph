@@ -2,7 +2,7 @@ package me.khruslan.cryptograph.ui.tests
 
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import me.khruslan.cryptograph.data.fixtures.COINS
+import me.khruslan.cryptograph.data.fixtures.STUB_COINS
 import me.khruslan.cryptograph.ui.R
 import me.khruslan.cryptograph.ui.coins.CoinsListState
 import me.khruslan.cryptograph.ui.coins.CoinsViewModel
@@ -31,7 +31,7 @@ internal class CoinsViewModelTests {
     fun `Reload coins - success`() {
         viewModel.reloadCoins()
 
-        val expectedListState = CoinsListState.Data(COINS)
+        val expectedListState = CoinsListState.Data(STUB_COINS)
         val actualListState = viewModel.coinsState.listState
         assertThat(actualListState).isEqualTo(expectedListState)
     }
@@ -48,9 +48,13 @@ internal class CoinsViewModelTests {
 
     @Test
     fun `Pin coin - success`() {
-        viewModel.pinCoin(id = COINS[1].id)
+        viewModel.pinCoin(id = STUB_COINS[1].id)
 
-        val expectedCoins = listOf(COINS[1].copy(isPinned = true), COINS[0], COINS[2])
+        val expectedCoins = listOf(
+            STUB_COINS[1].copy(isPinned = true),
+            STUB_COINS[0],
+            STUB_COINS[2]
+        )
         val expectedListState = CoinsListState.Data(expectedCoins)
         val actualListState = viewModel.coinsState.listState
         assertThat(actualListState).isEqualTo(expectedListState)
@@ -68,11 +72,11 @@ internal class CoinsViewModelTests {
 
     @Test
     fun `Unpin coin - success`() {
-        val coinId = COINS[0].id
+        val coinId = STUB_COINS[0].id
         viewModel.pinCoin(coinId)
         viewModel.unpinCoin(coinId)
 
-        val expectedCoins = COINS
+        val expectedCoins = STUB_COINS
         val expectedListState = CoinsListState.Data(expectedCoins)
         val actualListState = viewModel.coinsState.listState
         assertThat(actualListState).isEqualTo(expectedListState)

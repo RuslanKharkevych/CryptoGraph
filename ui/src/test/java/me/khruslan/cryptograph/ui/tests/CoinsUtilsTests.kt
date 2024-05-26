@@ -1,9 +1,11 @@
 package me.khruslan.cryptograph.ui.tests
 
 import androidx.compose.material.icons.Icons
-import androidx.compose.ui.graphics.Color
 import com.google.common.truth.Truth.assertThat
 import me.khruslan.cryptograph.data.coins.ChangeTrend
+import me.khruslan.cryptograph.ui.DarkGreen
+import me.khruslan.cryptograph.ui.DarkRed
+import me.khruslan.cryptograph.ui.DarkYellow
 import me.khruslan.cryptograph.ui.R
 import me.khruslan.cryptograph.ui.coins.color
 import me.khruslan.cryptograph.ui.coins.contendDescRes
@@ -59,21 +61,21 @@ internal class CoinsUtilsTests {
 
     @Test
     fun `Get change trend color - up`() {
-        val expectedColor = Color.Green
+        val expectedColor = DarkGreen
         val actualColor = ChangeTrend.UP.color
         assertThat(actualColor).isEqualTo(expectedColor)
     }
 
     @Test
     fun `Get change trend color - down`() {
-        val expectedColor = Color.Red
+        val expectedColor = DarkRed
         val actualColor = ChangeTrend.DOWN.color
         assertThat(actualColor).isEqualTo(expectedColor)
     }
 
     @Test
     fun `Get change trend color - flat`() {
-        val expectedColor = Color.Yellow
+        val expectedColor = DarkYellow
         val actualColor = ChangeTrend.STEADY_OR_UNKNOWN.color
         assertThat(actualColor).isEqualTo(expectedColor)
     }

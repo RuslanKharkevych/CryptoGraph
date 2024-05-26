@@ -7,14 +7,14 @@ import me.khruslan.cryptograph.data.coins.Coin
 import me.khruslan.cryptograph.data.coins.CoinsRepository
 import me.khruslan.cryptograph.data.common.DataException
 import me.khruslan.cryptograph.data.common.ErrorType
-import me.khruslan.cryptograph.data.fixtures.COINS
+import me.khruslan.cryptograph.data.fixtures.STUB_COINS
 
 internal class FakeCoinsRepository : CoinsRepository {
 
     var isNetworkReachable = true
     var isDatabaseCorrupted = false
 
-    private val _coins = MutableStateFlow(COINS)
+    private val _coins = MutableStateFlow(STUB_COINS)
 
     override val coins: Flow<List<Coin>>
         get() {

@@ -9,8 +9,8 @@ import me.khruslan.cryptograph.data.coins.mapper.CoinsMapper
 import me.khruslan.cryptograph.data.coins.mapper.CoinsMapperImpl
 import me.khruslan.cryptograph.data.coins.remote.CoinDto
 import me.khruslan.cryptograph.data.common.DataValidationException
-import me.khruslan.cryptograph.data.fixtures.COINS
-import me.khruslan.cryptograph.data.fixtures.DTO_COINS
+import me.khruslan.cryptograph.data.fixtures.STUB_COINS
+import me.khruslan.cryptograph.data.fixtures.STUB_DTO_COINS
 import org.junit.Before
 import org.junit.Test
 
@@ -27,9 +27,13 @@ internal class CoinsMapperTests {
 
     @Test
     fun `Map coins - success`() = runTest {
-        val pinnedCoins = listOf(PinnedCoinDto(coinUuid = COINS[1].id))
-        val expectedCoins = listOf(COINS[1].copy(isPinned = true), COINS[0], COINS[2])
-        val actualCoins = mapper.mapCoins(DTO_COINS, pinnedCoins)
+        val pinnedCoins = listOf(PinnedCoinDto(coinUuid = STUB_COINS[1].id))
+        val expectedCoins = listOf(
+            STUB_COINS[1].copy(isPinned = true),
+            STUB_COINS[0],
+            STUB_COINS[2]
+        )
+        val actualCoins = mapper.mapCoins(STUB_DTO_COINS, pinnedCoins)
         assertThat(actualCoins).isEqualTo(expectedCoins)
     }
 

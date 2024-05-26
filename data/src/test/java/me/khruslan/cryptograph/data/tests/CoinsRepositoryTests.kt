@@ -8,7 +8,7 @@ import me.khruslan.cryptograph.data.coins.CoinsRepositoryImpl
 import me.khruslan.cryptograph.data.fakes.FakeCoinsMapper
 import me.khruslan.cryptograph.data.fakes.FakeCoinsRemoteDataSource
 import me.khruslan.cryptograph.data.fakes.FakeCoinsLocalDataSource
-import me.khruslan.cryptograph.data.fixtures.COINS
+import me.khruslan.cryptograph.data.fixtures.STUB_COINS
 import org.junit.Before
 import org.junit.Test
 
@@ -28,17 +28,21 @@ internal class CoinsRepositoryTests {
     @Test
     fun `Get coins`() = runTest {
         repository.coins.test {
-            assertThat(COINS).isEqualTo(awaitItem())
+            assertThat(STUB_COINS).isEqualTo(awaitItem())
         }
     }
 
     @Test
     fun `Pin coin`() = runTest {
-        val coinId = COINS[1].id
+        val coinId = STUB_COINS[1].id
         repository.pinCoin(coinId)
 
         repository.coins.test {
-            val expectedCoins = listOf(COINS[1].copy(isPinned = true), COINS[0], COINS[2])
+            val expectedCoins = listOf(
+                STUB_COINS[1].copy(isPinned = true),
+                STUB_COINS[0],
+                STUB_COINS[2]
+            )
             val actualCoins = awaitItem()
             assertThat(actualCoins).isEqualTo(expectedCoins)
         }
@@ -46,12 +50,12 @@ internal class CoinsRepositoryTests {
 
     @Test
     fun `Unpin coin`() = runTest {
-        val coinId = COINS[2].id
+        val coinId = STUB_COINS[2].id
         repository.pinCoin(coinId)
         repository.unpinCoin(coinId)
 
         repository.coins.test {
-            assertThat(COINS).isEqualTo(awaitItem())
+            assertThat(STUB_COINS).isEqualTo(awaitItem())
         }
     }
 }
