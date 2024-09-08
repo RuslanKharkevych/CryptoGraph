@@ -124,6 +124,7 @@ internal class CoinsMapperImpl(private val dispatcher: CoroutineDispatcher) : Co
         return "\$$formattedNumber"
     }
 
+    // TODO: Consider moving this mapping to UI layer
     private fun mapSparkline(sparkline: List<String?>): List<Double> {
         val floatSparkline = sparkline.mapNotNull { it?.toDoubleOrNull() }
         val minValue = floatSparkline.minOrNull() ?: 0.0
@@ -146,6 +147,8 @@ internal class CoinsMapperImpl(private val dispatcher: CoroutineDispatcher) : Co
         }
     }
 
+    // TODO: Validate before mapping.
+    //  If list is empty after mapping, show different UI without retry button.
     private fun validateCoinHistory(history: List<CoinPrice>) {
         if (history.isEmpty()) {
             val exception = DataValidationException("Coin history is empty")

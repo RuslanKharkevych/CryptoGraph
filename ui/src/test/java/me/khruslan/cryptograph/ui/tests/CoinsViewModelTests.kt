@@ -4,10 +4,10 @@ import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import me.khruslan.cryptograph.data.fixtures.STUB_COINS
 import me.khruslan.cryptograph.ui.R
-import me.khruslan.cryptograph.ui.coins.CoinsListState
-import me.khruslan.cryptograph.ui.coins.CoinsViewModel
+import me.khruslan.cryptograph.ui.coins.main.CoinsViewModel
 import me.khruslan.cryptograph.ui.fakes.FakeCoinsRepository
 import me.khruslan.cryptograph.ui.rules.MainDispatcherRule
+import me.khruslan.cryptograph.ui.util.UiState
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -31,7 +31,7 @@ internal class CoinsViewModelTests {
     fun `Reload coins - success`() {
         viewModel.reloadCoins()
 
-        val expectedListState = CoinsListState.Data(STUB_COINS)
+        val expectedListState = UiState.Data(STUB_COINS)
         val actualListState = viewModel.coinsState.listState
         assertThat(actualListState).isEqualTo(expectedListState)
     }
@@ -41,7 +41,7 @@ internal class CoinsViewModelTests {
         fakeCoinsRepository.isNetworkReachable = false
         viewModel.reloadCoins()
 
-        val expectedListState = CoinsListState.Error(R.string.network_error_msg)
+        val expectedListState = UiState.Error(R.string.network_error_msg)
         val actualListState = viewModel.coinsState.listState
         assertThat(actualListState).isEqualTo(expectedListState)
     }
@@ -55,7 +55,7 @@ internal class CoinsViewModelTests {
             STUB_COINS[0],
             STUB_COINS[2]
         )
-        val expectedListState = CoinsListState.Data(expectedCoins)
+        val expectedListState = UiState.Data(expectedCoins)
         val actualListState = viewModel.coinsState.listState
         assertThat(actualListState).isEqualTo(expectedListState)
     }
@@ -77,7 +77,7 @@ internal class CoinsViewModelTests {
         viewModel.unpinCoin(coinId)
 
         val expectedCoins = STUB_COINS
-        val expectedListState = CoinsListState.Data(expectedCoins)
+        val expectedListState = UiState.Data(expectedCoins)
         val actualListState = viewModel.coinsState.listState
         assertThat(actualListState).isEqualTo(expectedListState)
     }

@@ -8,6 +8,8 @@ internal data class CoinrankingResponse<T>(val data: T)
 @Serializable
 internal data class CoinsDto(val coins: List<CoinDto>)
 
+// TODO: Make all fields optional. In mapper, either assign a default value (if field can be
+//  optional), or skip a coin (if field is absolutely mandatory).
 @Serializable
 internal data class CoinDto(
     val uuid: String,
@@ -16,7 +18,7 @@ internal data class CoinDto(
     val color: String?,
     val iconUrl: String,
     val price: String,
-    val change: String,
+    val change: String = "", // TODO: Remove default value after mapping updates
     val rank: Int,
     val sparkline: List<String?>,
 )

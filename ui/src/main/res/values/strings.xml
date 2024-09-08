@@ -2,12 +2,14 @@
 <resources>
     <!-- region Common -->
     <string name="app_name" translatable="false">CryptoGraph</string>
+    <string name="language_tag">en</string>
     <string name="database_error_msg">Failed to load data. Please try again</string>
     <string name="network_error_msg">Failed to load data. Please check your Internet connection and try again</string>
     <string name="server_error_msg">Failed to load data at this time. Please try again later</string>
     <string name="internal_error_msg">Something went wrong. Please try again later</string>
     <string name="loader_desc">Loading data, please wait</string>
     <string name="retry_btn_desc">Retry</string>
+    <string name="back_action_desc">Go back</string>
     <!-- endregion Common -->
 
     <!-- region Coins -->
@@ -22,4 +24,19 @@
     <string name="trending_down_icon_desc">Trending down</string>
     <string name="trending_flat_icon_desc">Trending flat</string>
     <!-- endregion Coins -->
+
+    <!-- region Coin History -->
+    <string name="style_label">Style</string>
+    <string name="style_graph_chip_label">Graph</string>
+    <string name="style_chart_chip_label">Chart</string>
+    <string name="period_label">Period</string>
+    <string name="period_one_week_chip_label">1w</string>
+    <string name="period_two_weeks_chip_label">2w</string>
+    <string name="period_one_month_chip_label">1m</string>
+    <string name="period_three_months_chip_label">3m</string>
+    <string name="period_six_months_chip_label">6m</string>
+    <string name="period_one_year_chip_label">1y</string>
+    <string name="period_three_years_chip_label">3y</string>
+    <string name="period_five_years_chip_label">5y</string>
+    <!-- endregion Coin History -->
 </resources>

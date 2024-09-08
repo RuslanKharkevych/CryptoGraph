@@ -4,7 +4,7 @@ import com.google.common.truth.Truth.assertThat
 import me.khruslan.cryptograph.data.common.DataException
 import me.khruslan.cryptograph.data.common.ErrorType
 import me.khruslan.cryptograph.ui.R
-import me.khruslan.cryptograph.ui.common.displayMessageRes
+import me.khruslan.cryptograph.ui.util.displayMessageRes
 import org.junit.Test
 
 internal class UtilsTests {

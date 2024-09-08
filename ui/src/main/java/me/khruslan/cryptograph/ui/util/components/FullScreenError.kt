@@ -1,4 +1,4 @@
-package me.khruslan.cryptograph.ui.common
+package me.khruslan.cryptograph.ui.util.components
 
 import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.infiniteRepeatable
@@ -26,8 +26,9 @@ import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import me.khruslan.cryptograph.ui.CryptoGraphTheme
+import me.khruslan.cryptograph.ui.core.CryptoGraphTheme
 import me.khruslan.cryptograph.ui.R
+import me.khruslan.cryptograph.ui.util.PreviewLightDarkWithBackground
 
 @Composable
 internal fun FullScreenError(message: String, onRetryClick: () -> Unit) {

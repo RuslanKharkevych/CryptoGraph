@@ -11,7 +11,7 @@
         android:theme="@style/Theme.CryptoGraph.Starting">
 
         <activity
-            android:name="me.khruslan.cryptograph.ui.CryptoGraphActivity"
+            android:name="me.khruslan.cryptograph.ui.core.CryptoGraphActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

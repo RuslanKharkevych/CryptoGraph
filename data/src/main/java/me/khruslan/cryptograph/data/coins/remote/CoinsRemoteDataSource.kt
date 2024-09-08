@@ -44,6 +44,7 @@ internal class CoinsRemoteDataSourceImpl(
 
     private val jsonDeserializer = Json {
         ignoreUnknownKeys = true
+        coerceInputValues = true // TODO: Disable after mapping updates
     }
 
     private val cacheControl = CacheControl.Builder()

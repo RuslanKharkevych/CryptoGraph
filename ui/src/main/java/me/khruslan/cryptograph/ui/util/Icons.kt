@@ -1,6 +1,6 @@
 @file:Suppress("ObjectPropertyName", "UnusedReceiverParameter")
 
-package me.khruslan.cryptograph.ui.common
+package me.khruslan.cryptograph.ui.util
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.materialIcon

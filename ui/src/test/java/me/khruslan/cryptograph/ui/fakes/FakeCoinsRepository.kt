@@ -4,10 +4,12 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 import me.khruslan.cryptograph.data.coins.Coin
+import me.khruslan.cryptograph.data.coins.CoinPrice
 import me.khruslan.cryptograph.data.coins.CoinsRepository
 import me.khruslan.cryptograph.data.common.DataException
 import me.khruslan.cryptograph.data.common.ErrorType
 import me.khruslan.cryptograph.data.fixtures.STUB_COINS
+import me.khruslan.cryptograph.data.fixtures.STUB_COIN_HISTORY
 
 internal class FakeCoinsRepository : CoinsRepository {
 
@@ -38,6 +40,11 @@ internal class FakeCoinsRepository : CoinsRepository {
                 it.copy(isPinned = if (it.id == id) false else it.isPinned)
             }.sorted()
         }
+    }
+
+    override suspend fun getCoinHistory(id: String): List<CoinPrice> {
+        checkIfNetworkIsReachable()
+        return STUB_COIN_HISTORY
     }
 
     private fun checkIfNetworkIsReachable() {

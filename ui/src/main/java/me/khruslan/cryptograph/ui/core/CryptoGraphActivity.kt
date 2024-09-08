@@ -1,4 +1,4 @@
-package me.khruslan.cryptograph.ui
+package me.khruslan.cryptograph.ui.core
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity

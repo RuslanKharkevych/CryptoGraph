@@ -1,12 +1,19 @@
-package me.khruslan.cryptograph.ui.coins
+package me.khruslan.cryptograph.ui.coins.main
 
+import androidx.compose.runtime.Stable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
+import me.khruslan.cryptograph.data.coins.Coin
 import me.khruslan.cryptograph.data.coins.CoinsRepository
 import me.khruslan.cryptograph.data.common.DataException
 import me.khruslan.cryptograph.ui.R
-import me.khruslan.cryptograph.ui.common.displayMessageRes
+import me.khruslan.cryptograph.ui.util.UiState
+import me.khruslan.cryptograph.ui.util.displayMessageRes
 
 internal class CoinsViewModel(private val coinsRepository: CoinsRepository) : ViewModel() {
 
@@ -18,7 +25,7 @@ internal class CoinsViewModel(private val coinsRepository: CoinsRepository) : Vi
     }
 
     fun reloadCoins() {
-        _coinsState.listState = CoinsListState.Loading
+        _coinsState.listState = UiState.Loading
         loadCoins()
     }
 
@@ -50,11 +57,24 @@ internal class CoinsViewModel(private val coinsRepository: CoinsRepository) : Vi
         viewModelScope.launch {
             try {
                 coinsRepository.coins.collect { coins ->
-                    _coinsState.listState = CoinsListState.Data(coins)
+                    _coinsState.listState = UiState.Data(coins)
                 }
             } catch (e: DataException) {
-                _coinsState.listState = CoinsListState.Error(e.displayMessageRes)
+                _coinsState.listState = UiState.Error(e.displayMessageRes)
             }
         }
     }
+}
+
+@Stable
+internal interface CoinsState {
+    val listState: UiState<List<Coin>>
+    val warningMessageRes: Int?
+    val notificationBadgeCount: Int
+}
+
+internal class MutableCoinsState : CoinsState {
+    override var listState: UiState<List<Coin>> by mutableStateOf(UiState.Loading)
+    override var warningMessageRes: Int? by mutableStateOf(null)
+    override var notificationBadgeCount: Int by mutableIntStateOf(0)
 }

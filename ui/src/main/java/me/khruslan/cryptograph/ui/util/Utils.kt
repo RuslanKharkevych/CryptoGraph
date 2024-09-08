@@ -1,4 +1,4 @@
-package me.khruslan.cryptograph.ui.common
+package me.khruslan.cryptograph.ui.util
 
 import androidx.annotation.StringRes
 import androidx.compose.runtime.Composable
@@ -12,6 +12,12 @@ import me.khruslan.cryptograph.data.common.DataException
 import me.khruslan.cryptograph.data.common.ErrorType
 import me.khruslan.cryptograph.ui.R
 
+sealed class UiState<out T> {
+    data object Loading : UiState<Nothing>()
+    data class Data<T>(val data: T) : UiState<T>()
+    data class Error(@StringRes val messageRes: Int) : UiState<Nothing>()
+}
+
 @get:StringRes
 internal val DataException.displayMessageRes
     get() = when (errorType) {
@@ -21,6 +27,7 @@ internal val DataException.displayMessageRes
         ErrorType.Internal -> R.string.internal_error_msg
     }
 
+// TODO: Accept #RGB format
 internal fun String?.toColor(): Color {
     return if (this != null) {
         Color(toColorInt())

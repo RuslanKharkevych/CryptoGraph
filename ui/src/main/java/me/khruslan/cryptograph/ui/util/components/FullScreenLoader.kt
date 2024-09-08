@@ -1,4 +1,4 @@
-package me.khruslan.cryptograph.ui.common
+package me.khruslan.cryptograph.ui.util.components
 
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.animateFloat
@@ -18,7 +18,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import me.khruslan.cryptograph.ui.CryptoGraphTheme
+import me.khruslan.cryptograph.ui.core.CryptoGraphTheme
 import me.khruslan.cryptograph.ui.R
 import kotlin.math.PI
 import kotlin.math.abs

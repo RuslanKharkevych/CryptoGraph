@@ -4,7 +4,7 @@ import android.app.Application
 import coil.ImageLoader
 import coil.ImageLoaderFactory
 import me.khruslan.cryptograph.data.dataModule
-import me.khruslan.cryptograph.ui.buildImageLoader
+import me.khruslan.cryptograph.ui.core.buildImageLoader
 import me.khruslan.cryptograph.ui.uiModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger

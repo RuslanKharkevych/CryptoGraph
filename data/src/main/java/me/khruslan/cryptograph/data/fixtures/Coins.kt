@@ -10,118 +10,7 @@ import java.time.LocalDate
 val PREVIEW_COINS: List<Coin>
     get() {
         if (previewCoins != null) return previewCoins!!
-        previewCoins = listOf(
-            Coin(
-                id = "Qwsogvtv82FCd",
-                symbol = "BTC",
-                name = "Bitcoin",
-                colorHex = "#f7931A",
-                iconUrl = "https://cdn.coinranking.com/bOabBYkcX/bitcoin_btc.svg",
-                price = "$63374.15",
-                rank = 1,
-                sparkline = listOf(
-                    1761.5760022910981,
-                    1364.7579643024583,
-                    1618.0100674692076,
-                    1606.7549416864495,
-                    1435.5545462645314,
-                    1001.0554563301339,
-                    891.2724150593349,
-                    790.9025636857623,
-                    674.8016004192323,
-                    623.1355157317594,
-                    765.602073581591,
-                    776.1928436954404,
-                    927.5038348098606,
-                    737.6118039189969,
-                    777.7991469524495,
-                    764.2070884411005,
-                    884.6351356494488,
-                    1298.7833620400124,
-                    1358.9932298122658,
-                    1378.439188447046,
-                    1283.055266849682,
-                    1131.121356425865,
-                    1412.7252158475167
-                ),
-                change = "0.33%",
-                changeTrend = ChangeTrend.UP,
-                isPinned = false
-            ),
-            Coin(
-                id = "razxDUgYGNAdQ",
-                symbol = "ETH",
-                name = "Ethereum",
-                colorHex = "#3C3C3D",
-                iconUrl = "https://cdn.coinranking.com/rk4RKHOuW/eth.svg",
-                price = "$3192.03",
-                rank = 2,
-                sparkline = listOf(
-                    184.8548244601975,
-                    152.98656409760724,
-                    161.68686359898993,
-                    161.7489449989921,
-                    137.90400573863326,
-                    87.72134375656105,
-                    78.94620958486166,
-                    80.17308770081308,
-                    71.57254983876237,
-                    67.56743202363987,
-                    60.761215310851185,
-                    56.54755342534099,
-                    67.66310651236972,
-                    51.9954413157825,
-                    47.80395885725966,
-                    31.47968627377668,
-                    41.65971130337675,
-                    59.46481648825147,
-                    57.35981284387208,
-                    52.956781142417185,
-                    54.367788769913204,
-                    54.46014125213105,
-                    66.1157041116403
-                ),
-                change = "3.48%",
-                changeTrend = ChangeTrend.UP,
-                isPinned = false
-            ),
-            Coin(
-                id = "HIVsRcGKkPFtW",
-                symbol = "USDT",
-                name = "Tether USD",
-                colorHex = "#22a079",
-                iconUrl = "https://cdn.coinranking.com/mgHqwlCLj/usdt.svg",
-                price = "$1.00",
-                rank = 3,
-                sparkline = listOf(
-                    0.010609349721644401,
-                    0.010602725670259883,
-                    0.010283960983068052,
-                    0.01037398315791016,
-                    0.011082912211909601,
-                    0.010834507069306332,
-                    0.010512039414376728,
-                    0.010616203870325469,
-                    0.010980403605894695,
-                    0.010465649446081082,
-                    0.010688301696552216,
-                    0.010575542848508368,
-                    0.010641923046475599,
-                    0.010684637702780941,
-                    0.010408523284936466,
-                    0.010952803167585623,
-                    0.01000154717947499,
-                    0.01048212091630707,
-                    0.010798359615303621,
-                    0.010424462609062823,
-                    0.010580504782494726,
-                    0.01061208762421284,
-                    0.010495978745968193
-                ),
-                change = "-0.11%",
-                changeTrend = ChangeTrend.DOWN,
-                isPinned = false
-            ),
+        previewCoins = STUB_COINS + listOf(
             Coin(
                 id = "WcwrkfNI4FUAe",
                 symbol = "BNB",
@@ -240,7 +129,119 @@ val PREVIEW_COINS: List<Coin>
 val STUB_COINS: List<Coin>
     get() {
         if (stubCoins != null) return stubCoins!!
-        stubCoins = PREVIEW_COINS.take(STUB_DTO_COINS.count())
+        stubCoins = listOf(
+            Coin(
+                id = "Qwsogvtv82FCd",
+                symbol = "BTC",
+                name = "Bitcoin",
+                colorHex = "#f7931A",
+                iconUrl = "https://cdn.coinranking.com/bOabBYkcX/bitcoin_btc.svg",
+                price = "$63374.15",
+                rank = 1,
+                sparkline = listOf(
+                    1761.5760022910981,
+                    1364.7579643024583,
+                    1618.0100674692076,
+                    1606.7549416864495,
+                    1435.5545462645314,
+                    1001.0554563301339,
+                    891.2724150593349,
+                    790.9025636857623,
+                    674.8016004192323,
+                    623.1355157317594,
+                    765.602073581591,
+                    776.1928436954404,
+                    927.5038348098606,
+                    737.6118039189969,
+                    777.7991469524495,
+                    764.2070884411005,
+                    884.6351356494488,
+                    1298.7833620400124,
+                    1358.9932298122658,
+                    1378.439188447046,
+                    1283.055266849682,
+                    1131.121356425865,
+                    1412.7252158475167
+                ),
+                change = "0.33%",
+                changeTrend = ChangeTrend.UP,
+                isPinned = false
+            ),
+            Coin(
+                id = "razxDUgYGNAdQ",
+                symbol = "ETH",
+                name = "Ethereum",
+                colorHex = "#3C3C3D",
+                iconUrl = "https://cdn.coinranking.com/rk4RKHOuW/eth.svg",
+                price = "$3192.03",
+                rank = 2,
+                sparkline = listOf(
+                    184.8548244601975,
+                    152.98656409760724,
+                    161.68686359898993,
+                    161.7489449989921,
+                    137.90400573863326,
+                    87.72134375656105,
+                    78.94620958486166,
+                    80.17308770081308,
+                    71.57254983876237,
+                    67.56743202363987,
+                    60.761215310851185,
+                    56.54755342534099,
+                    67.66310651236972,
+                    51.9954413157825,
+                    47.80395885725966,
+                    31.47968627377668,
+                    41.65971130337675,
+                    59.46481648825147,
+                    57.35981284387208,
+                    52.956781142417185,
+                    54.367788769913204,
+                    54.46014125213105,
+                    66.1157041116403
+                ),
+                change = "3.48%",
+                changeTrend = ChangeTrend.UP,
+                isPinned = false
+            ),
+            Coin(
+                id = "HIVsRcGKkPFtW",
+                symbol = "USDT",
+                name = "Tether USD",
+                colorHex = "#22a079",
+                iconUrl = "https://cdn.coinranking.com/mgHqwlCLj/usdt.svg",
+                price = "$1.00",
+                rank = 3,
+                sparkline = listOf(
+                    0.010609349721644401,
+                    0.010602725670259883,
+                    0.010283960983068052,
+                    0.01037398315791016,
+                    0.011082912211909601,
+                    0.010834507069306332,
+                    0.010512039414376728,
+                    0.010616203870325469,
+                    0.010980403605894695,
+                    0.010465649446081082,
+                    0.010688301696552216,
+                    0.010575542848508368,
+                    0.010641923046475599,
+                    0.010684637702780941,
+                    0.010408523284936466,
+                    0.010952803167585623,
+                    0.01000154717947499,
+                    0.01048212091630707,
+                    0.010798359615303621,
+                    0.010424462609062823,
+                    0.010580504782494726,
+                    0.01061208762421284,
+                    0.010495978745968193
+                ),
+                change = "-0.11%",
+                changeTrend = ChangeTrend.DOWN,
+                isPinned = false
+            ),
+        )
         return stubCoins!!
     }
 
@@ -360,7 +361,22 @@ internal val STUB_DTO_COINS: List<CoinDto>
         return stubDtoCoins!!
     }
 
-internal val STUB_COIN_HISTORY: List<CoinPrice>
+val PREVIEW_COIN_HISTORY: List<CoinPrice>
+    get() {
+        if (previewCoinHistory != null) return previewCoinHistory!!
+        previewCoinHistory = List(5 * 365) { day ->
+            val date = LocalDate.now().minusDays(day.toLong())
+            val randomizer =  date.dayOfWeek.value / date.dayOfMonth.toDouble()
+
+            CoinPrice(
+                date = date,
+                price = 40_000.00 + 20_000.00 * randomizer
+            )
+        }
+        return previewCoinHistory!!
+    }
+
+val STUB_COIN_HISTORY: List<CoinPrice>
     get() {
         if (stubCoinHistory != null) return stubCoinHistory!!
         stubCoinHistory = listOf(
@@ -404,5 +420,6 @@ private var previewCoins: List<Coin>? = null
 private var stubCoins: List<Coin>? = null
 private var stubDtoCoins: List<CoinDto>? = null
 
+private var previewCoinHistory: List<CoinPrice>? = null
 private var stubCoinHistory: List<CoinPrice>? = null
 private var stubDtoCoinHistory: List<CoinPriceDto>? = null

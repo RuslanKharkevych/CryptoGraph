@@ -34,6 +34,7 @@ android {
     }
 
     compileOptions {
+        isCoreLibraryDesugaringEnabled = true
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
@@ -58,6 +59,7 @@ dependencies {
     debugImplementation(libs.compose.uiTooling)
     implementation(libs.compose.uiToolingPreview)
     implementation(libs.coroutines)
+    coreLibraryDesugaring(libs.desugaring)
     implementation(libs.koin.composeNavigation)
     implementation(libs.lifecycleViewModel)
     implementation(libs.navigationCompose)
