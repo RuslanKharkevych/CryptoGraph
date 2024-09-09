@@ -251,7 +251,9 @@ private fun CoinCard(
                 changeTrend = coin.changeTrend
             )
         }
-        Sparkline(coin.sparkline)
+        if (coin.sparkline.isNotEmpty()) {
+            Sparkline(coin.sparkline)
+        }
     }
 }
 
@@ -259,32 +261,36 @@ private fun CoinCard(
 @Composable
 private fun CoinTitleAndIcon(
     modifier: Modifier,
-    symbol: String,
+    symbol: String?,
     name: String,
-    iconUrl: String,
+    iconUrl: String?,
 ) {
     Row(modifier = modifier.basicMarquee()) {
-        Text(
-            text = symbol,
-            style = MaterialTheme.typography.bodyLarge,
-            fontWeight = FontWeight.Bold,
-            maxLines = 1
-        )
-        Spacer(modifier = Modifier.width(8.dp))
+        if (symbol != null) {
+            Text(
+                text = symbol,
+                style = MaterialTheme.typography.bodyLarge,
+                fontWeight = FontWeight.Bold,
+                maxLines = 1
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+        }
         Text(
             text = name,
             style = MaterialTheme.typography.bodyLarge,
             maxLines = 1
         )
-        Spacer(modifier = Modifier.width(8.dp))
-        AsyncImage(
-            modifier = Modifier
-                .size(24.dp)
-                .clip(CircleShape),
-            model = iconUrl,
-            contentDescription = stringResource(R.string.coin_icon_desc, name),
-            placeholder = previewPlaceholder(Icons.Default.CurrencyBitcoin)
-        )
+        if (iconUrl != null) {
+            Spacer(modifier = Modifier.width(8.dp))
+            AsyncImage(
+                modifier = Modifier
+                    .size(24.dp)
+                    .clip(CircleShape),
+                model = iconUrl,
+                contentDescription = stringResource(R.string.coin_icon_desc, name),
+                placeholder = previewPlaceholder(Icons.Default.CurrencyBitcoin)
+            )
+        }
     }
 }
 
@@ -292,33 +298,37 @@ private fun CoinTitleAndIcon(
 @Composable
 private fun CoinPriceAndChange(
     modifier: Modifier,
-    price: String,
-    change: String,
+    price: String?,
+    change: String?,
     changeTrend: ChangeTrend
 ) {
     Row(
         modifier = modifier.basicMarquee(),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Text(
-            text = price,
-            style = MaterialTheme.typography.labelLarge,
-            maxLines = 1
-        )
-        Spacer(modifier = Modifier.width(8.dp))
-        Icon(
-            modifier = Modifier.size(16.dp),
-            imageVector = changeTrend.icon,
-            contentDescription = stringResource(changeTrend.contendDescRes),
-            tint = changeTrend.color
-        )
-        Spacer(modifier = Modifier.width(4.dp))
-        Text(
-            text = change,
-            style = MaterialTheme.typography.labelMedium,
-            color = changeTrend.color,
-            maxLines = 1
-        )
+        if (price != null) {
+            Text(
+                text = price,
+                style = MaterialTheme.typography.labelLarge,
+                maxLines = 1
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+        }
+        if (change != null) {
+            Icon(
+                modifier = Modifier.size(16.dp),
+                imageVector = changeTrend.icon,
+                contentDescription = stringResource(changeTrend.contendDescRes),
+                tint = changeTrend.color
+            )
+            Spacer(modifier = Modifier.width(4.dp))
+            Text(
+                text = change,
+                style = MaterialTheme.typography.labelMedium,
+                color = changeTrend.color,
+                maxLines = 1
+            )
+        }
     }
 }
 

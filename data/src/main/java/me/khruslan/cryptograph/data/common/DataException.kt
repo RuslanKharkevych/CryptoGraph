@@ -25,8 +25,8 @@ internal class ResponseDeserializationException(cause: Throwable) :
 internal class DatabaseException(cause: Throwable) :
     DataException(ErrorType.Database, cause)
 
-internal class DataValidationException(message: String) :
-    DataException(ErrorType.Internal, message = message)
+internal class DataValidationException(cause: Throwable) :
+    DataException(ErrorType.Internal, cause)
 
 private fun String.trimWhitespace(): String {
     val pattern = Regex("\\s+")

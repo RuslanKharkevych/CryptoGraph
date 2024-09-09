@@ -33,8 +33,8 @@ private const val TIME_PERIOD_QUERY_PARAM = "timePeriod"
 private const val TIME_PERIOD_QUERY_VALUE = "5y"
 
 internal interface CoinsRemoteDataSource {
-    suspend fun getCoins(): List<CoinDto>
-    suspend fun getCoinHistory(uuid: String): List<CoinPriceDto>
+    suspend fun getCoins(): List<CoinDto?>
+    suspend fun getCoinHistory(uuid: String): List<CoinPriceDto?>
 }
 
 internal class CoinsRemoteDataSourceImpl(
@@ -44,14 +44,13 @@ internal class CoinsRemoteDataSourceImpl(
 
     private val jsonDeserializer = Json {
         ignoreUnknownKeys = true
-        coerceInputValues = true // TODO: Disable after mapping updates
     }
 
     private val cacheControl = CacheControl.Builder()
         .maxStale(CACHE_MAX_STALE_SECONDS, TimeUnit.SECONDS)
         .build()
 
-    override suspend fun getCoins(): List<CoinDto> {
+    override suspend fun getCoins(): List<CoinDto?> {
         return withContext(dispatcher) {
             val requestUrl = GET_COINS_REQUEST_URL.toHttpUrl()
                 .newBuilder()
@@ -61,7 +60,7 @@ internal class CoinsRemoteDataSourceImpl(
         }
     }
 
-    override suspend fun getCoinHistory(uuid: String): List<CoinPriceDto> {
+    override suspend fun getCoinHistory(uuid: String): List<CoinPriceDto?> {
         return withContext(dispatcher) {
             val requestUrl = GET_COIN_HISTORY_REQUEST_URL
                 .replace(UUID_PATH_PARAM, uuid)

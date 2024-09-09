@@ -27,7 +27,6 @@ internal val DataException.displayMessageRes
         ErrorType.Internal -> R.string.internal_error_msg
     }
 
-// TODO: Accept #RGB format
 internal fun String?.toColor(): Color {
     return if (this != null) {
         Color(toColorInt())
