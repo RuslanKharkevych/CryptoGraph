@@ -3,7 +3,6 @@ package me.khruslan.cryptograph.ui.coins.main
 import androidx.annotation.StringRes
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.core.animateDpAsState
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -176,7 +175,6 @@ private fun TopBar(
     )
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun CoinsList(
     coins: List<Coin>,
@@ -191,7 +189,7 @@ private fun CoinsList(
         ) { index ->
             CoinCard(
                 modifier = Modifier
-                    .animateItemPlacement()
+                    .animateItem()
                     .padding(
                         horizontal = 16.dp,
                         vertical = 8.dp
@@ -257,7 +255,6 @@ private fun CoinCard(
     }
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun CoinTitleAndIcon(
     modifier: Modifier,
@@ -294,7 +291,6 @@ private fun CoinTitleAndIcon(
     }
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun CoinPriceAndChange(
     modifier: Modifier,
