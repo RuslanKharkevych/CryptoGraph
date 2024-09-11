@@ -1,26 +1,26 @@
 [versions]
-activityCompose = "1.9.0"
-agp = "8.4.0"
-coil = "2.6.0"
-compose = "1.6.7"
-composeCompiler = "1.5.13"
-composeMaterial3 = "1.2.1"
-coroutines = "1.8.0"
-desugaring = "2.0.4"
+activityCompose = "1.9.2"
+agp = "8.5.2"
+coil = "2.7.0"
+compose = "1.7.1"
+composeCompiler = "1.5.15"
+composeMaterial3 = "1.3.0"
+coroutines = "1.8.1"
+desugaring = "2.1.2"
 junit = "4.13.2"
 koin = "3.5.6"
-kotlin = "1.9.23"
-lifecycle = "2.7.0"
+kotlin = "2.0.20"
+lifecycle = "2.8.5"
 material = "1.12.0"
-navigationCompose = "2.7.7"
+navigationCompose = "2.8.0"
 objectbox = "3.8.0"
 okhttp = "4.12.0"
 secrets = "2.0.1"
-serializationJson = "1.6.0"
+serializationJson = "1.7.2"
 splashScreen = "1.0.1"
-truth = "1.4.2"
+truth = "1.4.4"
 turbine = "1.1.0"
-vico = "1.14.0"
+vico = "1.15.0"
 
 [libraries]
 activityCompose = { group = "androidx.activity", name = "activity-compose", version.ref = "activityCompose" }
@@ -55,6 +55,7 @@ vico = { group = "com.patrykandpatrick.vico", name = "compose-m3", version.ref =
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
 androidLibrary = { id = "com.android.library", version.ref = "agp" }
+composeCompiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin" }
 kotlinAndroid = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlinSerialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
