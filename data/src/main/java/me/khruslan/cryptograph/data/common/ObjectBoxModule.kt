@@ -1,6 +1,6 @@
 package me.khruslan.cryptograph.data.common
 
-import me.khruslan.cryptograph.data.coins.local.MyObjectBox
+import me.khruslan.cryptograph.data.MyObjectBox
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
 

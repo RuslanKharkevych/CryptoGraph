@@ -4,18 +4,62 @@
   "_note3": "If you have VCS merge conflicts, you must resolve them according to ObjectBox docs.",
   "entities": [
     {
-      "id": "1:7622686748898015255",
-      "lastPropertyId": "2:7773786197351697767",
-      "name": "PinnedCoinDto",
+      "id": "1:4494412827392768044",
+      "lastPropertyId": "7:6361820044904118736",
+      "name": "NotificationDto",
       "properties": [
         {
-          "id": "1:4929574505144433685",
+          "id": "1:882744234832091928",
           "name": "id",
           "type": 6,
           "flags": 1
         },
         {
-          "id": "2:7773786197351697767",
+          "id": "2:7545556366674805194",
+          "name": "coinUuid",
+          "type": 9
+        },
+        {
+          "id": "3:4777419465141630712",
+          "name": "title",
+          "type": 9
+        },
+        {
+          "id": "4:232286873256644600",
+          "name": "createdAtTimestamp",
+          "type": 6
+        },
+        {
+          "id": "5:5806593752339743516",
+          "name": "expirationDateTimestamp",
+          "type": 6
+        },
+        {
+          "id": "6:5918736360963823499",
+          "name": "priceLessThenTrigger",
+          "type": 8
+        },
+        {
+          "id": "7:6361820044904118736",
+          "name": "priceMoreThenTrigger",
+          "type": 8
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "2:7373946133125209649",
+      "lastPropertyId": "2:6747544648517456053",
+      "name": "PinnedCoinDto",
+      "properties": [
+        {
+          "id": "1:529161011350466836",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:6747544648517456053",
           "name": "coinUuid",
           "type": 9
         }
@@ -23,7 +67,7 @@
       "relations": []
     }
   ],
-  "lastEntityId": "1:7622686748898015255",
+  "lastEntityId": "2:7373946133125209649",
   "lastIndexId": "0:0",
   "lastRelationId": "0:0",
   "lastSequenceId": "0:0",
