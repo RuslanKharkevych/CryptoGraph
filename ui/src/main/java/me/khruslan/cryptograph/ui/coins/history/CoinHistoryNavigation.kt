@@ -2,6 +2,7 @@ package me.khruslan.cryptograph.ui.coins.history
 
 import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.SavedStateHandle
+import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavType
@@ -12,9 +13,8 @@ import me.khruslan.cryptograph.ui.coins.history.CoinHistoryArgKeys.COIN_ID_ARG
 import me.khruslan.cryptograph.ui.coins.history.CoinHistoryArgKeys.COIN_NAME_ARG
 import me.khruslan.cryptograph.ui.coins.history.CoinHistoryArgKeys.COLOR_HEX_ARG
 import me.khruslan.cryptograph.ui.coins.history.CoinHistoryArgKeys.IS_PINNED_ARG
-import me.khruslan.cryptograph.ui.util.Transitions
-import me.khruslan.cryptograph.ui.util.rememberNavInterceptor
-import me.khruslan.cryptograph.ui.util.route
+import me.khruslan.cryptograph.ui.util.navigation.rememberNavInterceptor
+import me.khruslan.cryptograph.ui.util.navigation.route
 import org.koin.androidx.compose.koinViewModel
 
 private const val COIN_HISTORY_ROUTE = "coin-history"
@@ -42,12 +42,22 @@ internal data class CoinHistoryArgs(
                 isPinned = checkNotNull(savedStateHandle[IS_PINNED_ARG])
             )
         }
+
+        fun fromNavBackStackEntry(navBackStackEntry: NavBackStackEntry): CoinHistoryArgs {
+            val bundle = checkNotNull(navBackStackEntry.arguments)
+            return CoinHistoryArgs(
+                coinId = checkNotNull(bundle.getString(COIN_ID_ARG)),
+                coinName = checkNotNull(bundle.getString(COIN_NAME_ARG)),
+                colorHex = bundle.getString(COLOR_HEX_ARG),
+                isPinned = checkNotNull(bundle.getBoolean(IS_PINNED_ARG))
+            )
+        }
     }
 }
 
 internal fun NavGraphBuilder.coinHistoryScreen(
     onBackActionClick: () -> Unit,
-    onNotificationsActionClick: () -> Unit,
+    onNotificationsActionClick: (coinId: String, coinName: String) -> Unit,
 ) {
     val arguments = listOf(
         navArgument(COIN_ID_ARG) { type = NavType.StringType },
@@ -58,12 +68,11 @@ internal fun NavGraphBuilder.coinHistoryScreen(
 
     composable(
         route = route(COIN_HISTORY_ROUTE, arguments),
-        arguments = arguments,
-        enterTransition = Transitions.Enter::slideRtl,
-        popExitTransition = Transitions.Exit::slideLtr
+        arguments = arguments
     ) { navBackStackEntry ->
         val viewModel: CoinHistoryViewModel = koinViewModel()
         val navInterceptor = rememberNavInterceptor(navBackStackEntry)
+        val args = CoinHistoryArgs.fromNavBackStackEntry(navBackStackEntry)
 
         CoinHistoryScreen(
             coinHistoryState = viewModel.coinHistoryState,
@@ -72,7 +81,9 @@ internal fun NavGraphBuilder.coinHistoryScreen(
             onRetryClick = viewModel::reloadCoinHistory,
             onWarningShown = viewModel::warningShown,
             onBackActionClick = navInterceptor(onBackActionClick),
-            onNotificationsActionClick = navInterceptor(onNotificationsActionClick)
+            onNotificationsActionClick = navInterceptor {
+                onNotificationsActionClick(args.coinId, args.coinName)
+            }
         )
     }
 }

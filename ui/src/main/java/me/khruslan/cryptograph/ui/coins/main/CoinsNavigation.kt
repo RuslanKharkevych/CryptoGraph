@@ -3,8 +3,7 @@ package me.khruslan.cryptograph.ui.coins.main
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import me.khruslan.cryptograph.data.coins.Coin
-import me.khruslan.cryptograph.ui.util.Transitions
-import me.khruslan.cryptograph.ui.util.rememberNavInterceptor
+import me.khruslan.cryptograph.ui.util.navigation.rememberNavInterceptor
 import org.koin.androidx.compose.koinViewModel
 
 internal const val COINS_ROUTE = "coins"
@@ -14,11 +13,7 @@ internal fun NavGraphBuilder.coinsScreen(
     onNotificationsActionClick: () -> Unit,
     onPreferencesActionClick: () -> Unit,
 ) {
-    composable(
-        route = COINS_ROUTE,
-        exitTransition = Transitions.Exit::slideRtl,
-        popEnterTransition = Transitions.Enter::slideLtr
-    ) { navBackStackEntry ->
+    composable(COINS_ROUTE) { navBackStackEntry ->
         val viewModel: CoinsViewModel = koinViewModel()
         val navInterceptor = rememberNavInterceptor(navBackStackEntry)
 

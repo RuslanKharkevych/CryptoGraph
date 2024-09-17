@@ -28,7 +28,7 @@ internal class NotificationsRepositoryTests {
         val notification = STUB_NOTIFICATIONS[0]
         repository.addOrUpdateNotification(notification)
 
-        repository.getNotifications().test {
+        repository.getNotifications(null).test {
             assertThat(awaitItem()).containsExactly(notification)
         }
     }
@@ -41,7 +41,7 @@ internal class NotificationsRepositoryTests {
         val updatedNotification = STUB_NOTIFICATIONS[0]
         repository.addOrUpdateNotification(updatedNotification)
 
-        repository.getNotifications().test {
+        repository.getNotifications(null).test {
             assertThat(awaitItem()).containsExactly(updatedNotification)
         }
     }
@@ -52,7 +52,7 @@ internal class NotificationsRepositoryTests {
         repository.addOrUpdateNotification(notification)
         repository.deleteNotification(notification)
 
-        repository.getNotifications().test {
+        repository.getNotifications(null).test {
             assertThat(awaitItem()).isEmpty()
         }
     }

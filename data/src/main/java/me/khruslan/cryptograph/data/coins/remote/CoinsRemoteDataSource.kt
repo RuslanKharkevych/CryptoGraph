@@ -24,6 +24,7 @@ private const val ACCESS_TOKEN_HEADER = "x-access-token"
 private const val CACHE_MAX_STALE_SECONDS = 3600
 
 private const val GET_COINS_REQUEST_URL = "$COINRANKING_BASE_URL/coins"
+private const val UUIDS_QUERY_PARAM = "uuids[]"
 private const val LIMIT_QUERY_PARAM = "limit"
 private const val LIMIT_QUERY_VALUE = "100"
 
@@ -33,7 +34,7 @@ private const val TIME_PERIOD_QUERY_PARAM = "timePeriod"
 private const val TIME_PERIOD_QUERY_VALUE = "5y"
 
 internal interface CoinsRemoteDataSource {
-    suspend fun getCoins(): List<CoinDto?>
+    suspend fun getCoins(uuid: String?): List<CoinDto?>
     suspend fun getCoinHistory(uuid: String): List<CoinPriceDto?>
 }
 
@@ -50,12 +51,15 @@ internal class CoinsRemoteDataSourceImpl(
         .maxStale(CACHE_MAX_STALE_SECONDS, TimeUnit.SECONDS)
         .build()
 
-    override suspend fun getCoins(): List<CoinDto?> {
+    override suspend fun getCoins(uuid: String?): List<CoinDto?> {
         return withContext(dispatcher) {
-            val requestUrl = GET_COINS_REQUEST_URL.toHttpUrl()
+            val requestUrlBuilder = GET_COINS_REQUEST_URL.toHttpUrl()
                 .newBuilder()
                 .addQueryParameter(LIMIT_QUERY_PARAM, LIMIT_QUERY_VALUE)
-                .build()
+            if (uuid != null) {
+                requestUrlBuilder.addQueryParameter(UUIDS_QUERY_PARAM, uuid)
+            }
+            val requestUrl = requestUrlBuilder.build()
             executeRequest<CoinsDto>(requestUrl).coins
         }
     }

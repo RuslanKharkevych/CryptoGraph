@@ -66,7 +66,7 @@ internal class CoinsRemoteDataSourceTests {
             .setResponseFile(GET_COINS_SUCCESSFUL_RESPONSE)
         mockServer.enqueue(mockResponse)
 
-        val coins = dataSource.getCoins()
+        val coins = dataSource.getCoins(null)
         assertThat(coins).isNotEmpty()
     }
 
@@ -77,7 +77,7 @@ internal class CoinsRemoteDataSourceTests {
             .setResponseFile(GET_COINS_FAILED_RESPONSE)
         mockServer.enqueue(mockResponse)
 
-        val result = runCatching { dataSource.getCoins() }
+        val result = runCatching { dataSource.getCoins(null) }
         val exception = result.exceptionOrNull()
         assertThat(exception).isInstanceOf(UnsuccessfulResponseException::class.java)
     }
@@ -89,7 +89,7 @@ internal class CoinsRemoteDataSourceTests {
             .setResponseFile(GET_COINS_INVALID_RESPONSE)
         mockServer.enqueue(mockResponse)
 
-        val result = runCatching { dataSource.getCoins() }
+        val result = runCatching { dataSource.getCoins(null) }
         val exception = result.exceptionOrNull()
         assertThat(exception).isInstanceOf(ResponseDeserializationException::class.java)
     }
@@ -99,7 +99,7 @@ internal class CoinsRemoteDataSourceTests {
         val mockResponse = MockResponse().setSocketPolicy(SocketPolicy.DISCONNECT_AT_START)
         mockServer.enqueue(mockResponse)
 
-        val result = runCatching { dataSource.getCoins() }
+        val result = runCatching { dataSource.getCoins(null) }
         val exception = result.exceptionOrNull()
         assertThat(exception).isInstanceOf(NetworkConnectionException::class.java)
     }

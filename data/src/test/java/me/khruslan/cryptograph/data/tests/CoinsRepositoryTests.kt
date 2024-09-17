@@ -29,8 +29,16 @@ internal class CoinsRepositoryTests {
 
     @Test
     fun `Get coins`() = runTest {
-        repository.coins.test {
-            assertThat(STUB_COINS).isEqualTo(awaitItem())
+        repository.getCoins().test {
+            assertThat(awaitItem()).isEqualTo(STUB_COINS)
+        }
+    }
+
+    @Test
+    fun `Filter coins`() = runTest {
+        val coin = STUB_COINS[0]
+        repository.getCoins(coin.id).test {
+            assertThat(awaitItem()).containsExactly(coin)
         }
     }
 
@@ -39,7 +47,7 @@ internal class CoinsRepositoryTests {
         val coinId = STUB_COINS[1].id
         repository.pinCoin(coinId)
 
-        repository.coins.test {
+        repository.getCoins().test {
             val expectedCoins = listOf(
                 STUB_COINS[1].copy(isPinned = true),
                 STUB_COINS[0],
@@ -56,8 +64,8 @@ internal class CoinsRepositoryTests {
         repository.pinCoin(coinId)
         repository.unpinCoin(coinId)
 
-        repository.coins.test {
-            assertThat(STUB_COINS).isEqualTo(awaitItem())
+        repository.getCoins().test {
+            assertThat(awaitItem()).isEqualTo(STUB_COINS)
         }
     }
 

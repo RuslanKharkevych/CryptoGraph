@@ -56,7 +56,7 @@ internal class CoinsViewModel(private val coinsRepository: CoinsRepository) : Vi
     private fun loadCoins() {
         viewModelScope.launch {
             try {
-                coinsRepository.coins.collect { coins ->
+                coinsRepository.getCoins().collect { coins ->
                     _coinsState.listState = UiState.Data(coins)
                 }
             } catch (e: DataException) {

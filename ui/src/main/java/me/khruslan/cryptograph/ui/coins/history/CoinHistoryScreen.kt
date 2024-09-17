@@ -74,7 +74,6 @@ import me.khruslan.cryptograph.ui.util.components.FullScreenError
 import me.khruslan.cryptograph.ui.util.components.FullScreenLoader
 import me.khruslan.cryptograph.ui.util.toColor
 import me.khruslan.cryptograph.ui.util.typeface
-import java.util.UUID
 
 @Composable
 internal fun CoinHistoryScreen(
@@ -151,7 +150,8 @@ private fun TopBar(
                 modifier = Modifier.basicMarquee(),
                 text = title,
                 style = MaterialTheme.typography.titleLarge,
-                fontWeight = FontWeight.Medium
+                fontWeight = FontWeight.Medium,
+                maxLines = 1
             )
         },
         navigationIcon = {
@@ -418,7 +418,7 @@ private fun rememberMarker(chartStyle: CoinHistoryChartStyle, indicatorColor: Co
 private fun CoinHistoryPreview() {
     val coinHistoryState = remember {
         val args = CoinHistoryArgs(
-            coinId = UUID.randomUUID().toString(),
+            coinId = "Qwsogvtv82FCd",
             coinName = "Bitcoin",
             colorHex = "#F7931A",
             isPinned = false

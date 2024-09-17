@@ -8,7 +8,7 @@ import me.khruslan.cryptograph.data.coins.mapper.CoinsMapper
 import me.khruslan.cryptograph.data.coins.remote.CoinsRemoteDataSource
 
 interface CoinsRepository {
-    val coins: Flow<List<Coin>>
+    fun getCoins(id: String? = null): Flow<List<Coin>>
     suspend fun pinCoin(id: String)
     suspend fun unpinCoin(id: String)
     suspend fun getCoinHistory(id: String): List<CoinPrice>
@@ -20,15 +20,14 @@ internal class CoinsRepositoryImpl(
     private val mapper: CoinsMapper,
 ) : CoinsRepository {
 
-    override val coins: Flow<List<Coin>>
-        get() {
-            val allCoinsFlow = flow { emit(remoteDataSource.getCoins()) }
-            val pinnedCoinsFlow = localDataSource.pinnedCoins
+    override fun getCoins(id: String?): Flow<List<Coin>> {
+        val allCoinsFlow = flow { emit(remoteDataSource.getCoins(id)) }
+        val pinnedCoinsFlow = localDataSource.pinnedCoins
 
-            return allCoinsFlow.combine(pinnedCoinsFlow) { allCoins, pinnedCoins ->
-                mapper.mapCoins(allCoins, pinnedCoins)
-            }
+        return allCoinsFlow.combine(pinnedCoinsFlow) { allCoins, pinnedCoins ->
+            mapper.mapCoins(allCoins, pinnedCoins)
         }
+    }
 
     override suspend fun pinCoin(id: String) {
         localDataSource.pinCoin(id)

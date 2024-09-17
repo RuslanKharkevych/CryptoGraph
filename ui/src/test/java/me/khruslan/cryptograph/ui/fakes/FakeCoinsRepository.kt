@@ -2,6 +2,7 @@ package me.khruslan.cryptograph.ui.fakes
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import me.khruslan.cryptograph.data.coins.Coin
 import me.khruslan.cryptograph.data.coins.CoinPrice
@@ -18,11 +19,12 @@ internal class FakeCoinsRepository : CoinsRepository {
 
     private val _coins = MutableStateFlow(STUB_COINS)
 
-    override val coins: Flow<List<Coin>>
-        get() {
-            checkIfNetworkIsReachable()
-            return _coins
+    override fun getCoins(id: String?): Flow<List<Coin>> {
+        checkIfNetworkIsReachable()
+        return _coins.map { coins ->
+            coins.filter { id?.equals(it.id) ?: true }
         }
+    }
 
     override suspend fun pinCoin(id: String) {
         checkIfDataIsValid()

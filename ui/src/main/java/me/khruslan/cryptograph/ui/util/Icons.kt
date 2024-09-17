@@ -6,12 +6,43 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.materialIcon
 import androidx.compose.material.icons.materialPath
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.graphics.vector.group
 
+private var _arrowDown: ImageVector? = null
 private var _currencyBitcoin: ImageVector? = null
 private var _starOutline: ImageVector? = null
 private var _trendingDown: ImageVector? = null
 private var _trendingFlat: ImageVector? = null
 private var _trendingUp: ImageVector? = null
+
+internal val Icons.AutoMirrored.Rounded.ArrowDown: ImageVector
+    get() {
+        if (_arrowDown != null) {
+            return _arrowDown!!
+        }
+        _arrowDown = materialIcon(name = "AutoMirrored.Rounded.ArrowDown", autoMirror = true) {
+            group(
+                rotate = 270f,
+                pivotX = 12f,
+                pivotY = 12f,
+            ) {
+                materialPath {
+                    moveTo(16.62f, 2.99f)
+                    curveToRelative(-0.49f, -0.49f, -1.28f, -0.49f, -1.77f, 0.0f)
+                    lineTo(6.54f, 11.3f)
+                    curveToRelative(-0.39f, 0.39f, -0.39f, 1.02f, 0.0f, 1.41f)
+                    lineToRelative(8.31f, 8.31f)
+                    curveToRelative(0.49f, 0.49f, 1.28f, 0.49f, 1.77f, 0.0f)
+                    reflectiveCurveToRelative(0.49f, -1.28f, 0.0f, -1.77f)
+                    lineTo(9.38f, 12.0f)
+                    lineToRelative(7.25f, -7.25f)
+                    curveToRelative(0.48f, -0.48f, 0.48f, -1.28f, -0.01f, -1.76f)
+                    close()
+                }
+            }
+        }
+        return _arrowDown!!
+    }
 
 internal val Icons.Filled.CurrencyBitcoin: ImageVector
     get() {

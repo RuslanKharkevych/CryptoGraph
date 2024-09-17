@@ -2,6 +2,7 @@ package me.khruslan.cryptograph.data.notifications
 
 import java.time.OffsetDateTime
 
+// TODO: Change OffsetDateTime to LocalDate
 data class Notification(
     val id: Long,
     val coinId: String,

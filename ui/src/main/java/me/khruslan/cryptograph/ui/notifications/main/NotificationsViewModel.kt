@@ -4,27 +4,43 @@ import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
-import me.khruslan.cryptograph.data.notifications.Notification
-import me.khruslan.cryptograph.data.notifications.NotificationsRepository
+import me.khruslan.cryptograph.data.common.DataException
+import me.khruslan.cryptograph.data.managers.CoinNotification
+import me.khruslan.cryptograph.data.managers.CoinNotificationsManager
+import me.khruslan.cryptograph.ui.util.UiState
+import me.khruslan.cryptograph.ui.util.displayMessageRes
 
 internal class NotificationsViewModel(
-    private val notificationsRepository: NotificationsRepository,
+    savedStateHandle: SavedStateHandle,
+    private val coinNotificationsManager: CoinNotificationsManager,
 ) : ViewModel() {
 
-    private val _notificationsState = MutableNotificationsState()
+    private val args = NotificationsArgs.fromSavedStateHandle(savedStateHandle)
+
+    private val _notificationsState = MutableNotificationsState(args)
     val notificationsState: NotificationsState = _notificationsState
 
     init {
         loadNotifications()
     }
 
+    fun reloadNotifications() {
+        _notificationsState.listState = UiState.Loading
+        loadNotifications()
+    }
+
     private fun loadNotifications() {
         viewModelScope.launch {
-            notificationsRepository.getNotifications().collect { notifications ->
-                _notificationsState.notifications = notifications
+            try {
+                coinNotificationsManager.getCoinNotifications(args.coinId).collect { notifications ->
+                    _notificationsState.listState = UiState.Data(notifications)
+                }
+            } catch (e: DataException) {
+                _notificationsState.listState = UiState.Error(e.displayMessageRes)
             }
         }
     }
@@ -32,9 +48,11 @@ internal class NotificationsViewModel(
 
 @Stable
 internal interface NotificationsState {
-    val notifications: List<Notification>
+    val coinName: String?
+    val listState: UiState<List<CoinNotification>>
 }
 
-internal class MutableNotificationsState : NotificationsState {
-    override var notifications: List<Notification> by mutableStateOf(emptyList())
+internal class MutableNotificationsState(args: NotificationsArgs) : NotificationsState {
+    override val coinName: String? = args.coinName
+    override var listState: UiState<List<CoinNotification>> by mutableStateOf(UiState.Loading)
 }
