@@ -7,7 +7,6 @@ import me.khruslan.cryptograph.data.common.objectBoxModule
 import me.khruslan.cryptograph.data.notifications.local.NotificationsLocalDataSourceImpl
 import me.khruslan.cryptograph.data.notifications.mapper.NotificationsMapperImpl
 import org.koin.dsl.module
-import java.time.Clock
 
 internal val notificationsModule = module {
     includes(objectBoxModule)
@@ -19,7 +18,6 @@ internal val notificationsModule = module {
             ),
             mapper = NotificationsMapperImpl(
                 dispatcher = Dispatchers.Default,
-                clock = Clock.systemDefaultZone()
             )
         )
     }

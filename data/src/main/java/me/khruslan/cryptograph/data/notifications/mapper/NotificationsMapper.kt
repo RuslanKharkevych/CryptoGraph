@@ -6,10 +6,8 @@ import me.khruslan.cryptograph.base.Logger
 import me.khruslan.cryptograph.data.notifications.Notification
 import me.khruslan.cryptograph.data.notifications.NotificationTrigger
 import me.khruslan.cryptograph.data.notifications.local.NotificationDto
-import java.time.Clock
 import java.time.DateTimeException
-import java.time.Instant
-import java.time.OffsetDateTime
+import java.time.LocalDate
 
 private const val LOG_TAG = "NotificationsMapper"
 
@@ -20,7 +18,6 @@ internal interface NotificationsMapper {
 
 internal class NotificationsMapperImpl(
     private val dispatcher: CoroutineDispatcher,
-    private val clock: Clock,
 ) : NotificationsMapper {
 
     override suspend fun mapNotifications(
@@ -39,8 +36,8 @@ internal class NotificationsMapperImpl(
                 id = notification.id,
                 coinUuid = notification.coinId,
                 title = notification.title,
-                createdAtTimestamp = notification.createdAt.toEpochSecond(),
-                expirationDateTimestamp = notification.expirationDate?.toEpochSecond(),
+                createdAtDate = notification.createdAt.toString(),
+                expirationDate = notification.expirationDate?.toString(),
                 priceLessThenTrigger = notification.trigger.targetPrice.takeIf {
                     notification.trigger is NotificationTrigger.PriceLessThen
                 },
@@ -57,8 +54,8 @@ internal class NotificationsMapperImpl(
                 id = notificationDto.id,
                 coinId = notificationDto.coinUuid,
                 title = notificationDto.title,
-                createdAt = mapTimestamp(notificationDto.createdAtTimestamp),
-                expirationDate = notificationDto.expirationDateTimestamp?.let(::mapTimestamp),
+                createdAt = mapDate(notificationDto.createdAtDate),
+                expirationDate = notificationDto.expirationDate?.let(::mapDate),
                 trigger = mapTrigger(
                     priceLessThen = notificationDto.priceLessThenTrigger,
                     priceMoreThen = notificationDto.priceMoreThenTrigger
@@ -70,12 +67,11 @@ internal class NotificationsMapperImpl(
         }
     }
 
-    private fun mapTimestamp(timestamp: Long): OffsetDateTime {
+    private fun mapDate(dateString: String): LocalDate {
         return try {
-            val instant = Instant.ofEpochSecond(timestamp)
-            OffsetDateTime.ofInstant(instant, clock.zone)
+            LocalDate.parse(dateString)
         } catch (e: DateTimeException) {
-            throw IllegalArgumentException("Invalid timestamp: $timestamp", e)
+            throw IllegalArgumentException("Invalid date string: $dateString", e)
         }
     }
 

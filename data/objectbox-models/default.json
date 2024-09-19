@@ -4,43 +4,43 @@
   "_note3": "If you have VCS merge conflicts, you must resolve them according to ObjectBox docs.",
   "entities": [
     {
-      "id": "1:4494412827392768044",
-      "lastPropertyId": "7:6361820044904118736",
+      "id": "1:8889450919415498283",
+      "lastPropertyId": "7:3307838415619794521",
       "name": "NotificationDto",
       "properties": [
         {
-          "id": "1:882744234832091928",
+          "id": "1:1275840907986733174",
           "name": "id",
           "type": 6,
           "flags": 1
         },
         {
-          "id": "2:7545556366674805194",
+          "id": "2:3904564024821078",
           "name": "coinUuid",
           "type": 9
         },
         {
-          "id": "3:4777419465141630712",
+          "id": "3:902109058433712438",
           "name": "title",
           "type": 9
         },
         {
-          "id": "4:232286873256644600",
-          "name": "createdAtTimestamp",
-          "type": 6
+          "id": "4:5631262992695341951",
+          "name": "createdAtDate",
+          "type": 9
         },
         {
-          "id": "5:5806593752339743516",
-          "name": "expirationDateTimestamp",
-          "type": 6
+          "id": "5:6830891407551069216",
+          "name": "expirationDate",
+          "type": 9
         },
         {
-          "id": "6:5918736360963823499",
+          "id": "6:6625867209281576177",
           "name": "priceLessThenTrigger",
           "type": 8
         },
         {
-          "id": "7:6361820044904118736",
+          "id": "7:3307838415619794521",
           "name": "priceMoreThenTrigger",
           "type": 8
         }
@@ -48,18 +48,18 @@
       "relations": []
     },
     {
-      "id": "2:7373946133125209649",
-      "lastPropertyId": "2:6747544648517456053",
+      "id": "2:5332469868733154503",
+      "lastPropertyId": "2:6132709625473427870",
       "name": "PinnedCoinDto",
       "properties": [
         {
-          "id": "1:529161011350466836",
+          "id": "1:7132691523563790967",
           "name": "id",
           "type": 6,
           "flags": 1
         },
         {
-          "id": "2:6747544648517456053",
+          "id": "2:6132709625473427870",
           "name": "coinUuid",
           "type": 9
         }
@@ -67,7 +67,7 @@
       "relations": []
     }
   ],
-  "lastEntityId": "2:7373946133125209649",
+  "lastEntityId": "2:5332469868733154503",
   "lastIndexId": "0:0",
   "lastRelationId": "0:0",
   "lastSequenceId": "0:0",

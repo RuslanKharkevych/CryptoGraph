@@ -1,14 +1,13 @@
 package me.khruslan.cryptograph.data.notifications
 
-import java.time.OffsetDateTime
+import java.time.LocalDate
 
-// TODO: Change OffsetDateTime to LocalDate
 data class Notification(
     val id: Long,
     val coinId: String,
     val title: String,
-    val createdAt: OffsetDateTime,
-    val expirationDate: OffsetDateTime?,
+    val createdAt: LocalDate,
+    val expirationDate: LocalDate?,
     val trigger: NotificationTrigger,
 )
 

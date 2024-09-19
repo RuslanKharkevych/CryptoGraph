@@ -6,11 +6,10 @@ import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
 import me.khruslan.cryptograph.data.fixtures.STUB_DTO_NOTIFICATIONS
 import me.khruslan.cryptograph.data.fixtures.STUB_NOTIFICATIONS
-import me.khruslan.cryptograph.data.notifications.mapper.NotificationsMapperImpl
 import me.khruslan.cryptograph.data.notifications.mapper.NotificationsMapper
+import me.khruslan.cryptograph.data.notifications.mapper.NotificationsMapperImpl
 import org.junit.Before
 import org.junit.Test
-import java.time.Clock
 
 @OptIn(ExperimentalCoroutinesApi::class)
 internal class NotificationsMapperTests {
@@ -21,7 +20,6 @@ internal class NotificationsMapperTests {
     fun setUp() {
         mapper = NotificationsMapperImpl(
             dispatcher = UnconfinedTestDispatcher(),
-            clock = Clock.systemUTC()
         )
     }
 
