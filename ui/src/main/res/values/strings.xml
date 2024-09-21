@@ -10,7 +10,7 @@
     <string name="loader_desc">Loading data, please wait</string>
     <string name="retry_btn_desc">Retry</string>
     <string name="back_action_desc">Go back</string>
-    <string name="close_action_desc">Close screen</string>
+    <string name="close_action_desc">Close</string>
     <!-- endregion Common -->
 
     <!-- region Coins -->
@@ -40,6 +40,10 @@
     <string name="period_three_years_chip_label">3y</string>
     <string name="period_five_years_chip_label">5y</string>
     <!-- endregion Coin History -->
+
+    <!-- region Coin Picker -->
+    <string name="coin_picker_title">Select a coin</string>
+    <!-- endregion Coin Picker -->
 
     <!-- region Notifications -->
     <string name="all_notifications_top_bar_title">Notifications</string>

@@ -1,6 +1,7 @@
 package me.khruslan.cryptograph.ui.notifications.main
 
 import androidx.lifecycle.SavedStateHandle
+import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavType
@@ -30,10 +31,19 @@ internal data class NotificationsArgs(
                 coinName = savedStateHandle[COIN_NAME_ARG]
             )
         }
+
+        fun fromNavBackStackEntry(navBackStackEntry: NavBackStackEntry): NotificationsArgs {
+            val bundle = checkNotNull(navBackStackEntry.arguments)
+            return NotificationsArgs(
+                coinId = bundle.getString(COIN_ID_ARG),
+                coinName = bundle.getString(COIN_NAME_ARG)
+            )
+        }
     }
 }
 
 internal fun NavGraphBuilder.notificationsScreen(
+    onCoinSelection: () -> Unit,
     onCloseActionClick: () -> Unit,
 ) {
     val arguments = listOf(
@@ -47,13 +57,18 @@ internal fun NavGraphBuilder.notificationsScreen(
     ) { navBackStackEntry ->
         val viewModel: NotificationsViewModel = koinViewModel()
         val navInterceptor = rememberNavInterceptor(navBackStackEntry)
+        val args = NotificationsArgs.fromNavBackStackEntry(navBackStackEntry)
 
         NotificationsScreen(
             notificationsState = viewModel.notificationsState,
             onRetryClick = viewModel::reloadNotifications,
             onCloseActionClick = navInterceptor(onCloseActionClick),
             onAddButtonClick = {
-                // TODO: Navigate to notification details screen
+                if (args.coinId != null) {
+                    // TODO: Navigate to notification details screen
+                } else {
+                    onCoinSelection()
+                }
             }
         )
     }

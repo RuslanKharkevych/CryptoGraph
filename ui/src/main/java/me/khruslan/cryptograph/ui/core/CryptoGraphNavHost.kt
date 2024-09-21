@@ -7,6 +7,8 @@ import me.khruslan.cryptograph.ui.coins.history.coinHistoryScreen
 import me.khruslan.cryptograph.ui.coins.history.navigateToCoinHistory
 import me.khruslan.cryptograph.ui.coins.main.COINS_ROUTE
 import me.khruslan.cryptograph.ui.coins.main.coinsScreen
+import me.khruslan.cryptograph.ui.coins.picker.coinPickerDialog
+import me.khruslan.cryptograph.ui.coins.picker.showCoinPicker
 import me.khruslan.cryptograph.ui.notifications.main.navigateToNotifications
 import me.khruslan.cryptograph.ui.notifications.main.notificationsScreen
 import me.khruslan.cryptograph.ui.util.navigation.Transitions
@@ -38,6 +40,14 @@ internal fun CryptoGraphNavHost() {
         )
 
         notificationsScreen(
+            onCoinSelection = navController::showCoinPicker,
+            onCloseActionClick = navController::popBackStack
+        )
+
+        coinPickerDialog(
+            onCoinSelected = {
+                // TODO: Pass back selected coin and pop back stack
+            },
             onCloseActionClick = navController::popBackStack
         )
     }

@@ -415,7 +415,7 @@ private fun rememberMarker(chartStyle: CoinHistoryChartStyle, indicatorColor: Co
 
 @Composable
 @PreviewScreenSizesLightDark
-private fun CoinHistoryPreview() {
+private fun CoinHistoryScreenPreview() {
     val coinHistoryState = remember {
         val args = CoinHistoryArgs(
             coinId = "Qwsogvtv82FCd",

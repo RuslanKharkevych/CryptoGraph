@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Notifications
 import androidx.compose.material.icons.outlined.Settings
@@ -39,13 +38,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import coil.compose.AsyncImage
 import com.patrykandpatrick.vico.compose.chart.Chart
 import com.patrykandpatrick.vico.compose.chart.line.lineChart
 import com.patrykandpatrick.vico.compose.chart.scroll.rememberChartScrollSpec
@@ -55,12 +52,12 @@ import me.khruslan.cryptograph.data.coins.ChangeTrend
 import me.khruslan.cryptograph.data.coins.Coin
 import me.khruslan.cryptograph.data.fixtures.PREVIEW_COINS
 import me.khruslan.cryptograph.ui.R
+import me.khruslan.cryptograph.ui.coins.shared.CoinTitleAndIcon
 import me.khruslan.cryptograph.ui.coins.shared.PinCoinButton
 import me.khruslan.cryptograph.ui.core.CryptoGraphTheme
 import me.khruslan.cryptograph.ui.core.DarkGreen
 import me.khruslan.cryptograph.ui.core.DarkRed
 import me.khruslan.cryptograph.ui.core.DarkYellow
-import me.khruslan.cryptograph.ui.util.CurrencyBitcoin
 import me.khruslan.cryptograph.ui.util.PreviewScreenSizesLightDark
 import me.khruslan.cryptograph.ui.util.TrendingDown
 import me.khruslan.cryptograph.ui.util.TrendingFlat
@@ -68,7 +65,6 @@ import me.khruslan.cryptograph.ui.util.TrendingUp
 import me.khruslan.cryptograph.ui.util.UiState
 import me.khruslan.cryptograph.ui.util.components.FullScreenError
 import me.khruslan.cryptograph.ui.util.components.FullScreenLoader
-import me.khruslan.cryptograph.ui.util.previewPlaceholder
 import me.khruslan.cryptograph.ui.util.toColor
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -141,7 +137,7 @@ private fun TopBar(
     onPreferencesActionClick: () -> Unit,
 ) {
     val shadow by animateDpAsState(
-        label = "TopBarShadowDpAnimation",
+        label = "CoinsTopBarShadowDpAnimation",
         targetValue = 8.dp * scrollBehavior.state.overlappedFraction
     )
 
@@ -251,42 +247,6 @@ private fun CoinCard(
         }
         if (coin.sparkline.isNotEmpty()) {
             Sparkline(coin.sparkline)
-        }
-    }
-}
-
-@Composable
-private fun CoinTitleAndIcon(
-    modifier: Modifier,
-    symbol: String?,
-    name: String,
-    iconUrl: String?,
-) {
-    Row(modifier = modifier.basicMarquee()) {
-        if (symbol != null) {
-            Text(
-                text = symbol,
-                style = MaterialTheme.typography.bodyLarge,
-                fontWeight = FontWeight.Bold,
-                maxLines = 1
-            )
-            Spacer(modifier = Modifier.width(8.dp))
-        }
-        Text(
-            text = name,
-            style = MaterialTheme.typography.bodyLarge,
-            maxLines = 1
-        )
-        if (iconUrl != null) {
-            Spacer(modifier = Modifier.width(8.dp))
-            AsyncImage(
-                modifier = Modifier
-                    .size(24.dp)
-                    .clip(CircleShape),
-                model = iconUrl,
-                contentDescription = stringResource(R.string.coin_icon_desc, name),
-                placeholder = previewPlaceholder(Icons.Default.CurrencyBitcoin)
-            )
         }
     }
 }
