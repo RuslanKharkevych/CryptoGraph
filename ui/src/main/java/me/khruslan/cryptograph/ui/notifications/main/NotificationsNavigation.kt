@@ -51,7 +51,10 @@ internal fun NavGraphBuilder.notificationsScreen(
         NotificationsScreen(
             notificationsState = viewModel.notificationsState,
             onRetryClick = viewModel::reloadNotifications,
-            onCloseActionClick = navInterceptor(onCloseActionClick)
+            onCloseActionClick = navInterceptor(onCloseActionClick),
+            onAddButtonClick = {
+                // TODO: Navigate to notification details screen
+            }
         )
     }
 }

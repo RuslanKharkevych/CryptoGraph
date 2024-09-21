@@ -7,10 +7,12 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.platform.LocalInspectionMode
+import androidx.compose.ui.res.stringResource
 import androidx.core.graphics.toColorInt
 import me.khruslan.cryptograph.data.common.DataException
 import me.khruslan.cryptograph.data.common.ErrorType
 import me.khruslan.cryptograph.ui.R
+import java.util.Locale
 
 sealed class UiState<out T> {
     data object Loading : UiState<Nothing>()
@@ -42,4 +44,10 @@ internal fun previewPlaceholder(icon: ImageVector): Painter? {
     } else {
         null
     }
+}
+
+@Composable
+internal fun getCurrentLocale(): Locale {
+    val languageTag = stringResource(R.string.language_tag)
+    return Locale.forLanguageTag(languageTag)
 }

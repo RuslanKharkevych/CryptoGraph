@@ -44,5 +44,11 @@
     <!-- region Notifications -->
     <string name="all_notifications_top_bar_title">Notifications</string>
     <string name="coin_notifications_top_bar_title">%s notifications</string>
+    <string name="all_notifications_empty_placeholder">Your notifications list is empty. Create one to get notified of coin price changes!</string>
+    <string name="coin_notifications_empty_placeholder">Your notifications list is empty. Create one to get notified of %s price changes!</string>
+    <string name="notification_trigger_price_less_then_desc">Price less then %s$</string>
+    <string name="notification_trigger_price_more_then_desc">Price more then %s$</string>
+    <string name="notification_expiration_date_not_applicable_label">N/A</string>
+    <string name="add_notification_btn_desc">Add new notification</string>
     <!-- endregion Notifications -->
 </resources>

@@ -8,7 +8,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.res.stringResource
 import com.patrykandpatrick.vico.core.axis.AxisPosition
 import com.patrykandpatrick.vico.core.axis.formatter.AxisValueFormatter
 import com.patrykandpatrick.vico.core.entry.ChartEntry
@@ -22,6 +21,7 @@ import kotlinx.coroutines.launch
 import me.khruslan.cryptograph.base.Logger
 import me.khruslan.cryptograph.data.coins.CoinPrice
 import me.khruslan.cryptograph.ui.R
+import me.khruslan.cryptograph.ui.util.getCurrentLocale
 import java.time.Clock
 import java.time.LocalDate
 import java.time.Period
@@ -186,14 +186,14 @@ private val CoinHistoryChartPeriod.datePeriod
 @Composable
 internal fun rememberCoinHistoryChartState(coinHistory: List<CoinPrice>): CoinHistoryChartState {
     val coroutineScope = rememberCoroutineScope()
-    val languageTag = stringResource(R.string.language_tag)
+    val locale = getCurrentLocale()
 
     return remember {
         CoinHistoryChartStateImpl(
             chartData = coinHistory,
             externalScope = coroutineScope,
             dispatcher = Dispatchers.Default,
-            locale = Locale.forLanguageTag(languageTag),
+            locale = locale,
             clock = Clock.systemUTC()
         )
     }
