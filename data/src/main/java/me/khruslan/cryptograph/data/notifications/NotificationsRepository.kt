@@ -7,6 +7,7 @@ import me.khruslan.cryptograph.data.notifications.mapper.NotificationsMapper
 
 interface NotificationsRepository {
     fun getNotifications(coinId: String?): Flow<List<Notification>>
+    suspend fun getNotification(id: Long): Notification
     suspend fun addOrUpdateNotification(notification: Notification)
     suspend fun deleteNotification(notification: Notification)
 }
@@ -20,6 +21,11 @@ internal class NotificationsRepositoryImpl(
         return localDataSource.getNotifications(coinId).map { notifications ->
             mapper.mapNotifications(notifications)
         }
+    }
+
+    override suspend fun getNotification(id: Long): Notification {
+        val notificationDto = localDataSource.getNotification(id)
+        return mapper.mapNotification(notificationDto)
     }
 
     override suspend fun addOrUpdateNotification(notification: Notification) {

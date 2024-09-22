@@ -65,6 +65,7 @@ internal fun NotificationsScreen(
     notificationsState: NotificationsState,
     onRetryClick: () -> Unit,
     onAddButtonClick: () -> Unit,
+    onNotificationClick: (notification: CoinNotification) -> Unit,
     onCloseActionClick: () -> Unit,
 ) {
     val topBarScrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
@@ -104,7 +105,10 @@ internal fun NotificationsScreen(
                     if (state.data.isEmpty()) {
                         EmptyPlaceholder(notificationsState.coinName)
                     } else {
-                        NotificationsList(state.data)
+                        NotificationsList(
+                            coinNotifications = state.data,
+                            onNotificationClick = onNotificationClick
+                        )
                     }
                 }
 
@@ -175,12 +179,17 @@ private fun EmptyPlaceholder(coinName: String?) {
 }
 
 @Composable
-private fun NotificationsList(coinNotifications: List<CoinNotification>) {
+private fun NotificationsList(
+    coinNotifications: List<CoinNotification>,
+    onNotificationClick: (notification: CoinNotification) -> Unit,
+) {
     LazyVerticalGrid(columns = GridCells.Adaptive(400.dp)) {
         items(
             count = coinNotifications.count(),
             key = { index -> coinNotifications[index].notification.id }
         ) { index ->
+            val coinNotification = coinNotifications[index]
+
             NotificationCard(
                 modifier = Modifier
                     .animateItem()
@@ -188,8 +197,9 @@ private fun NotificationsList(coinNotifications: List<CoinNotification>) {
                         horizontal = 16.dp,
                         vertical = 8.dp
                     ),
-                coin = coinNotifications[index].coin,
-                notification = coinNotifications[index].notification
+                coin = coinNotification.coin,
+                notification = coinNotification.notification,
+                onClick = { onNotificationClick(coinNotification) }
             )
         }
     }
@@ -200,12 +210,14 @@ private fun NotificationCard(
     modifier: Modifier,
     coin: Coin,
     notification: Notification,
+    onClick: () -> Unit,
 ) {
     Card(
         modifier = modifier,
         colors = CardDefaults.cardColors().copy(
             containerColor = coin.colorHex.toColor().copy(alpha = 0.2f)
-        )
+        ),
+        onClick = onClick
     ) {
         Row(
             modifier = Modifier
@@ -291,6 +303,7 @@ private fun NotificationsScreenPreview() {
         val args = NotificationsArgs(
             coinId = null,
             coinName = null,
+            coinPrice = null
         )
 
         MutableNotificationsState(args).apply {
@@ -303,6 +316,7 @@ private fun NotificationsScreenPreview() {
             notificationsState = notificationsState,
             onRetryClick = {},
             onAddButtonClick = {},
+            onNotificationClick = {},
             onCloseActionClick = {}
         )
     }

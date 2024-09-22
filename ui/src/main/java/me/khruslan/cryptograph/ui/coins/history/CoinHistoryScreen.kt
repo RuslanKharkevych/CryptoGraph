@@ -420,6 +420,7 @@ private fun CoinHistoryScreenPreview() {
         val args = CoinHistoryArgs(
             coinId = "Qwsogvtv82FCd",
             coinName = "Bitcoin",
+            coinPrice = "$63374.15",
             colorHex = "#F7931A",
             isPinned = false
         )

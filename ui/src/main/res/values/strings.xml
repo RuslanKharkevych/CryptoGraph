@@ -55,4 +55,9 @@
     <string name="notification_expiration_date_not_applicable_label">N/A</string>
     <string name="add_notification_btn_desc">Add new notification</string>
     <!-- endregion Notifications -->
+
+    <!-- region Notification Details -->
+    <string name="new_notification_title">%s notification</string>
+    <string name="delete_notification_action_desc">Delete notification</string>
+    <!-- endregion Notification Details -->
 </resources>

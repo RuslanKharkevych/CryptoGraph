@@ -17,18 +17,18 @@ internal class FakeCoinsRepository : CoinsRepository {
     var isNetworkReachable = true
     var isDatabaseCorrupted = false
 
-    private val _coins = MutableStateFlow(STUB_COINS)
+    private val coins = MutableStateFlow(STUB_COINS)
 
     override fun getCoins(id: String?): Flow<List<Coin>> {
         checkIfNetworkIsReachable()
-        return _coins.map { coins ->
+        return coins.map { coins ->
             coins.filter { id?.equals(it.id) ?: true }
         }
     }
 
     override suspend fun pinCoin(id: String) {
         checkIfDataIsValid()
-        _coins.update { coins ->
+        coins.update { coins ->
             coins.map {
                 it.copy(isPinned = if (it.id == id) true else it.isPinned)
             }.sorted()
@@ -37,7 +37,7 @@ internal class FakeCoinsRepository : CoinsRepository {
 
     override suspend fun unpinCoin(id: String) {
         checkIfDataIsValid()
-        _coins.update { coins ->
+        coins.update { coins ->
             coins.map {
                 it.copy(isPinned = if (it.id == id) false else it.isPinned)
             }.sorted()

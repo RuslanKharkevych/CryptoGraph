@@ -12,7 +12,15 @@ class FakeNotificationsRepository : NotificationsRepository {
         return MutableStateFlow(STUB_NOTIFICATIONS.filter { coinId?.equals(it.coinId) ?: true })
     }
 
-    override suspend fun addOrUpdateNotification(notification: Notification) {}
+    override suspend fun getNotification(id: Long): Notification {
+        throw UnsupportedOperationException()
+    }
 
-    override suspend fun deleteNotification(notification: Notification) {}
+    override suspend fun addOrUpdateNotification(notification: Notification) {
+        throw UnsupportedOperationException()
+    }
+
+    override suspend fun deleteNotification(notification: Notification) {
+        throw UnsupportedOperationException()
+    }
 }

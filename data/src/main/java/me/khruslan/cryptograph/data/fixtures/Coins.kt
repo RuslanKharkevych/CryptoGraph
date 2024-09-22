@@ -15,7 +15,7 @@ val PREVIEW_COINS
             name = "BNB",
             colorHex = "#e8b342",
             iconUrl = "https://cdn.coinranking.com/B1N19L_dZ/bnb.svg",
-            price = "593.01",
+            price = "$593.01",
             rank = 4,
             sparkline = listOf(
                 603.505093363307,
@@ -52,7 +52,7 @@ val PREVIEW_COINS
             name = "Solana",
             colorHex = null,
             iconUrl = "https://cdn.coinranking.com/yvUG4Qex5/solana.svg",
-            price = "136.43",
+            price = "$136.43",
             rank = 5,
             sparkline = listOf(
                 140.22188254904697,
@@ -89,7 +89,7 @@ val PREVIEW_COINS
             name = "USDC",
             colorHex = null,
             iconUrl = "https://cdn.coinranking.com/jkDf8sQbY/usdc.svg",
-            price = "1.00",
+            price = "$1.00",
             rank = 6,
             sparkline = listOf(
                 1.0011380690133656,

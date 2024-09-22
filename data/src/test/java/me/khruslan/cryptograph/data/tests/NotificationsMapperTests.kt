@@ -30,7 +30,13 @@ internal class NotificationsMapperTests {
     }
 
     @Test
-    fun `Map notification`() = runTest {
+    fun `Map notification - from DTO`() = runTest {
+        val notification = mapper.mapNotification(STUB_DTO_NOTIFICATIONS[0])
+        assertThat(notification).isEqualTo(STUB_NOTIFICATIONS[0])
+    }
+
+    @Test
+    fun `Map notification - to DTO`() = runTest {
         val notification = mapper.mapNotification(STUB_NOTIFICATIONS[0])
         assertThat(notification).isEqualTo(STUB_DTO_NOTIFICATIONS[0])
     }

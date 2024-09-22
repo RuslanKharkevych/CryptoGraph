@@ -17,6 +17,10 @@ internal class FakeNotificationsLocalDataSource : NotificationsLocalDataSource {
         }
     }
 
+    override suspend fun getNotification(id: Long): NotificationDto {
+        return notificationsFlow.value.first { it.id == id }
+    }
+
     override suspend fun addOrUpdateNotification(notification: NotificationDto) {
         notificationsFlow.update { notifications ->
             val index = notifications.indexOfFirst { it.id == notification.id }

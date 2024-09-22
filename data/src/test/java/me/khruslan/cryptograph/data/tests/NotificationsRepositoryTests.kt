@@ -24,6 +24,15 @@ internal class NotificationsRepositoryTests {
     }
 
     @Test
+    fun `Get notification`() = runTest {
+        val addedNotification = STUB_NOTIFICATIONS[0]
+        repository.addOrUpdateNotification(addedNotification)
+
+        val actualNotification = repository.getNotification(addedNotification.id)
+        assertThat(actualNotification).isEqualTo(addedNotification)
+    }
+
+    @Test
     fun `Add notification`() = runTest {
         val notification = STUB_NOTIFICATIONS[0]
         repository.addOrUpdateNotification(notification)

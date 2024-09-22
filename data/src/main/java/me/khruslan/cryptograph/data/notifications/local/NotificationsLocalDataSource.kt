@@ -15,6 +15,7 @@ private const val LOG_TAG = "NotificationsLocalDataSource"
 
 internal interface NotificationsLocalDataSource {
     fun getNotifications(coinUuid: String? = null): Flow<List<NotificationDto>>
+    suspend fun getNotification(id: Long): NotificationDto
     suspend fun addOrUpdateNotification(notification: NotificationDto)
     suspend fun deleteNotification(notification: NotificationDto)
 }
@@ -34,6 +35,17 @@ internal class NotificationsLocalDataSourceImpl(
 
         return queryBuilder.build().subscribe().toFlow().onEach { notifications ->
             Logger.info(LOG_TAG, "Observed notifications: $notifications")
+        }
+    }
+
+    override suspend fun getNotification(id: Long): NotificationDto {
+        return withContext(dispatcher) {
+            try {
+                box.get(id)
+            } catch (e: DbException) {
+                Logger.error(LOG_TAG, "Failed to get notification by id: $id", e)
+                throw DatabaseException(e)
+            }
         }
     }
 

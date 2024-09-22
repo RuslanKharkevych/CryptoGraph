@@ -30,6 +30,15 @@ internal class NotificationsLocalDataSourceTests {
     }
 
     @Test
+    fun `Get notification`() = runTest {
+        val addedNotification = STUB_DTO_NOTIFICATIONS[0].copy(id = 0L)
+        dataSource.addOrUpdateNotification(addedNotification)
+
+        val actualNotification = dataSource.getNotification(addedNotification.id)
+        assertThat(actualNotification).isEqualTo(addedNotification)
+    }
+
+    @Test
     fun `Add notification`() = runTest {
         val notification = STUB_DTO_NOTIFICATIONS[0].copy(id = 0L)
         dataSource.addOrUpdateNotification(notification)

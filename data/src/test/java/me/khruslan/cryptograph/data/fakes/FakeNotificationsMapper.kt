@@ -12,8 +12,12 @@ internal class FakeNotificationsMapper : NotificationsMapper {
         notifications: List<NotificationDto>
     ): List<Notification> {
         return notifications.map { notification ->
-            STUB_NOTIFICATIONS.first { it.id == notification.id }
+            mapNotification(notification)
         }
+    }
+
+    override suspend fun mapNotification(notification: NotificationDto): Notification {
+        return STUB_NOTIFICATIONS.first { it.id == notification.id }
     }
 
     override suspend fun mapNotification(notification: Notification): NotificationDto {

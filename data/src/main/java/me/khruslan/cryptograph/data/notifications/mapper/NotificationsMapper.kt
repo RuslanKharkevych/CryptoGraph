@@ -3,6 +3,7 @@ package me.khruslan.cryptograph.data.notifications.mapper
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import me.khruslan.cryptograph.base.Logger
+import me.khruslan.cryptograph.data.common.DataValidationException
 import me.khruslan.cryptograph.data.notifications.Notification
 import me.khruslan.cryptograph.data.notifications.NotificationTrigger
 import me.khruslan.cryptograph.data.notifications.local.NotificationDto
@@ -13,6 +14,7 @@ private const val LOG_TAG = "NotificationsMapper"
 
 internal interface NotificationsMapper {
     suspend fun mapNotifications(notifications: List<NotificationDto>): List<Notification>
+    suspend fun mapNotification(notification: NotificationDto): Notification
     suspend fun mapNotification(notification: Notification): NotificationDto
 }
 
@@ -25,7 +27,18 @@ internal class NotificationsMapperImpl(
     ): List<Notification> {
         return withContext(dispatcher) {
             notifications.mapNotNull { notificationDto ->
-                mapNotification(notificationDto)
+                mapNotificationOrNull(notificationDto)
+            }
+        }
+    }
+
+    override suspend fun mapNotification(notification: NotificationDto): Notification {
+        return withContext(dispatcher) {
+            try {
+                mapNotificationInternal(notification)
+            } catch (e: IllegalArgumentException) {
+                Logger.error(LOG_TAG, "Failed to map $notification", e)
+                throw DataValidationException(e)
             }
         }
     }
@@ -48,19 +61,23 @@ internal class NotificationsMapperImpl(
         }
     }
 
-    private fun mapNotification(notificationDto: NotificationDto): Notification? {
-        return try {
-            Notification(
-                id = notificationDto.id,
-                coinId = notificationDto.coinUuid,
-                title = notificationDto.title,
-                createdAt = mapDate(notificationDto.createdAtDate),
-                expirationDate = notificationDto.expirationDate?.let(::mapDate),
-                trigger = mapTrigger(
-                    priceLessThen = notificationDto.priceLessThenTrigger,
-                    priceMoreThen = notificationDto.priceMoreThenTrigger
-                )
+    private fun mapNotificationInternal(notificationDto: NotificationDto): Notification {
+        return Notification(
+            id = notificationDto.id,
+            coinId = notificationDto.coinUuid,
+            title = notificationDto.title,
+            createdAt = mapDate(notificationDto.createdAtDate),
+            expirationDate = notificationDto.expirationDate?.let(::mapDate),
+            trigger = mapTrigger(
+                priceLessThen = notificationDto.priceLessThenTrigger,
+                priceMoreThen = notificationDto.priceMoreThenTrigger
             )
+        )
+    }
+
+    private fun mapNotificationOrNull(notificationDto: NotificationDto): Notification? {
+        return try {
+            mapNotificationInternal(notificationDto)
         } catch (e: IllegalArgumentException) {
             Logger.error(LOG_TAG, "Failed to map $notificationDto", e)
             null

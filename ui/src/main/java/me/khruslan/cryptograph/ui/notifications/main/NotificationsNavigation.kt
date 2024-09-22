@@ -6,8 +6,12 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
+import me.khruslan.cryptograph.data.notifications.Notification
+import me.khruslan.cryptograph.ui.coins.shared.CoinInfo
+import me.khruslan.cryptograph.ui.coins.shared.CoinInfoNavResultEffect
 import me.khruslan.cryptograph.ui.notifications.main.NotificationsArgKeys.COIN_ID_ARG
 import me.khruslan.cryptograph.ui.notifications.main.NotificationsArgKeys.COIN_NAME_ARG
+import me.khruslan.cryptograph.ui.notifications.main.NotificationsArgKeys.COIN_PRICE_ARG
 import me.khruslan.cryptograph.ui.util.navigation.modal
 import me.khruslan.cryptograph.ui.util.navigation.rememberNavInterceptor
 import me.khruslan.cryptograph.ui.util.navigation.route
@@ -18,17 +22,20 @@ private const val NOTIFICATIONS_ROUTE = "notifications"
 private object NotificationsArgKeys {
     const val COIN_ID_ARG = "coin-id"
     const val COIN_NAME_ARG = "coin-name"
+    const val COIN_PRICE_ARG = "coin-price"
 }
 
 internal data class NotificationsArgs(
     val coinId: String?,
     val coinName: String?,
+    val coinPrice: String?,
 ) {
     companion object {
         fun fromSavedStateHandle(savedStateHandle: SavedStateHandle): NotificationsArgs {
             return NotificationsArgs(
                 coinId = savedStateHandle[COIN_ID_ARG],
-                coinName = savedStateHandle[COIN_NAME_ARG]
+                coinName = savedStateHandle[COIN_NAME_ARG],
+                coinPrice = savedStateHandle[COIN_PRICE_ARG]
             )
         }
 
@@ -36,19 +43,22 @@ internal data class NotificationsArgs(
             val bundle = checkNotNull(navBackStackEntry.arguments)
             return NotificationsArgs(
                 coinId = bundle.getString(COIN_ID_ARG),
-                coinName = bundle.getString(COIN_NAME_ARG)
+                coinName = bundle.getString(COIN_NAME_ARG),
+                coinPrice = bundle.getString(COIN_PRICE_ARG)
             )
         }
     }
 }
 
 internal fun NavGraphBuilder.notificationsScreen(
+    onNotificationDetails: (notification: Notification?, coinInfo: CoinInfo) -> Unit,
     onCoinSelection: () -> Unit,
     onCloseActionClick: () -> Unit,
 ) {
     val arguments = listOf(
         navArgument(COIN_ID_ARG) { type = NavType.StringType; nullable = true },
-        navArgument(COIN_NAME_ARG) { type = NavType.StringType; nullable = true }
+        navArgument(COIN_NAME_ARG) { type = NavType.StringType; nullable = true },
+        navArgument(COIN_PRICE_ARG) { type = NavType.StringType; nullable = true }
     )
 
     modal(
@@ -59,28 +69,35 @@ internal fun NavGraphBuilder.notificationsScreen(
         val navInterceptor = rememberNavInterceptor(navBackStackEntry)
         val args = NotificationsArgs.fromNavBackStackEntry(navBackStackEntry)
 
+        CoinInfoNavResultEffect(navBackStackEntry) { coinInfo ->
+            onNotificationDetails(null, coinInfo)
+        }
+
         NotificationsScreen(
             notificationsState = viewModel.notificationsState,
             onRetryClick = viewModel::reloadNotifications,
-            onCloseActionClick = navInterceptor(onCloseActionClick),
-            onAddButtonClick = {
-                if (args.coinId != null) {
-                    // TODO: Navigate to notification details screen
+            onAddButtonClick = navInterceptor {
+                if (args.coinId != null && args.coinName != null) {
+                    val coinInfo = CoinInfo(args.coinId, args.coinName, args.coinPrice)
+                    onNotificationDetails(null, coinInfo)
                 } else {
                     onCoinSelection()
                 }
-            }
+            },
+            onNotificationClick = navInterceptor { (coin, notification) ->
+                val coinInfo = CoinInfo.fromCoin(coin)
+                onNotificationDetails(notification, coinInfo)
+            },
+            onCloseActionClick = navInterceptor(onCloseActionClick),
         )
     }
 }
 
-internal fun NavController.navigateToNotifications(
-    coinId: String? = null,
-    coinName: String? = null,
-) {
+internal fun NavController.navigateToNotifications(coinInfo: CoinInfo? = null) {
     val route = route(NOTIFICATIONS_ROUTE) {
-        argument(COIN_ID_ARG, coinId)
-        argument(COIN_NAME_ARG, coinName)
+        argument(COIN_ID_ARG, coinInfo?.id)
+        argument(COIN_NAME_ARG, coinInfo?.name)
+        argument(COIN_PRICE_ARG, coinInfo?.price)
     }
 
     navigate(route)

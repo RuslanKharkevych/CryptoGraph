@@ -13,11 +13,15 @@ internal class FakeCoinsRepository : CoinsRepository {
         return flowOf(STUB_COINS.filter { id?.equals(it.id) ?: true })
     }
 
-    override suspend fun pinCoin(id: String) {}
+    override suspend fun pinCoin(id: String) {
+        throw UnsupportedOperationException()
+    }
 
-    override suspend fun unpinCoin(id: String) {}
+    override suspend fun unpinCoin(id: String) {
+        throw UnsupportedOperationException()
+    }
 
     override suspend fun getCoinHistory(id: String): List<CoinPrice> {
-        return emptyList()
+        throw UnsupportedOperationException()
     }
 }
