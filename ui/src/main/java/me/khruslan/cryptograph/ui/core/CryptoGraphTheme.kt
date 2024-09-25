@@ -1,6 +1,7 @@
 package me.khruslan.cryptograph.ui.core
 
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Typography
 import androidx.compose.material3.darkColorScheme
@@ -14,17 +15,25 @@ import me.khruslan.cryptograph.ui.R
 
 @Composable
 internal fun CryptoGraphTheme(content: @Composable () -> Unit) {
-    val colorScheme = if (isSystemInDarkTheme()) {
-        darkColorScheme()
-    } else {
-        lightColorScheme()
-    }
-
     MaterialTheme(
-        colorScheme = colorScheme,
+        colorScheme = cryptoGraphColorTheme(),
         typography = CryptoGraphTypography,
         content = content
     )
+}
+
+@Composable
+private fun cryptoGraphColorTheme(): ColorScheme {
+    return if (isSystemInDarkTheme()) {
+        darkColorScheme()
+    } else {
+        lightColorScheme()
+    }.run {
+        copy(
+            primary = onSurfaceVariant,
+            primaryContainer = surfaceContainerHigh
+        )
+    }
 }
 
 internal val DarkGreen = Color(0xFF00796B)

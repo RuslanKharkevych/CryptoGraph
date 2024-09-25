@@ -10,38 +10,35 @@ import androidx.compose.ui.text.input.TextFieldValue
 import me.khruslan.cryptograph.data.notifications.Notification
 import me.khruslan.cryptograph.data.notifications.NotificationTrigger
 import me.khruslan.cryptograph.ui.coins.shared.CoinInfo
-import me.khruslan.cryptograph.ui.util.getCurrentLocale
-import java.time.format.DateTimeFormatter
-import java.util.Locale
+import java.time.LocalDate
 
-private const val EXPIRATION_DATE_PATTERN = "MMM dd, yyyy"
-
+// TODO: Save state on configuration changes
 internal interface NotificationDetailsFormState {
     val coinInfo: CoinInfo
     val notificationTitle: TextFieldValue
     val triggerType: NotificationTriggerType
     val triggerPrice: TextFieldValue
-    val expirationDate: String
+    val expirationDate: LocalDate?
+    val expirationDatePickerVisible: Boolean
 
     fun updateNotificationTitle(title: TextFieldValue)
     fun updateTriggerPrice(price: TextFieldValue)
-    fun showDatePicker()
+    fun updateExpirationDate(date: LocalDate?)
+    fun showExpirationDatePicker()
+    fun dismissExpirationDatePicker()
 }
 
 private class NotificationDetailsFormStateImpl(
     coinInfo: CoinInfo,
     notification: Notification?,
-    locale: Locale,
 ) : NotificationDetailsFormState {
-
-    private val expirationDateFormatter =
-        DateTimeFormatter.ofPattern(EXPIRATION_DATE_PATTERN, locale)
 
     override var coinInfo by mutableStateOf(coinInfo)
     override var notificationTitle by notificationTitleState(notification)
     override var triggerType by triggerTypeState(notification)
     override var triggerPrice by triggerPriceState(notification)
-    override var expirationDate by expirationDateState(notification)
+    override var expirationDate by mutableStateOf(notification?.expirationDate)
+    override var expirationDatePickerVisible by mutableStateOf(false)
 
     override fun updateNotificationTitle(title: TextFieldValue) {
         notificationTitle = title
@@ -51,8 +48,16 @@ private class NotificationDetailsFormStateImpl(
         triggerPrice = price
     }
 
-    override fun showDatePicker() {
-        // TODO: Show date picker
+    override fun updateExpirationDate(date: LocalDate?) {
+        expirationDate = date
+    }
+
+    override fun showExpirationDatePicker() {
+        expirationDatePickerVisible = true
+    }
+
+    override fun dismissExpirationDatePicker() {
+        expirationDatePickerVisible = false
     }
 
     private fun notificationTitleState(notification: Notification?): MutableState<TextFieldValue> {
@@ -73,11 +78,6 @@ private class NotificationDetailsFormStateImpl(
         val price = notification?.trigger?.targetPrice?.toBigDecimal()?.toPlainString().orEmpty()
         return mutableStateOf(TextFieldValue(price))
     }
-
-    private fun expirationDateState(notification: Notification?): MutableState<String> {
-        val dateString = notification?.expirationDate?.format(expirationDateFormatter).orEmpty()
-        return mutableStateOf(dateString)
-    }
 }
 
 internal enum class NotificationTriggerType(val label: String) {
@@ -90,10 +90,8 @@ internal fun rememberNotificationDetailsFormState(
     coinInfo: CoinInfo,
     notification: Notification?,
 ): NotificationDetailsFormState {
-    val locale = getCurrentLocale()
-
     return remember(notification) {
-        NotificationDetailsFormStateImpl(coinInfo, notification, locale)
+        NotificationDetailsFormStateImpl(coinInfo, notification)
     }.apply {
         this.coinInfo = coinInfo
     }

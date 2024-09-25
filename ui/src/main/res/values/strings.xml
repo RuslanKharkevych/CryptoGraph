@@ -65,6 +65,7 @@
     <string name="expiration_date_field_label">Expiration date (optional)</string>
     <string name="save_btn_label">Save</string>
     <string name="discard_btn_label">Discard</string>
-    <string name="not_selected_placeholder">Not selected</string>
+    <string name="date_picker_positive_btn">Confirm</string>
+    <string name="date_picker_negative_btn">Cancel</string>
     <!-- endregion Notification Details -->
 </resources>

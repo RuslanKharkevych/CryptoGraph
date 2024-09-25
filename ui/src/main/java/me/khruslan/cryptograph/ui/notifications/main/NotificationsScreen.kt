@@ -80,10 +80,7 @@ internal fun NotificationsScreen(
             )
         },
         floatingActionButton = {
-            FloatingActionButton(
-                containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
-                onClick = onAddButtonClick
-            ) {
+            FloatingActionButton(onClick = onAddButtonClick) {
                 Icon(
                     imageVector = Icons.Default.Add,
                     contentDescription = stringResource(R.string.add_notification_btn_desc)

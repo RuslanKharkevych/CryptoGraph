@@ -18,19 +18,18 @@ import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.foundation.text.selection.TextSelectionColors
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.outlined.Delete
-import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.DisplayMode
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -40,14 +39,11 @@ import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.focus.FocusDirection
-import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
@@ -62,10 +58,17 @@ import me.khruslan.cryptograph.data.notifications.Notification
 import me.khruslan.cryptograph.ui.R
 import me.khruslan.cryptograph.ui.coins.shared.CoinInfo
 import me.khruslan.cryptograph.ui.core.CryptoGraphTheme
+import me.khruslan.cryptograph.ui.notifications.details.date.ExpirationDatePickerDialog
+import me.khruslan.cryptograph.ui.notifications.details.date.rememberExpirationDatePickerState
 import me.khruslan.cryptograph.ui.util.PreviewScreenSizesLightDark
 import me.khruslan.cryptograph.ui.util.UiState
 import me.khruslan.cryptograph.ui.util.components.FullScreenError
 import me.khruslan.cryptograph.ui.util.components.FullScreenLoader
+import me.khruslan.cryptograph.ui.util.getCurrentLocale
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+
+private const val EXPIRATION_DATE_PATTERN = "MMM dd, yyyy"
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -166,15 +169,37 @@ private fun TopBar(
     )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun NotificationForm(
     coinInfo: CoinInfo,
     notification: Notification?,
     onCoinFieldClick: (coinId: String) -> Unit,
 ) {
-    val state = rememberNotificationDetailsFormState(coinInfo, notification)
+    val formState = rememberNotificationDetailsFormState(coinInfo, notification)
+    val focusManager = LocalFocusManager.current
 
     BoxWithConstraints {
+        if (formState.expirationDatePickerVisible) {
+            ExpirationDatePickerDialog(
+                state = rememberExpirationDatePickerState(
+                    initialDate = formState.expirationDate,
+                    initialDisplayMode = if (maxHeight > 500.dp) {
+                        DisplayMode.Picker
+                    } else {
+                        DisplayMode.Input
+                    }
+                ),
+                onDateSelected = formState::updateExpirationDate,
+                onDismiss = {
+                    if (formState.expirationDate == null) {
+                        focusManager.clearFocus()
+                    }
+                    formState.dismissExpirationDatePicker()
+                }
+            )
+        }
+
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -191,21 +216,21 @@ private fun NotificationForm(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             CoinField(
-                name = state.coinInfo.name,
+                name = formState.coinInfo.name,
                 onClick = { onCoinFieldClick(coinInfo.id) }
             )
             NotificationTitleField(
-                title = state.notificationTitle,
-                onTitleChange = state::updateNotificationTitle
+                title = formState.notificationTitle,
+                onTitleChange = formState::updateNotificationTitle
             )
             TriggerField(
-                type = state.triggerType,
-                price = state.triggerPrice,
-                onPriceChange = state::updateTriggerPrice
+                type = formState.triggerType,
+                price = formState.triggerPrice,
+                onPriceChange = formState::updateTriggerPrice
             )
             ExpirationDateField(
-                date = state.expirationDate,
-                onClick = state::showDatePicker
+                date = formatExpirationDate(formState.expirationDate),
+                onClick = formState::showExpirationDatePicker
             )
             FormButtons(
                 onSaveClick = {
@@ -297,11 +322,11 @@ private fun FormButtons(
             .heightIn(min = 45.dp)
             .weight(1f)
 
-        Button(
+        OutlinedButton(
             modifier = buttonModifier,
-            colors = ButtonDefaults.buttonColors(
+            colors = ButtonDefaults.outlinedButtonColors(
                 containerColor = MaterialTheme.colorScheme.errorContainer,
-                contentColor = MaterialTheme.colorScheme.onSurface
+                contentColor = MaterialTheme.colorScheme.onErrorContainer
             ),
             onClick = onDiscardClick,
             content = {
@@ -309,13 +334,13 @@ private fun FormButtons(
             }
         )
 
-        Button(
+        OutlinedButton(
             modifier = buttonModifier,
-            colors = ButtonDefaults.buttonColors(
-                containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
-                contentColor = MaterialTheme.colorScheme.onSurface
-            ),
             onClick = onSaveClick,
+            colors = ButtonDefaults.outlinedButtonColors(
+                containerColor = MaterialTheme.colorScheme.primaryContainer,
+                contentColor = MaterialTheme.colorScheme.onPrimaryContainer
+            ),
             content = {
                 Text(text = stringResource(R.string.save_btn_label))
             }
@@ -352,7 +377,6 @@ private fun FormField(
 ) {
     val focusManager = LocalFocusManager.current
     val interactionSource = remember { MutableInteractionSource() }
-    var focused by remember { mutableStateOf(false) }
 
     LaunchedEffect(interactionSource) {
         interactionSource.interactions.collect { interaction ->
@@ -365,24 +389,10 @@ private fun FormField(
     OutlinedTextField(
         modifier = Modifier
             .widthIn(max = 400.dp)
-            .fillMaxWidth()
-            .onFocusChanged { focused = it.isFocused },
-        value = if (value.text.isEmpty() && readOnly && focused) {
-            TextFieldValue(stringResource(R.string.not_selected_placeholder))
-        } else {
-            value
-        },
+            .fillMaxWidth(),
+        value = value,
         onValueChange = onValueChange,
         interactionSource = interactionSource.takeIf { onClick != null },
-        colors = OutlinedTextFieldDefaults.colors(
-            focusedBorderColor = MaterialTheme.colorScheme.onSurfaceVariant,
-            focusedLabelColor = MaterialTheme.colorScheme.onSurfaceVariant,
-            cursorColor = MaterialTheme.colorScheme.onSurfaceVariant,
-            selectionColors = TextSelectionColors(
-                handleColor = MaterialTheme.colorScheme.onSurfaceVariant,
-                backgroundColor = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.4f)
-            )
-        ),
         keyboardOptions = keyboardOptions,
         keyboardActions = KeyboardActions(
             onNext = { focusManager.moveFocus(FocusDirection.Next) },
@@ -394,6 +404,14 @@ private fun FormField(
         prefix = prefix,
         suffix = suffix
     )
+}
+
+@Composable
+private fun formatExpirationDate(date: LocalDate?): String {
+    if (date == null) return ""
+    val locale = getCurrentLocale()
+    val dateFormatter = DateTimeFormatter.ofPattern(EXPIRATION_DATE_PATTERN, locale)
+    return date.format(dateFormatter)
 }
 
 private val NotificationDetailsState.topBarTitle
