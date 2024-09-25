@@ -21,6 +21,6 @@ internal fun <T> NavResultEffect(
 
     result?.let {
         onResult(it)
-        savedStateHandle.remove<T?>(key)
+        savedStateHandle[key] = null
     }
 }

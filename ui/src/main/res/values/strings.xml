@@ -59,5 +59,12 @@
     <!-- region Notification Details -->
     <string name="new_notification_title">%s notification</string>
     <string name="delete_notification_action_desc">Delete notification</string>
+    <string name="coin_field_label">Coin</string>
+    <string name="notification_title_field_label">Notification title</string>
+    <string name="notification_trigger_field_label">Notification trigger</string>
+    <string name="expiration_date_field_label">Expiration date (optional)</string>
+    <string name="save_btn_label">Save</string>
+    <string name="discard_btn_label">Discard</string>
+    <string name="not_selected_placeholder">Not selected</string>
     <!-- endregion Notification Details -->
 </resources>

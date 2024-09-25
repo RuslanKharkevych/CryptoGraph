@@ -54,6 +54,7 @@ internal fun CryptoGraphNavHost() {
         )
 
         notificationDetailsScreen(
+            onCoinFieldClick = navController::showCoinPicker,
             onBackActionClick = navController::popBackStack
         )
     }

@@ -42,6 +42,10 @@ internal class NotificationDetailsViewModel(
         // TODO: Implement logic of deleting notification
     }
 
+    fun updateCoinInfo(coinInfo: CoinInfo) {
+        _notificationDetailsState.coinInfo = coinInfo
+    }
+
     private fun loadNotification() {
         viewModelScope.launch {
             try {
@@ -57,8 +61,8 @@ internal class NotificationDetailsViewModel(
 @Stable
 internal interface NotificationDetailsState {
     val notificationTitle: String?
-    val coinInfo: CoinInfo
     val isDeletable: Boolean
+    val coinInfo: CoinInfo
     val notificationState: UiState<Notification?>
 }
 
@@ -66,7 +70,7 @@ internal class MutableNotificationDetailsState(
     args: NotificationDetailsArgs
 ) : NotificationDetailsState {
     override val notificationTitle: String? = args.notificationTitle
-    override val coinInfo: CoinInfo = CoinInfo.fromArgs(args)
     override val isDeletable: Boolean = args.notificationId != 0L
+    override var coinInfo: CoinInfo by mutableStateOf(CoinInfo.fromArgs(args))
     override var notificationState: UiState<Notification?> by mutableStateOf(UiState.Loading)
 }

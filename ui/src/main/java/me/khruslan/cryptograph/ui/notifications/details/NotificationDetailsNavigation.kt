@@ -10,6 +10,7 @@ import androidx.navigation.navArgument
 import me.khruslan.cryptograph.data.notifications.Notification
 import me.khruslan.cryptograph.ui.coins.shared.CoinInfo
 import me.khruslan.cryptograph.ui.coins.shared.CoinInfoArgs
+import me.khruslan.cryptograph.ui.coins.shared.CoinInfoNavResultEffect
 import me.khruslan.cryptograph.ui.notifications.details.NotificationDetailsArgKeys.COIN_ID_ARG
 import me.khruslan.cryptograph.ui.notifications.details.NotificationDetailsArgKeys.COIN_NAME_ARG
 import me.khruslan.cryptograph.ui.notifications.details.NotificationDetailsArgKeys.COIN_PRICE_ARG
@@ -51,6 +52,7 @@ internal data class NotificationDetailsArgs(
 }
 
 internal fun NavGraphBuilder.notificationDetailsScreen(
+    onCoinFieldClick: (coinId: String) -> Unit,
     onBackActionClick: () -> Unit,
 ) {
     val arguments = listOf(
@@ -68,10 +70,15 @@ internal fun NavGraphBuilder.notificationDetailsScreen(
         val viewModel: NotificationDetailsViewModel = koinViewModel()
         val navInterceptor = rememberNavInterceptor(navBackStackEntry)
 
+        CoinInfoNavResultEffect(navBackStackEntry) { coinInfo ->
+            viewModel.updateCoinInfo(coinInfo)
+        }
+
         NotificationDetailsScreen(
             notificationDetailsState = viewModel.notificationDetailsState,
             onRetryClick = viewModel::reloadNotification,
             onDeleteActionClick = viewModel::deleteNotification,
+            onCoinFieldClick = navInterceptor(onCoinFieldClick),
             onBackActionClick = navInterceptor(onBackActionClick)
         )
     }
