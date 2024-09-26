@@ -38,6 +38,10 @@ internal class NotificationDetailsViewModel(
         loadNotification()
     }
 
+    fun saveNotification(notification: Notification) {
+        // TODO: Implement logic of saving notification
+    }
+
     fun deleteNotification() {
         // TODO: Implement logic of deleting notification
     }

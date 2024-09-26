@@ -41,7 +41,7 @@ val STUB_NOTIFICATIONS
                 title = "Bitcoin < 5000$",
                 createdAt = LocalDate.parse("2024-09-13"),
                 expirationDate = null,
-                trigger = NotificationTrigger.PriceLessThen(5000.0)
+                trigger = NotificationTrigger.PriceLessThen(50000.0)
             ),
             Notification(
                 id = 2L,
@@ -49,7 +49,7 @@ val STUB_NOTIFICATIONS
                 title = "Ethereum > 3000$",
                 createdAt = LocalDate.parse("2024-09-13"),
                 expirationDate = LocalDate.parse("2025-09-13"),
-                trigger = NotificationTrigger.PriceMoreThen(3000.0)
+                trigger = NotificationTrigger.PriceMoreThen(4000.0)
             ),
             Notification(
                 id = 3L,

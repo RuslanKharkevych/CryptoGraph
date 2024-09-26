@@ -44,13 +44,16 @@ import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.focus.FocusDirection
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
@@ -77,13 +80,14 @@ import me.khruslan.cryptograph.ui.util.previewPlaceholder
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
-private const val EXPIRATION_DATE_PATTERN = "MMM dd, yyyy"
+private const val EXPIRATION_DATE_PATTERN = "MMMM dd, yyyy"
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun NotificationDetailsScreen(
     notificationDetailsState: NotificationDetailsState,
     onRetryClick: () -> Unit,
+    onSaveNotification: (notification: Notification) -> Unit,
     onDeleteActionClick: () -> Unit,
     onCoinFieldClick: (coinId: String) -> Unit,
     onBackActionClick: () -> Unit,
@@ -116,7 +120,8 @@ internal fun NotificationDetailsScreen(
                     coinInfo = notificationDetailsState.coinInfo,
                     isCoinEditable = notificationDetailsState.isCoinEditable,
                     notification = state.data,
-                    onCoinFieldClick = onCoinFieldClick
+                    onCoinFieldClick = onCoinFieldClick,
+                    onSaveNotification = onSaveNotification
                 )
 
                 is UiState.Error -> FullScreenError(
@@ -186,6 +191,7 @@ private fun NotificationForm(
     isCoinEditable: Boolean,
     notification: Notification?,
     onCoinFieldClick: (coinId: String) -> Unit,
+    onSaveNotification: (notification: Notification) -> Unit,
 ) {
     val formState = rememberNotificationDetailsFormState(coinInfo, notification)
     val focusManager = LocalFocusManager.current
@@ -215,7 +221,7 @@ private fun NotificationForm(
                 .verticalScroll(rememberScrollState())
                 .padding(horizontal = 24.dp),
             verticalArrangement = Arrangement.spacedBy(
-                space = 16.dp,
+                space = 8.dp,
                 alignment = if (maxWidth > 800.dp) {
                     Alignment.CenterVertically
                 } else {
@@ -231,13 +237,18 @@ private fun NotificationForm(
             )
             NotificationTitleField(
                 title = formState.notificationTitle,
-                onTitleChange = formState::updateNotificationTitle
+                state = formState.notificationTitleState,
+                onTitleChange = formState::updateNotificationTitle,
+                onFocusChange = formState::validateNotificationTitle
             )
             TriggerField(
                 type = formState.triggerType,
                 typeDropdownExpanded = formState.triggerTypeDropdownExpanded,
                 price = formState.triggerPrice,
+                priceState = formState.triggerPriceState,
+                currentCoinPrice = formState.coinInfo.price,
                 onPriceChange = formState::updateTriggerPrice,
+                onPriceFocusChange = formState::validateTriggerPrice,
                 onExpandTypeDropdown = formState::expandTriggerTypeDropdown,
                 onCollapseTypeDropdown = formState::collapseTriggerTypeDropdown,
                 onTypeSelected = formState::updateTriggerType
@@ -248,7 +259,8 @@ private fun NotificationForm(
             )
             FormButtons(
                 onSaveClick = {
-                    // TODO: Validate fields
+                    focusManager.clearFocus()
+                    formState.buildNotification(onSuccess = onSaveNotification)
                 },
                 onDiscardClick = {
                     // TODO: Show confirmation dialog
@@ -267,6 +279,10 @@ private fun CoinField(
     FormField(
         value = TextFieldValue(coinInfo.name),
         label = stringResource(R.string.coin_field_label),
+        supportingText = stringResource(
+            R.string.coin_field_desc,
+            coinInfo.price ?: unknownPricePlaceholder()
+        ),
         readOnly = true,
         enabled = editable,
         suffix = {
@@ -286,17 +302,27 @@ private fun CoinField(
 @Composable
 private fun NotificationTitleField(
     title: TextFieldValue,
+    state: NotificationTitleState,
     onTitleChange: (title: TextFieldValue) -> Unit,
+    onFocusChange: (isFocused: Boolean) -> Unit,
 ) {
     FormField(
         value = title,
         onValueChange = onTitleChange,
         label = stringResource(R.string.notification_title_field_label),
+        supportingText = stringResource(
+            when (state) {
+                NotificationTitleState.Default -> R.string.notification_title_field_desc
+                NotificationTitleState.Blank -> R.string.notification_title_field_blank_error_label
+            }
+        ),
+        isError = !state.isValid,
         keyboardOptions = KeyboardOptions(
             capitalization = KeyboardCapitalization.Sentences,
             keyboardType = KeyboardType.Text,
             imeAction = ImeAction.Next
         ),
+        onFocusChange = onFocusChange
     )
 }
 
@@ -305,7 +331,10 @@ private fun TriggerField(
     type: NotificationTriggerType,
     typeDropdownExpanded: Boolean,
     price: TextFieldValue,
+    priceState: NotificationTriggerPriceState,
+    currentCoinPrice: String?,
     onPriceChange: (price: TextFieldValue) -> Unit,
+    onPriceFocusChange: (isFocused: Boolean) -> Unit,
     onExpandTypeDropdown: () -> Unit,
     onCollapseTypeDropdown: () -> Unit,
     onTypeSelected: (type: NotificationTriggerType) -> Unit,
@@ -314,6 +343,11 @@ private fun TriggerField(
         value = price,
         onValueChange = onPriceChange,
         label = stringResource(R.string.notification_trigger_field_label),
+        supportingText = getTriggerPriceSupportingLabel(
+            state = priceState,
+            currentCoinPrice = currentCoinPrice
+        ),
+        isError = !priceState.isValid,
         keyboardOptions = KeyboardOptions(
             keyboardType = KeyboardType.Decimal,
             imeAction = ImeAction.Done
@@ -329,7 +363,8 @@ private fun TriggerField(
         },
         suffix = {
             Text(text = "$")
-        }
+        },
+        onFocusChange = onPriceFocusChange
     )
 }
 
@@ -338,6 +373,7 @@ private fun ExpirationDateField(date: String, onClick: () -> Unit) {
     FormField(
         value = TextFieldValue(date),
         label = stringResource(R.string.expiration_date_field_label),
+        supportingText = stringResource(R.string.expiration_date_field_desc),
         readOnly = true,
         onClick = onClick
     )
@@ -427,16 +463,20 @@ private fun FormField(
     value: TextFieldValue,
     onValueChange: (TextFieldValue) -> Unit = {},
     label: String,
+    supportingText: String,
     readOnly: Boolean = false,
     enabled: Boolean = true,
+    isError: Boolean = false,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     prefix: @Composable (() -> Unit)? = null,
     suffix: @Composable (() -> Unit)? = null,
     onClick: (() -> Unit)? = null,
+    onFocusChange: ((isFocused: Boolean) -> Unit)? = null,
 ) {
     val focusManager = LocalFocusManager.current
     val interactionSource = remember { MutableInteractionSource() }
     val onClickListener by rememberUpdatedState(onClick)
+    var wasFocused by remember { mutableStateOf(false) }
 
     LaunchedEffect(interactionSource) {
         interactionSource.interactions.collect { interaction ->
@@ -449,7 +489,12 @@ private fun FormField(
     OutlinedTextField(
         modifier = Modifier
             .widthIn(max = 400.dp)
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .onFocusChanged { focusState ->
+                val isFocused = focusState.isFocused
+                if (isFocused) wasFocused = true
+                if (wasFocused) onFocusChange?.invoke(isFocused)
+            },
         value = value,
         onValueChange = onValueChange,
         interactionSource = interactionSource.takeIf { onClick != null },
@@ -461,10 +506,12 @@ private fun FormField(
         colors = formFieldColors(),
         readOnly = readOnly,
         enabled = enabled,
+        isError = isError,
         singleLine = true,
         label = { Text(label) },
         prefix = prefix,
-        suffix = suffix
+        suffix = suffix,
+        supportingText = { Text(supportingText) }
     )
 }
 
@@ -485,6 +532,43 @@ private fun formatExpirationDate(date: LocalDate?): String {
     val locale = getCurrentLocale()
     val dateFormatter = DateTimeFormatter.ofPattern(EXPIRATION_DATE_PATTERN, locale)
     return date.format(dateFormatter)
+}
+
+@Composable
+private fun getTriggerPriceSupportingLabel(
+    state: NotificationTriggerPriceState,
+    currentCoinPrice: String?,
+): String {
+    val price = currentCoinPrice ?: unknownPricePlaceholder()
+
+    return when (state) {
+        NotificationTriggerPriceState.Default -> stringResource(
+            R.string.notification_trigger_field_desc
+        )
+
+        NotificationTriggerPriceState.Empty -> stringResource(
+            R.string.notification_trigger_field_empty_price_error_label
+        )
+
+        NotificationTriggerPriceState.InvalidFormat -> stringResource(
+            R.string.notification_trigger_field_invalid_price_error_label
+        )
+
+        NotificationTriggerPriceState.PriceTooSmall -> stringResource(
+            R.string.notification_trigger_field_price_too_small_error_label,
+            price
+        )
+
+        NotificationTriggerPriceState.PriceTooBig -> stringResource(
+            R.string.notification_trigger_field_price_too_big_error_label,
+            price
+        )
+    }
+}
+
+@Composable
+private fun unknownPricePlaceholder(): String {
+    return stringResource(R.string.notification_trigger_price_unknown_placeholder)
 }
 
 private val NotificationDetailsState.topBarTitle
@@ -518,6 +602,7 @@ private fun NotificationDetailsScreenPreview() {
         NotificationDetailsScreen(
             notificationDetailsState = notificationState,
             onRetryClick = {},
+            onSaveNotification = {},
             onDeleteActionClick = {},
             onCoinFieldClick = {},
             onBackActionClick = {}
