@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
@@ -55,17 +56,20 @@ import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
 import me.khruslan.cryptograph.data.fixtures.PREVIEW_NOTIFICATIONS
 import me.khruslan.cryptograph.data.notifications.Notification
 import me.khruslan.cryptograph.ui.R
 import me.khruslan.cryptograph.ui.coins.shared.CoinInfo
 import me.khruslan.cryptograph.ui.core.CryptoGraphTheme
 import me.khruslan.cryptograph.ui.notifications.details.date.ExpirationDatePickerDialog
+import me.khruslan.cryptograph.ui.util.CurrencyBitcoin
 import me.khruslan.cryptograph.ui.util.PreviewScreenSizesLightDark
 import me.khruslan.cryptograph.ui.util.UiState
 import me.khruslan.cryptograph.ui.util.components.FullScreenError
 import me.khruslan.cryptograph.ui.util.components.FullScreenLoader
 import me.khruslan.cryptograph.ui.util.getCurrentLocale
+import me.khruslan.cryptograph.ui.util.previewPlaceholder
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
@@ -216,6 +220,7 @@ private fun NotificationForm(
         ) {
             CoinField(
                 name = formState.coinInfo.name,
+                iconUrl = formState.coinInfo.iconUrl,
                 onClick = { onCoinFieldClick(coinInfo.id) }
             )
             NotificationTitleField(
@@ -247,14 +252,21 @@ private fun NotificationForm(
     }
 }
 
-// TODO: Show coin icon as suffix
 @Composable
-private fun CoinField(name: String, onClick: () -> Unit) {
+private fun CoinField(name: String, iconUrl: String?, onClick: () -> Unit) {
     // TODO: Disable if user navigated from CoinHistory screen
     FormField(
         value = TextFieldValue(name),
         label = stringResource(R.string.coin_field_label),
         readOnly = true,
+        suffix = {
+            AsyncImage(
+                modifier = Modifier.size(24.dp),
+                model = iconUrl,
+                contentDescription = stringResource(R.string.coin_icon_desc, name),
+                placeholder = previewPlaceholder(Icons.Default.CurrencyBitcoin)
+            )
+        },
         onClick = onClick
     )
 }
@@ -461,7 +473,8 @@ private fun NotificationDetailsScreenPreview() {
             notificationTitle = "Solana > 200$",
             coinId = "zNZHO_Sjf",
             coinName = "Solana",
-            coinPrice = "$136.43"
+            coinPrice = "$136.43",
+            coinIconUrl = "https://cdn.coinranking.com/yvUG4Qex5/solana.svg"
         )
 
         MutableNotificationDetailsState(args).apply {

@@ -421,6 +421,7 @@ private fun CoinHistoryScreenPreview() {
             coinId = "Qwsogvtv82FCd",
             coinName = "Bitcoin",
             coinPrice = "$63374.15",
+            coinIconUrl = "https://cdn.coinranking.com/bOabBYkcX/bitcoin_btc.svg",
             colorHex = "#F7931A",
             isPinned = false
         )

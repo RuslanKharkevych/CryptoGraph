@@ -300,7 +300,8 @@ private fun NotificationsScreenPreview() {
         val args = NotificationsArgs(
             coinId = null,
             coinName = null,
-            coinPrice = null
+            coinPrice = null,
+            coinIconUrl = null
         )
 
         MutableNotificationsState(args).apply {

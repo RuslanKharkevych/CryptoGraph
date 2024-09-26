@@ -9,6 +9,7 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import me.khruslan.cryptograph.data.coins.Coin
+import me.khruslan.cryptograph.ui.coins.history.CoinHistoryArgKeys.COIN_ICON_URL_ARG
 import me.khruslan.cryptograph.ui.coins.history.CoinHistoryArgKeys.COIN_ID_ARG
 import me.khruslan.cryptograph.ui.coins.history.CoinHistoryArgKeys.COIN_NAME_ARG
 import me.khruslan.cryptograph.ui.coins.history.CoinHistoryArgKeys.COIN_PRICE_ARG
@@ -27,6 +28,7 @@ internal object CoinHistoryArgKeys {
     const val COIN_ID_ARG = "coin-id"
     const val COIN_NAME_ARG = "coin-name"
     const val COIN_PRICE_ARG = "coin-price"
+    const val COIN_ICON_URL_ARG = "coin-icon-url"
     const val COLOR_HEX_ARG = "color-hex"
     const val IS_PINNED_ARG = "is-pinned"
 }
@@ -35,6 +37,7 @@ internal data class CoinHistoryArgs(
     override val coinId: String,
     override val coinName: String,
     override val coinPrice: String?,
+    override val coinIconUrl: String?,
     val colorHex: String?,
     val isPinned: Boolean,
 ) : CoinInfoArgs {
@@ -44,6 +47,7 @@ internal data class CoinHistoryArgs(
                 coinId = checkNotNull(savedStateHandle[COIN_ID_ARG]),
                 coinName = checkNotNull(savedStateHandle[COIN_NAME_ARG]),
                 coinPrice = savedStateHandle[COIN_PRICE_ARG],
+                coinIconUrl = savedStateHandle[COIN_ICON_URL_ARG],
                 colorHex = savedStateHandle[COLOR_HEX_ARG],
                 isPinned = checkNotNull(savedStateHandle[IS_PINNED_ARG])
             )
@@ -55,6 +59,7 @@ internal data class CoinHistoryArgs(
                 coinId = checkNotNull(bundle.getString(COIN_ID_ARG)),
                 coinName = checkNotNull(bundle.getString(COIN_NAME_ARG)),
                 coinPrice = bundle.getString(COIN_PRICE_ARG),
+                coinIconUrl = bundle.getString(COIN_ICON_URL_ARG),
                 colorHex = bundle.getString(COLOR_HEX_ARG),
                 isPinned = checkNotNull(bundle.getBoolean(IS_PINNED_ARG))
             )
@@ -70,6 +75,7 @@ internal fun NavGraphBuilder.coinHistoryScreen(
         navArgument(COIN_ID_ARG) { type = NavType.StringType },
         navArgument(COIN_NAME_ARG) { type = NavType.StringType },
         navArgument(COIN_PRICE_ARG) { type = NavType.StringType; nullable = true },
+        navArgument(COIN_ICON_URL_ARG) { type = NavType.StringType; nullable = true },
         navArgument(COLOR_HEX_ARG) { type = NavType.StringType; nullable = true },
         navArgument(IS_PINNED_ARG) { type = NavType.BoolType }
     )
@@ -102,6 +108,7 @@ internal fun NavController.navigateToCoinHistory(coin: Coin) {
         argument(COIN_ID_ARG, coin.id)
         argument(COIN_NAME_ARG, coin.name)
         argument(COIN_PRICE_ARG, coin.price)
+        argument(COIN_ICON_URL_ARG, coin.iconUrl)
         argument(COLOR_HEX_ARG, coin.colorHex)
         argument(IS_PINNED_ARG, coin.isPinned)
     }

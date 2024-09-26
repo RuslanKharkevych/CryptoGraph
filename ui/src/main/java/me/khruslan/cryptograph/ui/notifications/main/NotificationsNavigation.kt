@@ -8,7 +8,9 @@ import androidx.navigation.NavType
 import androidx.navigation.navArgument
 import me.khruslan.cryptograph.data.notifications.Notification
 import me.khruslan.cryptograph.ui.coins.shared.CoinInfo
+import me.khruslan.cryptograph.ui.coins.shared.CoinInfoArgs
 import me.khruslan.cryptograph.ui.coins.shared.CoinInfoNavResultEffect
+import me.khruslan.cryptograph.ui.notifications.main.NotificationsArgKeys.COIN_ICON_URL_ARG
 import me.khruslan.cryptograph.ui.notifications.main.NotificationsArgKeys.COIN_ID_ARG
 import me.khruslan.cryptograph.ui.notifications.main.NotificationsArgKeys.COIN_NAME_ARG
 import me.khruslan.cryptograph.ui.notifications.main.NotificationsArgKeys.COIN_PRICE_ARG
@@ -23,19 +25,22 @@ private object NotificationsArgKeys {
     const val COIN_ID_ARG = "coin-id"
     const val COIN_NAME_ARG = "coin-name"
     const val COIN_PRICE_ARG = "coin-price"
+    const val COIN_ICON_URL_ARG = "coin-icon-url"
 }
 
 internal data class NotificationsArgs(
     val coinId: String?,
     val coinName: String?,
     val coinPrice: String?,
+    val coinIconUrl: String?,
 ) {
     companion object {
         fun fromSavedStateHandle(savedStateHandle: SavedStateHandle): NotificationsArgs {
             return NotificationsArgs(
                 coinId = savedStateHandle[COIN_ID_ARG],
                 coinName = savedStateHandle[COIN_NAME_ARG],
-                coinPrice = savedStateHandle[COIN_PRICE_ARG]
+                coinPrice = savedStateHandle[COIN_PRICE_ARG],
+                coinIconUrl = savedStateHandle[COIN_ICON_URL_ARG]
             )
         }
 
@@ -44,8 +49,18 @@ internal data class NotificationsArgs(
             return NotificationsArgs(
                 coinId = bundle.getString(COIN_ID_ARG),
                 coinName = bundle.getString(COIN_NAME_ARG),
-                coinPrice = bundle.getString(COIN_PRICE_ARG)
+                coinPrice = bundle.getString(COIN_PRICE_ARG),
+                coinIconUrl = bundle.getString(COIN_ICON_URL_ARG)
             )
+        }
+    }
+
+    fun toCoinInfoArgs(): CoinInfoArgs {
+        return object : CoinInfoArgs {
+            override val coinId = checkNotNull(this@NotificationsArgs.coinId)
+            override val coinName = checkNotNull(this@NotificationsArgs.coinName)
+            override val coinPrice = this@NotificationsArgs.coinPrice
+            override val coinIconUrl = this@NotificationsArgs.coinIconUrl
         }
     }
 }
@@ -58,7 +73,8 @@ internal fun NavGraphBuilder.notificationsScreen(
     val arguments = listOf(
         navArgument(COIN_ID_ARG) { type = NavType.StringType; nullable = true },
         navArgument(COIN_NAME_ARG) { type = NavType.StringType; nullable = true },
-        navArgument(COIN_PRICE_ARG) { type = NavType.StringType; nullable = true }
+        navArgument(COIN_PRICE_ARG) { type = NavType.StringType; nullable = true },
+        navArgument(COIN_ICON_URL_ARG) { type = NavType.StringType; nullable = true },
     )
 
     modal(
@@ -78,7 +94,7 @@ internal fun NavGraphBuilder.notificationsScreen(
             onRetryClick = viewModel::reloadNotifications,
             onAddButtonClick = navInterceptor {
                 if (args.coinId != null && args.coinName != null) {
-                    val coinInfo = CoinInfo(args.coinId, args.coinName, args.coinPrice)
+                    val coinInfo = CoinInfo.fromArgs(args.toCoinInfoArgs())
                     onNotificationDetails(null, coinInfo)
                 } else {
                     onCoinSelection()
@@ -98,6 +114,7 @@ internal fun NavController.navigateToNotifications(coinInfo: CoinInfo? = null) {
         argument(COIN_ID_ARG, coinInfo?.id)
         argument(COIN_NAME_ARG, coinInfo?.name)
         argument(COIN_PRICE_ARG, coinInfo?.price)
+        argument(COIN_ICON_URL_ARG, coinInfo?.iconUrl)
     }
 
     navigate(route)

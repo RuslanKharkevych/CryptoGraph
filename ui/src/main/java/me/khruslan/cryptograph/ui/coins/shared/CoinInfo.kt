@@ -14,13 +14,15 @@ private const val COIN_INFO_NAV_RESULT_KEY = "coin-info"
 internal data class CoinInfo(
     val id: String,
     val name: String,
-    val price: String?
+    val price: String?,
+    val iconUrl: String?,
 ) : Parcelable {
 
     private constructor(parcel: Parcel) : this(
         id = checkNotNull(parcel.readString()),
         name = checkNotNull(parcel.readString()),
-        price = parcel.readString()
+        price = parcel.readString(),
+        iconUrl = parcel.readString()
     )
 
     companion object {
@@ -36,7 +38,8 @@ internal data class CoinInfo(
             return CoinInfo(
                 id = coin.id,
                 name = coin.name,
-                price = coin.price
+                price = coin.price,
+                iconUrl = coin.iconUrl
             )
         }
 
@@ -44,7 +47,8 @@ internal data class CoinInfo(
             return CoinInfo(
                 id = args.coinId,
                 name = args.coinName,
-                price = args.coinPrice
+                price = args.coinPrice,
+                iconUrl = args.coinIconUrl
             )
         }
     }
@@ -53,6 +57,7 @@ internal data class CoinInfo(
         parcel.writeString(id)
         parcel.writeString(name)
         parcel.writeString(price)
+        parcel.writeString(iconUrl)
     }
 
     override fun describeContents() = 0
@@ -62,6 +67,7 @@ internal interface CoinInfoArgs {
     val coinId: String
     val coinName: String
     val coinPrice: String?
+    val coinIconUrl: String?
 }
 
 internal fun NavController.dismissWithSelectedCoin(coin: Coin) {
