@@ -13,7 +13,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewLightDark
@@ -28,16 +28,18 @@ import java.util.Locale
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun ExpirationDatePickerDialog(
-    state: DatePickerState,
+    initialDate: LocalDate?,
+    displayMode: DisplayMode,
     onDateSelected: (date: LocalDate?) -> Unit,
     onDismiss: () -> Unit,
 ) {
-    val initialDisplayMode = remember(state) {
-        state.displayMode
-    }
+    val datePickerState = rememberDatePickerState(
+        initialDate = initialDate,
+        initialDisplayMode = displayMode
+    )
 
     fun confirmDate() {
-        val date = state.selectedDateMillis?.let { epochMillis ->
+        val date = datePickerState.selectedDateMillis?.let { epochMillis ->
             localDateFromEpochMillis(epochMillis)
         }
         onDateSelected(date)
@@ -59,9 +61,15 @@ internal fun ExpirationDatePickerDialog(
         content = {
             LocaleProvider {
                 DatePicker(
-                    state = state,
-                    showModeToggle = initialDisplayMode == DisplayMode.Picker
+                    state = datePickerState,
+                    showModeToggle = false
                 )
+            }
+
+            SideEffect {
+                if (datePickerState.displayMode != displayMode) {
+                    datePickerState.displayMode = displayMode
+                }
             }
         }
     )
@@ -69,7 +77,7 @@ internal fun ExpirationDatePickerDialog(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-internal fun rememberExpirationDatePickerState(
+private fun rememberDatePickerState(
     initialDate: LocalDate?,
     initialDisplayMode: DisplayMode,
 ): DatePickerState {
@@ -121,7 +129,8 @@ private fun localDateFromEpochMillis(epochMillis: Long): LocalDate {
 private fun ExpirationDatePickerDialogPreview() {
     CryptoGraphTheme {
         ExpirationDatePickerDialog(
-            state = rememberDatePickerState(),
+            initialDate = null,
+            displayMode = DisplayMode.Picker,
             onDateSelected = {},
             onDismiss = {}
         )

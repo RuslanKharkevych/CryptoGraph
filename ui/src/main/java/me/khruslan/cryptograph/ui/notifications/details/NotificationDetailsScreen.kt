@@ -59,7 +59,6 @@ import me.khruslan.cryptograph.ui.R
 import me.khruslan.cryptograph.ui.coins.shared.CoinInfo
 import me.khruslan.cryptograph.ui.core.CryptoGraphTheme
 import me.khruslan.cryptograph.ui.notifications.details.date.ExpirationDatePickerDialog
-import me.khruslan.cryptograph.ui.notifications.details.date.rememberExpirationDatePickerState
 import me.khruslan.cryptograph.ui.util.PreviewScreenSizesLightDark
 import me.khruslan.cryptograph.ui.util.UiState
 import me.khruslan.cryptograph.ui.util.components.FullScreenError
@@ -182,14 +181,12 @@ private fun NotificationForm(
     BoxWithConstraints {
         if (formState.expirationDatePickerVisible) {
             ExpirationDatePickerDialog(
-                state = rememberExpirationDatePickerState(
-                    initialDate = formState.expirationDate,
-                    initialDisplayMode = if (maxHeight > 500.dp) {
-                        DisplayMode.Picker
-                    } else {
-                        DisplayMode.Input
-                    }
-                ),
+                initialDate = formState.expirationDate,
+                displayMode = if (maxHeight > 500.dp) {
+                    DisplayMode.Picker
+                } else {
+                    DisplayMode.Input
+                },
                 onDateSelected = formState::updateExpirationDate,
                 onDismiss = {
                     if (formState.expirationDate == null) {
