@@ -24,6 +24,7 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DisplayMode
+import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -32,6 +33,7 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
@@ -222,8 +224,12 @@ private fun NotificationForm(
             )
             TriggerField(
                 type = formState.triggerType,
+                typeDropdownExpanded = formState.triggerTypeDropdownExpanded,
                 price = formState.triggerPrice,
-                onPriceChange = formState::updateTriggerPrice
+                onPriceChange = formState::updateTriggerPrice,
+                onExpandTypeDropdown = formState::expandTriggerTypeDropdown,
+                onCollapseTypeDropdown = formState::collapseTriggerTypeDropdown,
+                onTypeSelected = formState::updateTriggerType
             )
             ExpirationDateField(
                 date = formatExpirationDate(formState.expirationDate),
@@ -273,8 +279,12 @@ private fun NotificationTitleField(
 @Composable
 private fun TriggerField(
     type: NotificationTriggerType,
+    typeDropdownExpanded: Boolean,
     price: TextFieldValue,
     onPriceChange: (price: TextFieldValue) -> Unit,
+    onExpandTypeDropdown: () -> Unit,
+    onCollapseTypeDropdown: () -> Unit,
+    onTypeSelected: (type: NotificationTriggerType) -> Unit,
 ) {
     FormField(
         value = price,
@@ -285,7 +295,13 @@ private fun TriggerField(
             imeAction = ImeAction.Done
         ),
         prefix = {
-            TriggerTypeDropdown(type = type)
+            TriggerTypeDropdown(
+                type = type,
+                expanded = typeDropdownExpanded,
+                onExpand = onExpandTypeDropdown,
+                onCollapse = onCollapseTypeDropdown,
+                onTypeSelected = onTypeSelected
+            )
         },
         suffix = {
             Text(text = "$")
@@ -346,19 +362,40 @@ private fun FormButtons(
 }
 
 @Composable
-private fun TriggerTypeDropdown(type: NotificationTriggerType) {
+private fun TriggerTypeDropdown(
+    type: NotificationTriggerType,
+    expanded: Boolean,
+    onExpand: () -> Unit,
+    onCollapse: () -> Unit,
+    onTypeSelected: (type: NotificationTriggerType) -> Unit,
+) {
     Text(
         modifier = Modifier
             .padding(end = 4.dp)
             .clickable(
                 interactionSource = remember { MutableInteractionSource() },
                 indication = ripple(bounded = false),
-                onClick = {
-                    // TODO: Open trigger type dropdown menu
-                }
+                onClick = onExpand
             ),
         text = type.label
     )
+
+    DropdownMenu(
+        expanded = expanded,
+        onDismissRequest = onCollapse
+    ) {
+        NotificationTriggerType.entries.forEach { type ->
+            TextButton(
+                onClick = {
+                    onTypeSelected(type)
+                    onCollapse()
+                },
+                content = {
+                    Text(text = type.label)
+                }
+            )
+        }
+    }
 }
 
 @Composable

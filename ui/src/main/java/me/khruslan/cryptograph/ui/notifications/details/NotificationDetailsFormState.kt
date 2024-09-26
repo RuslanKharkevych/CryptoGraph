@@ -16,11 +16,15 @@ internal interface NotificationDetailsFormState {
     val coinInfo: CoinInfo
     val notificationTitle: TextFieldValue
     val triggerType: NotificationTriggerType
+    val triggerTypeDropdownExpanded: Boolean
     val triggerPrice: TextFieldValue
     val expirationDate: LocalDate?
     val expirationDatePickerVisible: Boolean
 
     fun updateNotificationTitle(title: TextFieldValue)
+    fun updateTriggerType(type: NotificationTriggerType)
+    fun expandTriggerTypeDropdown()
+    fun collapseTriggerTypeDropdown()
     fun updateTriggerPrice(price: TextFieldValue)
     fun updateExpirationDate(date: LocalDate?)
     fun showExpirationDatePicker()
@@ -51,12 +55,25 @@ private class NotificationDetailsFormStateImpl(
     override var coinInfo by mutableStateOf(coinInfo)
     override var notificationTitle by mutableStateOf(notificationTitle)
     override var triggerType by mutableStateOf(triggerType)
+    override var triggerTypeDropdownExpanded by mutableStateOf(false)
     override var triggerPrice by mutableStateOf(triggerPrice)
     override var expirationDate by mutableStateOf(expirationDate)
     override var expirationDatePickerVisible by mutableStateOf(expirationDatePickerVisible)
 
     override fun updateNotificationTitle(title: TextFieldValue) {
         notificationTitle = title
+    }
+
+    override fun updateTriggerType(type: NotificationTriggerType) {
+        triggerType = type
+    }
+
+    override fun expandTriggerTypeDropdown() {
+        triggerTypeDropdownExpanded = true
+    }
+
+    override fun collapseTriggerTypeDropdown() {
+        triggerTypeDropdownExpanded = false
     }
 
     override fun updateTriggerPrice(price: TextFieldValue) {
