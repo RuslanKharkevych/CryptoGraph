@@ -34,6 +34,9 @@ internal data class NotificationsArgs(
     val coinPrice: String?,
     val coinIconUrl: String?,
 ) {
+    val coinSelected
+        get() = coinId != null
+
     companion object {
         fun fromSavedStateHandle(savedStateHandle: SavedStateHandle): NotificationsArgs {
             return NotificationsArgs(
@@ -65,8 +68,14 @@ internal data class NotificationsArgs(
     }
 }
 
+private typealias NotificationDetailsCallback = (
+    notification: Notification?,
+    coinInfo: CoinInfo,
+    coinEditable: Boolean,
+) -> Unit
+
 internal fun NavGraphBuilder.notificationsScreen(
-    onNotificationDetails: (notification: Notification?, coinInfo: CoinInfo) -> Unit,
+    onNotificationDetails: NotificationDetailsCallback,
     onCoinSelection: () -> Unit,
     onCloseActionClick: () -> Unit,
 ) {
@@ -86,23 +95,23 @@ internal fun NavGraphBuilder.notificationsScreen(
         val args = NotificationsArgs.fromNavBackStackEntry(navBackStackEntry)
 
         CoinInfoNavResultEffect(navBackStackEntry) { coinInfo ->
-            onNotificationDetails(null, coinInfo)
+            onNotificationDetails(null, coinInfo, true)
         }
 
         NotificationsScreen(
             notificationsState = viewModel.notificationsState,
             onRetryClick = viewModel::reloadNotifications,
             onAddButtonClick = navInterceptor {
-                if (args.coinId != null && args.coinName != null) {
+                if (args.coinSelected) {
                     val coinInfo = CoinInfo.fromArgs(args.toCoinInfoArgs())
-                    onNotificationDetails(null, coinInfo)
+                    onNotificationDetails(null, coinInfo, false)
                 } else {
                     onCoinSelection()
                 }
             },
             onNotificationClick = navInterceptor { (coin, notification) ->
                 val coinInfo = CoinInfo.fromCoin(coin)
-                onNotificationDetails(notification, coinInfo)
+                onNotificationDetails(notification, coinInfo, !args.coinSelected)
             },
             onCloseActionClick = navInterceptor(onCloseActionClick),
         )

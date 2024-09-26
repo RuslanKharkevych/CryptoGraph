@@ -32,9 +32,11 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.TextFieldColors
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
@@ -43,8 +45,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -110,6 +114,7 @@ internal fun NotificationDetailsScreen(
 
                 is UiState.Data -> NotificationForm(
                     coinInfo = notificationDetailsState.coinInfo,
+                    isCoinEditable = notificationDetailsState.isCoinEditable,
                     notification = state.data,
                     onCoinFieldClick = onCoinFieldClick
                 )
@@ -178,6 +183,7 @@ private fun TopBar(
 @Composable
 private fun NotificationForm(
     coinInfo: CoinInfo,
+    isCoinEditable: Boolean,
     notification: Notification?,
     onCoinFieldClick: (coinId: String) -> Unit,
 ) {
@@ -219,9 +225,9 @@ private fun NotificationForm(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             CoinField(
-                name = formState.coinInfo.name,
-                iconUrl = formState.coinInfo.iconUrl,
-                onClick = { onCoinFieldClick(coinInfo.id) }
+                coinInfo = formState.coinInfo,
+                editable = isCoinEditable,
+                onClick = onCoinFieldClick
             )
             NotificationTitleField(
                 title = formState.notificationTitle,
@@ -253,21 +259,27 @@ private fun NotificationForm(
 }
 
 @Composable
-private fun CoinField(name: String, iconUrl: String?, onClick: () -> Unit) {
-    // TODO: Disable if user navigated from CoinHistory screen
+private fun CoinField(
+    coinInfo: CoinInfo,
+    editable: Boolean,
+    onClick: (coinId: String) -> Unit,
+) {
     FormField(
-        value = TextFieldValue(name),
+        value = TextFieldValue(coinInfo.name),
         label = stringResource(R.string.coin_field_label),
         readOnly = true,
+        enabled = editable,
         suffix = {
             AsyncImage(
-                modifier = Modifier.size(24.dp),
-                model = iconUrl,
-                contentDescription = stringResource(R.string.coin_icon_desc, name),
+                modifier = Modifier
+                    .size(24.dp)
+                    .alpha(if (editable) 1f else 0.5f),
+                model = coinInfo.iconUrl,
+                contentDescription = stringResource(R.string.coin_icon_desc, coinInfo.name),
                 placeholder = previewPlaceholder(Icons.Default.CurrencyBitcoin)
             )
         },
-        onClick = onClick
+        onClick = { onClick(coinInfo.id) }
     )
 }
 
@@ -416,6 +428,7 @@ private fun FormField(
     onValueChange: (TextFieldValue) -> Unit = {},
     label: String,
     readOnly: Boolean = false,
+    enabled: Boolean = true,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     prefix: @Composable (() -> Unit)? = null,
     suffix: @Composable (() -> Unit)? = null,
@@ -423,11 +436,12 @@ private fun FormField(
 ) {
     val focusManager = LocalFocusManager.current
     val interactionSource = remember { MutableInteractionSource() }
+    val onClickListener by rememberUpdatedState(onClick)
 
     LaunchedEffect(interactionSource) {
         interactionSource.interactions.collect { interaction ->
             if (interaction is PressInteraction.Release) {
-                onClick?.invoke()
+                onClickListener?.invoke()
             }
         }
     }
@@ -444,11 +458,24 @@ private fun FormField(
             onNext = { focusManager.moveFocus(FocusDirection.Next) },
             onDone = { focusManager.clearFocus() }
         ),
+        colors = formFieldColors(),
         readOnly = readOnly,
+        enabled = enabled,
         singleLine = true,
         label = { Text(label) },
         prefix = prefix,
         suffix = suffix
+    )
+}
+
+@Composable
+private fun formFieldColors(): TextFieldColors {
+    val disabledColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)
+
+    return OutlinedTextFieldDefaults.colors(
+        disabledBorderColor = disabledColor,
+        disabledTextColor = disabledColor,
+        disabledLabelColor = disabledColor
     )
 }
 
@@ -462,7 +489,11 @@ private fun formatExpirationDate(date: LocalDate?): String {
 
 private val NotificationDetailsState.topBarTitle
     @Composable
-    get() = notificationTitle ?: stringResource(R.string.new_notification_title, coinInfo.name)
+    get() = notificationTitle ?: if (isCoinEditable) {
+        stringResource(R.string.new_generic_notification_title)
+    } else {
+        stringResource(R.string.new_coin_notification_title, coinInfo.name)
+    }
 
 @Composable
 @PreviewScreenSizesLightDark
@@ -474,7 +505,8 @@ private fun NotificationDetailsScreenPreview() {
             coinId = "zNZHO_Sjf",
             coinName = "Solana",
             coinPrice = "$136.43",
-            coinIconUrl = "https://cdn.coinranking.com/yvUG4Qex5/solana.svg"
+            coinIconUrl = "https://cdn.coinranking.com/yvUG4Qex5/solana.svg",
+            coinEditable = true
         )
 
         MutableNotificationDetailsState(args).apply {

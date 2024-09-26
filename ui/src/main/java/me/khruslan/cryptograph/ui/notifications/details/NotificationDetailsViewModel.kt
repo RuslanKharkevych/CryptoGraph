@@ -62,6 +62,7 @@ internal class NotificationDetailsViewModel(
 internal interface NotificationDetailsState {
     val notificationTitle: String?
     val isDeletable: Boolean
+    val isCoinEditable: Boolean
     val coinInfo: CoinInfo
     val notificationState: UiState<Notification?>
 }
@@ -71,6 +72,7 @@ internal class MutableNotificationDetailsState(
 ) : NotificationDetailsState {
     override val notificationTitle: String? = args.notificationTitle
     override val isDeletable: Boolean = args.notificationId != 0L
+    override val isCoinEditable: Boolean = args.coinEditable
     override var coinInfo: CoinInfo by mutableStateOf(CoinInfo.fromArgs(args))
     override var notificationState: UiState<Notification?> by mutableStateOf(UiState.Loading)
 }

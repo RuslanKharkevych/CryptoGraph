@@ -57,7 +57,8 @@
     <!-- endregion Notifications -->
 
     <!-- region Notification Details -->
-    <string name="new_notification_title">%s notification</string>
+    <string name="new_coin_notification_title">New %s notification</string>
+    <string name="new_generic_notification_title">New notification</string>
     <string name="delete_notification_action_desc">Delete notification</string>
     <string name="coin_field_label">Coin</string>
     <string name="notification_title_field_label">Notification title</string>

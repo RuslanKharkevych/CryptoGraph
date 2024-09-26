@@ -11,6 +11,7 @@ import me.khruslan.cryptograph.data.notifications.Notification
 import me.khruslan.cryptograph.ui.coins.shared.CoinInfo
 import me.khruslan.cryptograph.ui.coins.shared.CoinInfoArgs
 import me.khruslan.cryptograph.ui.coins.shared.CoinInfoNavResultEffect
+import me.khruslan.cryptograph.ui.notifications.details.NotificationDetailsArgKeys.COIN_EDITABLE_ARG
 import me.khruslan.cryptograph.ui.notifications.details.NotificationDetailsArgKeys.COIN_ICON_URL_ARG
 import me.khruslan.cryptograph.ui.notifications.details.NotificationDetailsArgKeys.COIN_ID_ARG
 import me.khruslan.cryptograph.ui.notifications.details.NotificationDetailsArgKeys.COIN_NAME_ARG
@@ -31,6 +32,7 @@ internal object NotificationDetailsArgKeys {
     const val COIN_NAME_ARG = "coin-name"
     const val COIN_PRICE_ARG = "coin-price"
     const val COIN_ICON_URL_ARG = "coin-icon-url"
+    const val COIN_EDITABLE_ARG = "coin-editable"
 }
 
 internal data class NotificationDetailsArgs(
@@ -40,6 +42,7 @@ internal data class NotificationDetailsArgs(
     override val coinName: String,
     override val coinPrice: String?,
     override val coinIconUrl: String?,
+    val coinEditable: Boolean,
 ) : CoinInfoArgs {
     companion object {
         fun fromSavedStateHandle(savedStateHandle: SavedStateHandle): NotificationDetailsArgs {
@@ -49,7 +52,8 @@ internal data class NotificationDetailsArgs(
                 coinId = checkNotNull(savedStateHandle[COIN_ID_ARG]),
                 coinName = checkNotNull(savedStateHandle[COIN_NAME_ARG]),
                 coinPrice = savedStateHandle[COIN_PRICE_ARG],
-                coinIconUrl = savedStateHandle[COIN_ICON_URL_ARG]
+                coinIconUrl = savedStateHandle[COIN_ICON_URL_ARG],
+                coinEditable = checkNotNull(savedStateHandle[COIN_EDITABLE_ARG])
             )
         }
     }
@@ -66,6 +70,7 @@ internal fun NavGraphBuilder.notificationDetailsScreen(
         navArgument(COIN_NAME_ARG) { type = NavType.StringType },
         navArgument(COIN_PRICE_ARG) { type = NavType.StringType; nullable = true },
         navArgument(COIN_ICON_URL_ARG) { type = NavType.StringType; nullable = true },
+        navArgument(COIN_EDITABLE_ARG) { type = NavType.BoolType }
     )
 
     composable(
@@ -92,6 +97,7 @@ internal fun NavGraphBuilder.notificationDetailsScreen(
 internal fun NavController.navigateToNotificationDetails(
     notification: Notification?,
     coinInfo: CoinInfo,
+    coinEditable: Boolean,
 ) {
     val route = route(NOTIFICATION_DETAILS_ROUTE) {
         argument(NOTIFICATION_ID_ARG, notification?.id)
@@ -100,6 +106,7 @@ internal fun NavController.navigateToNotificationDetails(
         argument(COIN_NAME_ARG, coinInfo.name)
         argument(COIN_PRICE_ARG, coinInfo.price)
         argument(COIN_ICON_URL_ARG, coinInfo.iconUrl)
+        argument(COIN_EDITABLE_ARG, coinEditable)
     }
 
     navigate(route)
