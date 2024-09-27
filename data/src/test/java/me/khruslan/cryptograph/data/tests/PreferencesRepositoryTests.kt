@@ -9,7 +9,7 @@ import me.khruslan.cryptograph.data.preferences.ChartStyle
 import me.khruslan.cryptograph.data.preferences.PreferencesRepository
 import me.khruslan.cryptograph.data.preferences.PreferencesRepositoryImpl
 import me.khruslan.cryptograph.data.preferences.Theme
-import me.khruslan.cryptograph.data.preferences.mapper.PreferencesMapperImpl
+import me.khruslan.cryptograph.data.preferences.mapper.PreferencesMapper
 import org.junit.Before
 import org.junit.Test
 
@@ -21,7 +21,7 @@ internal class PreferencesRepositoryTests {
     fun setUp() {
         repository = PreferencesRepositoryImpl(
             localDataSource = FakePreferencesLocalDataSource(),
-            mapper = PreferencesMapperImpl()
+            mapper = PreferencesMapper()
         )
     }
 

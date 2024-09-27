@@ -1,7 +1,6 @@
 package me.khruslan.cryptograph.ui.tests
 
 import com.google.common.truth.Truth.assertThat
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import me.khruslan.cryptograph.data.fixtures.STUB_COINS
 import me.khruslan.cryptograph.ui.R
 import me.khruslan.cryptograph.ui.coins.main.CoinsViewModel
@@ -12,7 +11,6 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 
-@ExperimentalCoroutinesApi
 internal class CoinsViewModelTests {
 
     @get:Rule

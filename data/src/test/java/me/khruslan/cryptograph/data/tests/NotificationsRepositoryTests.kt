@@ -2,12 +2,14 @@ package me.khruslan.cryptograph.data.tests
 
 import app.cash.turbine.test
 import com.google.common.truth.Truth.assertThat
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
 import me.khruslan.cryptograph.data.fakes.FakeNotificationsLocalDataSource
-import me.khruslan.cryptograph.data.fakes.FakeNotificationsMapper
 import me.khruslan.cryptograph.data.fixtures.STUB_NOTIFICATIONS
 import me.khruslan.cryptograph.data.notifications.NotificationsRepository
 import me.khruslan.cryptograph.data.notifications.NotificationsRepositoryImpl
+import me.khruslan.cryptograph.data.notifications.mapper.NotificationsMapper
 import org.junit.Before
 import org.junit.Test
 
@@ -15,11 +17,14 @@ internal class NotificationsRepositoryTests {
 
     private lateinit var repository: NotificationsRepository
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     @Before
     fun setUp() {
+        val dispatcher = UnconfinedTestDispatcher()
+
         repository = NotificationsRepositoryImpl(
             localDataSource = FakeNotificationsLocalDataSource(),
-            mapper = FakeNotificationsMapper()
+            mapper = NotificationsMapper(dispatcher)
         )
     }
 

@@ -8,18 +8,9 @@ import me.khruslan.cryptograph.data.notifications.Notification
 
 private const val LOG_TAG = "CoinNotificationsMapper"
 
-internal interface CoinNotificationsMapper {
+internal class CoinNotificationsMapper(private val dispatcher: CoroutineDispatcher) {
+
     suspend fun mapCoinNotifications(
-        coins: List<Coin>,
-        notifications: List<Notification>,
-    ): List<CoinNotification>
-}
-
-internal class CoinNotificationsMapperImpl(
-    private val dispatcher: CoroutineDispatcher
-) : CoinNotificationsMapper {
-
-    override suspend fun mapCoinNotifications(
         coins: List<Coin>,
         notifications: List<Notification>,
     ): List<CoinNotification> {

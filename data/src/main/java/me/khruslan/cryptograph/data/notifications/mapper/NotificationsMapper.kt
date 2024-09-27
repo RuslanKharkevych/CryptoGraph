@@ -12,17 +12,9 @@ import java.time.LocalDate
 
 private const val LOG_TAG = "NotificationsMapper"
 
-internal interface NotificationsMapper {
-    suspend fun mapNotifications(notifications: List<NotificationDto>): List<Notification>
-    suspend fun mapNotification(notification: NotificationDto): Notification
-    suspend fun mapNotification(notification: Notification): NotificationDto
-}
+internal class NotificationsMapper(private val dispatcher: CoroutineDispatcher) {
 
-internal class NotificationsMapperImpl(
-    private val dispatcher: CoroutineDispatcher,
-) : NotificationsMapper {
-
-    override suspend fun mapNotifications(
+    suspend fun mapNotifications(
         notifications: List<NotificationDto>,
     ): List<Notification> {
         return withContext(dispatcher) {
@@ -32,7 +24,7 @@ internal class NotificationsMapperImpl(
         }
     }
 
-    override suspend fun mapNotification(notification: NotificationDto): Notification {
+    suspend fun mapNotification(notification: NotificationDto): Notification {
         return withContext(dispatcher) {
             try {
                 mapNotificationInternal(notification)
@@ -43,7 +35,7 @@ internal class NotificationsMapperImpl(
         }
     }
 
-    override suspend fun mapNotification(notification: Notification): NotificationDto {
+    suspend fun mapNotification(notification: Notification): NotificationDto {
         return withContext(dispatcher) {
             NotificationDto(
                 id = notification.id,

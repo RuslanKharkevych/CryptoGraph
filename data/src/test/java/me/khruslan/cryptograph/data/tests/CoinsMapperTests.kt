@@ -6,7 +6,6 @@ import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
 import me.khruslan.cryptograph.data.coins.local.PinnedCoinDto
 import me.khruslan.cryptograph.data.coins.mapper.CoinsMapper
-import me.khruslan.cryptograph.data.coins.mapper.CoinsMapperImpl
 import me.khruslan.cryptograph.data.coins.remote.CoinDto
 import me.khruslan.cryptograph.data.coins.remote.CoinPriceDto
 import me.khruslan.cryptograph.data.common.DataValidationException
@@ -17,15 +16,15 @@ import me.khruslan.cryptograph.data.fixtures.STUB_DTO_COIN_HISTORY
 import org.junit.Before
 import org.junit.Test
 
-@OptIn(ExperimentalCoroutinesApi::class)
 internal class CoinsMapperTests {
 
     private lateinit var mapper: CoinsMapper
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     @Before
     fun setUp() {
         val dispatcher = UnconfinedTestDispatcher()
-        mapper = CoinsMapperImpl(dispatcher)
+        mapper = CoinsMapper(dispatcher)
     }
 
     @Test

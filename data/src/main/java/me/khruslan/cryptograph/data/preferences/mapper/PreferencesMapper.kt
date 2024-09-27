@@ -12,16 +12,9 @@ import me.khruslan.cryptograph.data.preferences.local.ThemeValue
 
 private const val LOG_TAG = "PreferencesMapper"
 
-internal interface PreferencesMapper {
-    fun mapPreferences(preferences: PreferencesDto): Preferences
-    fun mapTheme(theme: Theme): Int
-    fun mapChartStyle(chartStyle: ChartStyle): Int
-    fun mapChartPeriod(chartPeriod: ChartPeriod): Int
-}
+internal class PreferencesMapper {
 
-internal class PreferencesMapperImpl : PreferencesMapper {
-
-    override fun mapPreferences(preferences: PreferencesDto): Preferences {
+    fun mapPreferences(preferences: PreferencesDto): Preferences {
         return Preferences(
             theme = mapTheme(preferences.themeValue),
             chartStyle = mapChartStyle(preferences.chartStyleValue),
@@ -29,7 +22,7 @@ internal class PreferencesMapperImpl : PreferencesMapper {
         )
     }
 
-    override fun mapTheme(theme: Theme): Int {
+    fun mapTheme(theme: Theme): Int {
         return when (theme) {
             Theme.SystemDefault -> ThemeValue.SYSTEM_DEFAULT
             Theme.Light -> ThemeValue.LIGHT
@@ -37,14 +30,14 @@ internal class PreferencesMapperImpl : PreferencesMapper {
         }
     }
 
-    override fun mapChartStyle(chartStyle: ChartStyle): Int {
+    fun mapChartStyle(chartStyle: ChartStyle): Int {
         return when (chartStyle) {
             ChartStyle.Default -> ChartStyleValue.DEFAULT
             ChartStyle.Graph -> ChartStyleValue.GRAPH
         }
     }
 
-    override fun mapChartPeriod(chartPeriod: ChartPeriod): Int {
+    fun mapChartPeriod(chartPeriod: ChartPeriod): Int {
         return when (chartPeriod) {
             ChartPeriod.OneWeek -> ChartPeriodValue.ONE_WEEK
             ChartPeriod.TwoWeeks -> ChartPeriodValue.TWO_WEEKS

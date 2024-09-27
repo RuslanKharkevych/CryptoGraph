@@ -5,7 +5,7 @@ import io.objectbox.kotlin.boxFor
 import kotlinx.coroutines.Dispatchers
 import me.khruslan.cryptograph.data.common.objectBoxModule
 import me.khruslan.cryptograph.data.notifications.local.NotificationsLocalDataSourceImpl
-import me.khruslan.cryptograph.data.notifications.mapper.NotificationsMapperImpl
+import me.khruslan.cryptograph.data.notifications.mapper.NotificationsMapper
 import org.koin.dsl.module
 
 internal val notificationsModule = module {
@@ -16,7 +16,7 @@ internal val notificationsModule = module {
                 box = get<BoxStore>().boxFor(),
                 dispatcher = Dispatchers.IO
             ),
-            mapper = NotificationsMapperImpl(
+            mapper = NotificationsMapper(
                 dispatcher = Dispatchers.Default,
             )
         )

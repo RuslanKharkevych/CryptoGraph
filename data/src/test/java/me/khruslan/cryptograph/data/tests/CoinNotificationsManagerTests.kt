@@ -2,8 +2,9 @@ package me.khruslan.cryptograph.data.tests
 
 import app.cash.turbine.test
 import com.google.common.truth.Truth.assertThat
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
-import me.khruslan.cryptograph.data.fakes.FakeCoinNotificationsMapper
 import me.khruslan.cryptograph.data.fakes.FakeCoinsRepository
 import me.khruslan.cryptograph.data.fakes.FakeNotificationsRepository
 import me.khruslan.cryptograph.data.fixtures.STUB_COIN_NOTIFICATIONS
@@ -15,21 +16,17 @@ import org.junit.Test
 
 internal class CoinNotificationsManagerTests {
 
-    private lateinit var fakeCoinsRepository: FakeCoinsRepository
-    private lateinit var fakeNotificationsRepository: FakeNotificationsRepository
-    private lateinit var fakeMapper: CoinNotificationsMapper
     private lateinit var coinNotificationsManager: CoinNotificationsManager
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     @Before
     fun setUp() {
-        fakeCoinsRepository = FakeCoinsRepository()
-        fakeNotificationsRepository = FakeNotificationsRepository()
-        fakeMapper = FakeCoinNotificationsMapper()
+        val dispatcher = UnconfinedTestDispatcher()
 
         coinNotificationsManager = CoinNotificationsManagerImpl(
-            coinsRepository = fakeCoinsRepository,
-            notificationsRepository = fakeNotificationsRepository,
-            mapper = fakeMapper
+            coinsRepository = FakeCoinsRepository(),
+            notificationsRepository = FakeNotificationsRepository(),
+            mapper = CoinNotificationsMapper(dispatcher)
         )
     }
 

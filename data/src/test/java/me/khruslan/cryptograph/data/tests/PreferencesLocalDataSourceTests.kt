@@ -15,7 +15,6 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 
-@OptIn(ExperimentalCoroutinesApi::class)
 internal class PreferencesLocalDataSourceTests {
 
     @get:Rule
@@ -23,6 +22,7 @@ internal class PreferencesLocalDataSourceTests {
 
     private lateinit var dataSource: PreferencesLocalDataSource
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     @Before
     fun setUp() {
         dataSource = PreferencesLocalDataSourceImpl(

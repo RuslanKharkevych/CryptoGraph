@@ -14,7 +14,6 @@ import org.junit.Rule
 import org.junit.Test
 import java.util.UUID
 
-@OptIn(ExperimentalCoroutinesApi::class)
 internal class CoinsLocalDataSourceTests {
 
     @get:Rule
@@ -22,6 +21,7 @@ internal class CoinsLocalDataSourceTests {
 
     private lateinit var dataSource: CoinsLocalDataSource
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     @Before
     fun setUp() {
         dataSource = CoinsLocalDataSourceImpl(

@@ -16,7 +16,6 @@ import org.junit.experimental.runners.Enclosed
 import org.junit.runner.RunWith
 import org.junit.runners.Parameterized
 
-@OptIn(ExperimentalCoroutinesApi::class)
 @RunWith(Enclosed::class)
 internal class CoinHistoryChartStateTests {
 
@@ -33,6 +32,7 @@ internal class CoinHistoryChartStateTests {
     abstract class CoreTests {
         protected lateinit var chartState: CoinHistoryChartState
 
+        @OptIn(ExperimentalCoroutinesApi::class)
         @Before
         fun setUp() {
             chartState = CoinHistoryChartStateImpl(

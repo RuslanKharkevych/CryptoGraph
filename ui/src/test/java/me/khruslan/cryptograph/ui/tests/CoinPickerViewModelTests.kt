@@ -2,7 +2,6 @@ package me.khruslan.cryptograph.ui.tests
 
 import androidx.lifecycle.SavedStateHandle
 import com.google.common.truth.Truth.assertThat
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import me.khruslan.cryptograph.data.fixtures.STUB_COINS
 import me.khruslan.cryptograph.ui.R
 import me.khruslan.cryptograph.ui.coins.picker.CoinPickerViewModel
@@ -13,7 +12,6 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 
-@OptIn(ExperimentalCoroutinesApi::class)
 internal class CoinPickerViewModelTests {
 
     @get:Rule

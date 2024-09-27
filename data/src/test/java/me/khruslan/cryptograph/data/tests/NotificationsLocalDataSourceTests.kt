@@ -13,7 +13,6 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 
-@OptIn(ExperimentalCoroutinesApi::class)
 internal class NotificationsLocalDataSourceTests {
 
     @get:Rule
@@ -21,6 +20,7 @@ internal class NotificationsLocalDataSourceTests {
 
     private lateinit var dataSource: NotificationsLocalDataSource
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     @Before
     fun setUp() {
         dataSource = NotificationsLocalDataSourceImpl(

@@ -2,7 +2,6 @@ package me.khruslan.cryptograph.ui.tests
 
 import androidx.lifecycle.SavedStateHandle
 import com.google.common.truth.Truth.assertThat
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import me.khruslan.cryptograph.data.fixtures.STUB_COIN_HISTORY
 import me.khruslan.cryptograph.ui.R
 import me.khruslan.cryptograph.ui.coins.history.CoinHistoryArgKeys
@@ -21,7 +20,6 @@ private val COIN_HISTORY_ARGS = mapOf(
     CoinHistoryArgKeys.IS_PINNED_ARG to false
 )
 
-@OptIn(ExperimentalCoroutinesApi::class)
 internal class CoinHistoryViewModelTests {
 
     @get:Rule

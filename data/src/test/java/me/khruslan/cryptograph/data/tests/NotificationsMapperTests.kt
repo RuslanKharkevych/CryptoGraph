@@ -7,18 +7,17 @@ import kotlinx.coroutines.test.runTest
 import me.khruslan.cryptograph.data.fixtures.STUB_DTO_NOTIFICATIONS
 import me.khruslan.cryptograph.data.fixtures.STUB_NOTIFICATIONS
 import me.khruslan.cryptograph.data.notifications.mapper.NotificationsMapper
-import me.khruslan.cryptograph.data.notifications.mapper.NotificationsMapperImpl
 import org.junit.Before
 import org.junit.Test
 
-@OptIn(ExperimentalCoroutinesApi::class)
 internal class NotificationsMapperTests {
 
     private lateinit var mapper: NotificationsMapper
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     @Before
     fun setUp() {
-        mapper = NotificationsMapperImpl(
+        mapper = NotificationsMapper(
             dispatcher = UnconfinedTestDispatcher(),
         )
     }

@@ -4,7 +4,7 @@ import io.objectbox.BoxStore
 import io.objectbox.kotlin.boxFor
 import kotlinx.coroutines.Dispatchers
 import me.khruslan.cryptograph.data.coins.local.CoinsLocalDataSourceImpl
-import me.khruslan.cryptograph.data.coins.mapper.CoinsMapperImpl
+import me.khruslan.cryptograph.data.coins.mapper.CoinsMapper
 import me.khruslan.cryptograph.data.coins.remote.CoinsRemoteDataSourceImpl
 import me.khruslan.cryptograph.data.common.buildHttpClient
 import me.khruslan.cryptograph.data.common.objectBoxModule
@@ -23,7 +23,7 @@ internal val coinsModule = module {
                 client = buildHttpClient(androidContext()),
                 dispatcher = Dispatchers.IO
             ),
-            mapper = CoinsMapperImpl(
+            mapper = CoinsMapper(
                 dispatcher = Dispatchers.Default
             )
         )

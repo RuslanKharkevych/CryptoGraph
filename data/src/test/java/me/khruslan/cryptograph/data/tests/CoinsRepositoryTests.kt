@@ -2,10 +2,12 @@ package me.khruslan.cryptograph.data.tests
 
 import app.cash.turbine.test
 import com.google.common.truth.Truth.assertThat
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
 import me.khruslan.cryptograph.data.coins.CoinsRepository
 import me.khruslan.cryptograph.data.coins.CoinsRepositoryImpl
-import me.khruslan.cryptograph.data.fakes.FakeCoinsMapper
+import me.khruslan.cryptograph.data.coins.mapper.CoinsMapper
 import me.khruslan.cryptograph.data.fakes.FakeCoinsRemoteDataSource
 import me.khruslan.cryptograph.data.fakes.FakeCoinsLocalDataSource
 import me.khruslan.cryptograph.data.fixtures.STUB_COINS
@@ -18,12 +20,15 @@ internal class CoinsRepositoryTests {
 
     private lateinit var repository: CoinsRepository
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     @Before
     fun setUp() {
+        val dispatcher = UnconfinedTestDispatcher()
+
         repository = CoinsRepositoryImpl(
             localDataSource = FakeCoinsLocalDataSource(),
             remoteDataSource = FakeCoinsRemoteDataSource(),
-            mapper = FakeCoinsMapper()
+            mapper = CoinsMapper(dispatcher)
         )
     }
 

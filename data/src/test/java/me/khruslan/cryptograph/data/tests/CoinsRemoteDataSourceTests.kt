@@ -35,12 +35,12 @@ private const val GET_COIN_HISTORY_SUCCESSFUL_RESPONSE = "$ROOT_PATH/get-coin-hi
 private const val GET_COIN_HISTORY_FAILED_RESPONSE = "$ROOT_PATH/get-coin-history-failure.json"
 private const val GET_COIN_HISTORY_INVALID_RESPONSE = "$ROOT_PATH/get-coin-history-invalid.json"
 
-@OptIn(ExperimentalCoroutinesApi::class)
 internal class CoinsRemoteDataSourceTests {
 
     private lateinit var mockServer: MockWebServer
     private lateinit var dataSource: CoinsRemoteDataSource
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     @Before
     fun setUp() {
         mockServer = MockWebServer()

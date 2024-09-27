@@ -2,7 +2,6 @@ package me.khruslan.cryptograph.ui.tests
 
 import androidx.lifecycle.SavedStateHandle
 import com.google.common.truth.Truth.assertThat
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import me.khruslan.cryptograph.data.fixtures.STUB_COINS
 import me.khruslan.cryptograph.data.fixtures.STUB_NOTIFICATIONS
@@ -26,7 +25,6 @@ private val NOTIFICATION_DETAILS_ARGS = mapOf(
     NotificationDetailsArgKeys.COIN_EDITABLE_ARG to true
 )
 
-@OptIn(ExperimentalCoroutinesApi::class)
 internal class NotificationDetailsViewModelTests {
 
     @get:Rule

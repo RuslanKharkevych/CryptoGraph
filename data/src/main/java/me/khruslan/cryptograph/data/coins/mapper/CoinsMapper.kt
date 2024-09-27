@@ -22,18 +22,9 @@ import kotlin.contracts.contract
 private const val LOG_TAG = "CoinsMapper"
 private const val COLOR_HEX_PATTERN = "^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{8})\$"
 
-internal interface CoinsMapper {
+internal class CoinsMapper(private val dispatcher: CoroutineDispatcher) {
+
     suspend fun mapCoins(
-        allCoins: List<CoinDto?>,
-        pinnedCoins: List<PinnedCoinDto>,
-    ): List<Coin>
-
-    suspend fun mapCoinHistory(history: List<CoinPriceDto?>): List<CoinPrice>
-}
-
-internal class CoinsMapperImpl(private val dispatcher: CoroutineDispatcher) : CoinsMapper {
-
-    override suspend fun mapCoins(
         allCoins: List<CoinDto?>,
         pinnedCoins: List<PinnedCoinDto>,
     ): List<Coin> {
@@ -53,7 +44,7 @@ internal class CoinsMapperImpl(private val dispatcher: CoroutineDispatcher) : Co
         }
     }
 
-    override suspend fun mapCoinHistory(history: List<CoinPriceDto?>): List<CoinPrice> {
+    suspend fun mapCoinHistory(history: List<CoinPriceDto?>): List<CoinPrice> {
         return withContext(dispatcher) {
             try {
                 history.filterNotNull().mapNotNull { coinPriceDto ->

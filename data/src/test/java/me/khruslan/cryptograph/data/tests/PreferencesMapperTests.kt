@@ -4,7 +4,6 @@ import com.google.common.truth.Truth.assertThat
 import me.khruslan.cryptograph.data.fixtures.STUB_DTO_PREFERENCES
 import me.khruslan.cryptograph.data.fixtures.STUB_PREFERENCES
 import me.khruslan.cryptograph.data.preferences.mapper.PreferencesMapper
-import me.khruslan.cryptograph.data.preferences.mapper.PreferencesMapperImpl
 import org.junit.Before
 import org.junit.Test
 
@@ -14,7 +13,7 @@ internal class PreferencesMapperTests {
 
     @Before
     fun setUp() {
-        mapper = PreferencesMapperImpl()
+        mapper = PreferencesMapper()
     }
 
     @Test

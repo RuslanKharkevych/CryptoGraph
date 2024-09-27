@@ -13,7 +13,7 @@ internal val coinNotificationsModule = module {
         CoinNotificationsManagerImpl(
             coinsRepository = get<CoinsRepository>(),
             notificationsRepository = get<NotificationsRepository>(),
-            mapper = CoinNotificationsMapperImpl(
+            mapper = CoinNotificationsMapper(
                 dispatcher = Dispatchers.Default
             )
         )

@@ -8,19 +8,18 @@ import me.khruslan.cryptograph.data.fixtures.STUB_COINS
 import me.khruslan.cryptograph.data.fixtures.STUB_COIN_NOTIFICATIONS
 import me.khruslan.cryptograph.data.fixtures.STUB_NOTIFICATIONS
 import me.khruslan.cryptograph.data.managers.CoinNotificationsMapper
-import me.khruslan.cryptograph.data.managers.CoinNotificationsMapperImpl
 import org.junit.Before
 import org.junit.Test
 
-@OptIn(ExperimentalCoroutinesApi::class)
 internal class CoinNotificationsMapperTests {
 
     private lateinit var mapper: CoinNotificationsMapper
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     @Before
     fun setUp() {
         val dispatcher = UnconfinedTestDispatcher()
-        mapper = CoinNotificationsMapperImpl(dispatcher)
+        mapper = CoinNotificationsMapper(dispatcher)
     }
 
     @Test

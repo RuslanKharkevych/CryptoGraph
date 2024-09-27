@@ -6,7 +6,7 @@ import me.khruslan.cryptograph.ui.notifications.details.confirmation.Confirmatio
 import org.junit.Before
 import org.junit.Test
 
-class ConfirmationAlertStateTests {
+internal class ConfirmationAlertStateTests {
 
     private lateinit var alertState: ConfirmationAlertState
 
