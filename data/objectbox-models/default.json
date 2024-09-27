@@ -4,43 +4,43 @@
   "_note3": "If you have VCS merge conflicts, you must resolve them according to ObjectBox docs.",
   "entities": [
     {
-      "id": "1:8889450919415498283",
-      "lastPropertyId": "7:3307838415619794521",
+      "id": "1:9169094913495674516",
+      "lastPropertyId": "7:1254157179891662776",
       "name": "NotificationDto",
       "properties": [
         {
-          "id": "1:1275840907986733174",
+          "id": "1:8143238521895279790",
           "name": "id",
           "type": 6,
           "flags": 1
         },
         {
-          "id": "2:3904564024821078",
+          "id": "2:1435081041756590737",
           "name": "coinUuid",
           "type": 9
         },
         {
-          "id": "3:902109058433712438",
+          "id": "3:764193865471534592",
           "name": "title",
           "type": 9
         },
         {
-          "id": "4:5631262992695341951",
+          "id": "4:4510754136303789317",
           "name": "createdAtDate",
           "type": 9
         },
         {
-          "id": "5:6830891407551069216",
+          "id": "5:5725870891192827877",
           "name": "expirationDate",
           "type": 9
         },
         {
-          "id": "6:6625867209281576177",
+          "id": "6:4633292265685947146",
           "name": "priceLessThenTrigger",
           "type": 8
         },
         {
-          "id": "7:3307838415619794521",
+          "id": "7:1254157179891662776",
           "name": "priceMoreThenTrigger",
           "type": 8
         }
@@ -48,26 +48,55 @@
       "relations": []
     },
     {
-      "id": "2:5332469868733154503",
-      "lastPropertyId": "2:6132709625473427870",
+      "id": "2:5308449433339928001",
+      "lastPropertyId": "2:8641322215264208773",
       "name": "PinnedCoinDto",
       "properties": [
         {
-          "id": "1:7132691523563790967",
+          "id": "1:7926103132323551044",
           "name": "id",
           "type": 6,
           "flags": 1
         },
         {
-          "id": "2:6132709625473427870",
+          "id": "2:8641322215264208773",
           "name": "coinUuid",
           "type": 9
         }
       ],
       "relations": []
+    },
+    {
+      "id": "3:948471697262514713",
+      "lastPropertyId": "4:4648206679077546536",
+      "name": "PreferencesDto",
+      "properties": [
+        {
+          "id": "1:5840868685627925694",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:5128232348684263694",
+          "name": "themeValue",
+          "type": 5
+        },
+        {
+          "id": "3:8878806404619759379",
+          "name": "chartStyleValue",
+          "type": 5
+        },
+        {
+          "id": "4:4648206679077546536",
+          "name": "chartPeriodValue",
+          "type": 5
+        }
+      ],
+      "relations": []
     }
   ],
-  "lastEntityId": "2:5332469868733154503",
+  "lastEntityId": "3:948471697262514713",
   "lastIndexId": "0:0",
   "lastRelationId": "0:0",
   "lastSequenceId": "0:0",
