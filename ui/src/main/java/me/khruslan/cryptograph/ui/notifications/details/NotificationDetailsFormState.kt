@@ -5,6 +5,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.Saver
 import androidx.compose.runtime.saveable.mapSaver
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -16,7 +17,6 @@ import java.time.Clock
 import java.time.LocalDate
 
 internal interface NotificationDetailsFormState {
-    val notificationId: Long
     val coinInfo: CoinInfo
     val notificationTitle: TextFieldValue
     val notificationTitleState: NotificationTitleState
@@ -43,7 +43,8 @@ internal interface NotificationDetailsFormState {
 @VisibleForTesting
 internal class NotificationDetailsFormStateImpl(
     private val clock: Clock,
-    notificationId: Long?,
+    private val notificationId: Long?,
+    private val createdAt: LocalDate?,
     coinInfo: CoinInfo,
     notificationTitle: TextFieldValue,
     notificationTitleState: NotificationTitleState,
@@ -61,6 +62,7 @@ internal class NotificationDetailsFormStateImpl(
     ) : this(
         clock = clock,
         notificationId = notification?.id,
+        createdAt = notification?.createdAt,
         coinInfo = coinInfo,
         notificationTitle = notification.titleTextFieldValue,
         notificationTitleState = NotificationTitleState.Default,
@@ -71,7 +73,6 @@ internal class NotificationDetailsFormStateImpl(
         expirationDatePickerVisible = false
     )
 
-    override val notificationId = notificationId ?: 0L
     override var coinInfo by mutableStateOf(coinInfo)
     override var notificationTitle by mutableStateOf(notificationTitle)
     override var notificationTitleState by mutableStateOf(notificationTitleState)
@@ -148,10 +149,10 @@ internal class NotificationDetailsFormStateImpl(
         if (!notificationTitleState.isValid || !triggerPriceState.isValid) return
 
         val notification = Notification(
-            id = notificationId,
+            id = notificationId ?: 0L,
             coinId = coinInfo.id,
             title = notificationTitle,
-            createdAt = LocalDate.now(clock),
+            createdAt = createdAt ?: LocalDate.now(clock),
             expirationDate = expirationDate,
             trigger = buildTrigger(triggerType, triggerPrice.toDouble())
         )
@@ -229,7 +230,13 @@ internal fun rememberNotificationDetailsFormState(
     notification: Notification?,
 ): NotificationDetailsFormState {
     val clock = Clock.systemDefaultZone()
-    val state = rememberSaveable(notification, saver = NotificationDetailsFormStateSaver) {
+    val saver = notificationDetailsFormStateSaver(
+        clock = clock,
+        notificationId = notification?.id,
+        createdAt = notification?.createdAt
+    )
+
+    val state = rememberSaveable(notification, saver = saver) {
         NotificationDetailsFormStateImpl(coinInfo, notification, clock)
     }
 
@@ -243,8 +250,11 @@ internal fun rememberNotificationDetailsFormState(
     return state
 }
 
-private val NotificationDetailsFormStateSaver = run {
-    val notificationIdKey = "notification_id"
+private fun notificationDetailsFormStateSaver(
+    clock: Clock,
+    notificationId: Long?,
+    createdAt: LocalDate?,
+): Saver<NotificationDetailsFormStateImpl, Any> {
     val coinInfoKey = "coin_info"
     val notificationTitleKey = "notification_title"
     val notificationTitleStateKey = "notification_title_valid_key"
@@ -254,10 +264,9 @@ private val NotificationDetailsFormStateSaver = run {
     val expirationDateKey = "expiration_date"
     val expirationDatePickerVisibleKey = "expiration_date_picker_visible"
 
-    mapSaver(
+    return mapSaver(
         save = { state ->
             mapOf(
-                notificationIdKey to state.notificationId,
                 coinInfoKey to state.coinInfo,
                 notificationTitleKey to with(TextFieldValue.Saver) {
                     save(state.notificationTitle)
@@ -274,8 +283,9 @@ private val NotificationDetailsFormStateSaver = run {
         },
         restore = { args ->
             NotificationDetailsFormStateImpl(
-                clock = Clock.systemDefaultZone(),
-                notificationId = args[notificationIdKey] as Long,
+                clock = clock,
+                notificationId = notificationId,
+                createdAt = createdAt,
                 coinInfo = args[coinInfoKey] as CoinInfo,
                 notificationTitle = checkNotNull(
                     TextFieldValue.Saver.restore(checkNotNull(args[notificationTitleKey]))

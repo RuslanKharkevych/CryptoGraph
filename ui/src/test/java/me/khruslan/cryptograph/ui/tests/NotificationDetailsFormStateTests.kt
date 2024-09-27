@@ -45,7 +45,6 @@ internal class NotificationDetailsFormStateTests {
         initFormState(coin, notification)
 
         with(formState) {
-            assertThat(notificationId).isEqualTo(notification.id)
             assertThat(this.coinInfo).isEqualTo(CoinInfo.fromCoin(coin))
             assertThat(notificationTitle).isEqualTo(TextFieldValue(notification.title))
             assertThat(notificationTitleState).isEqualTo(NotificationTitleState.Default)

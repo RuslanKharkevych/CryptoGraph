@@ -18,7 +18,7 @@ import org.junit.Rule
 import org.junit.Test
 
 private val NOTIFICATION_DETAILS_ARGS = mapOf(
-    NotificationDetailsArgKeys.NOTIFICATION_ID_ARG to 1L,
+    NotificationDetailsArgKeys.NOTIFICATION_ID_ARG to 6L,
     NotificationDetailsArgKeys.NOTIFICATION_TITLE_ARG to "Bitcoin < 5000$",
     NotificationDetailsArgKeys.COIN_ID_ARG to "Qwsogvtv82FCd",
     NotificationDetailsArgKeys.COIN_NAME_ARG to "Bitcoin",
