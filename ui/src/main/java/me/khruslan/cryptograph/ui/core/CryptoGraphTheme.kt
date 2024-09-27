@@ -27,7 +27,7 @@ private fun cryptoGraphColorTheme(): ColorScheme {
     return if (isSystemInDarkTheme()) {
         darkColorScheme()
     } else {
-        lightColorScheme()
+        lightColorScheme(errorContainer = Error80)
     }.run {
         copy(
             primary = onSurfaceVariant,
@@ -35,6 +35,8 @@ private fun cryptoGraphColorTheme(): ColorScheme {
         )
     }
 }
+
+private val Error80 = Color(red = 242, green = 184, blue = 181)
 
 internal val DarkGreen = Color(0xFF00796B)
 internal val DarkRed = Color(0xFFB71C1C)
