@@ -4,8 +4,10 @@ import androidx.lifecycle.SavedStateHandle
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
+import me.khruslan.cryptograph.data.fixtures.STUB_COINS
 import me.khruslan.cryptograph.data.fixtures.STUB_NOTIFICATIONS
 import me.khruslan.cryptograph.ui.R
+import me.khruslan.cryptograph.ui.coins.shared.CoinInfo
 import me.khruslan.cryptograph.ui.fakes.FakeNotificationsRepository
 import me.khruslan.cryptograph.ui.notifications.details.NotificationDetailsArgKeys
 import me.khruslan.cryptograph.ui.notifications.details.NotificationDetailsViewModel
@@ -20,7 +22,8 @@ private val NOTIFICATION_DETAILS_ARGS = mapOf(
     NotificationDetailsArgKeys.NOTIFICATION_TITLE_ARG to "Bitcoin < 5000$",
     NotificationDetailsArgKeys.COIN_ID_ARG to "Qwsogvtv82FCd",
     NotificationDetailsArgKeys.COIN_NAME_ARG to "Bitcoin",
-    NotificationDetailsArgKeys.COIN_PRICE_ARG to "$63374.15"
+    NotificationDetailsArgKeys.COIN_PRICE_ARG to "$63374.15",
+    NotificationDetailsArgKeys.COIN_EDITABLE_ARG to true
 )
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -73,5 +76,53 @@ internal class NotificationDetailsViewModelTests {
         val expectedNotificationState = UiState.Error(R.string.database_error_msg)
         val actualNotificationState = viewModel.notificationDetailsState.notificationState
         assertThat(actualNotificationState).isEqualTo(expectedNotificationState)
+    }
+
+    @Test
+    fun `Update coin info`() {
+        initViewModel()
+        val coinInfo = CoinInfo.fromCoin(STUB_COINS[0])
+        viewModel.updateCoinInfo(coinInfo)
+
+        assertThat(viewModel.notificationDetailsState.coinInfo).isEqualTo(coinInfo)
+    }
+
+    @Test
+    fun `Save notification - success`() = runTest {
+        initViewModel()
+        viewModel.saveNotification(STUB_NOTIFICATIONS[0])
+
+        assertThat(viewModel.notificationDetailsState.notificationSaved).isTrue()
+    }
+
+    @Test
+    fun `Save notification - failure`() = runTest {
+        initViewModel()
+        fakeNotificationsRepository.isDatabaseCorrupted = true
+        viewModel.saveNotification(STUB_NOTIFICATIONS[0])
+
+        val expectedWarningMessageRes = R.string.save_notification_warning_msg
+        val actualWarningMessageRes = viewModel.notificationDetailsState.warningMessageRes
+        assertThat(actualWarningMessageRes).isEqualTo(expectedWarningMessageRes)
+    }
+
+    @Test
+    fun `Save notification - already saving`() = runTest {
+        initViewModel()
+        val notification = STUB_NOTIFICATIONS[0].copy(id = 0L)
+        viewModel.saveNotification(notification)
+        viewModel.saveNotification(notification)
+
+        assertThat(fakeNotificationsRepository.notificationsAdded).isEqualTo(1)
+    }
+
+    @Test
+    fun `Warning shown`() {
+        initViewModel()
+        fakeNotificationsRepository.isDatabaseCorrupted = true
+        viewModel.saveNotification(STUB_NOTIFICATIONS[0])
+        viewModel.warningShown()
+
+        assertThat(viewModel.notificationDetailsState.warningMessageRes).isNull()
     }
 }

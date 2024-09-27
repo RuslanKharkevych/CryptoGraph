@@ -13,6 +13,7 @@ import me.khruslan.cryptograph.data.notifications.NotificationsRepository
 internal class FakeNotificationsRepository : NotificationsRepository {
 
     var isDatabaseCorrupted = false
+    var notificationsAdded = 0
 
     private val notificationsFlow = MutableStateFlow(STUB_NOTIFICATIONS)
 
@@ -28,14 +29,14 @@ internal class FakeNotificationsRepository : NotificationsRepository {
     }
 
     override suspend fun addOrUpdateNotification(notification: Notification) {
+        checkIfDataIsValid()
         notificationsFlow.update { notifications ->
-            val index = notifications.indexOfFirst { it.id == notification.id }
-            if (index == -1) {
+            if (notification.id == 0L) {
+                notificationsAdded++
                 notifications + notification
             } else {
-                notifications.toMutableList().also {
-                    it[index] = notification
-                }
+                val index = notifications.indexOfFirst { it.id == notification.id }
+                notifications.toMutableList().also { it[index] = notification }
             }
         }
     }

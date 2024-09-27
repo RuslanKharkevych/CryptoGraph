@@ -11,6 +11,7 @@ import kotlinx.coroutines.launch
 import me.khruslan.cryptograph.data.common.DataException
 import me.khruslan.cryptograph.data.notifications.Notification
 import me.khruslan.cryptograph.data.notifications.NotificationsRepository
+import me.khruslan.cryptograph.ui.R
 import me.khruslan.cryptograph.ui.coins.shared.CoinInfo
 import me.khruslan.cryptograph.ui.util.UiState
 import me.khruslan.cryptograph.ui.util.displayMessageRes
@@ -24,6 +25,8 @@ internal class NotificationDetailsViewModel(
 
     private val _notificationDetailsState = MutableNotificationDetailsState(args)
     val notificationDetailsState: NotificationDetailsState = _notificationDetailsState
+
+    private var notificationSaving = false
 
     init {
         if (args.notificationId == 0L) {
@@ -39,7 +42,18 @@ internal class NotificationDetailsViewModel(
     }
 
     fun saveNotification(notification: Notification) {
-        // TODO: Implement logic of saving notification
+        if (notificationSaving) return
+        notificationSaving = true
+
+        viewModelScope.launch {
+            try {
+                notificationsRepository.addOrUpdateNotification(notification)
+                _notificationDetailsState.notificationSaved = true
+            } catch (_: DataException) {
+                _notificationDetailsState.warningMessageRes = R.string.save_notification_warning_msg
+                notificationSaving = false
+            }
+        }
     }
 
     fun deleteNotification() {
@@ -48,6 +62,10 @@ internal class NotificationDetailsViewModel(
 
     fun updateCoinInfo(coinInfo: CoinInfo) {
         _notificationDetailsState.coinInfo = coinInfo
+    }
+
+    fun warningShown() {
+        _notificationDetailsState.warningMessageRes = null
     }
 
     private fun loadNotification() {
@@ -69,6 +87,8 @@ internal interface NotificationDetailsState {
     val isCoinEditable: Boolean
     val coinInfo: CoinInfo
     val notificationState: UiState<Notification?>
+    val notificationSaved: Boolean
+    val warningMessageRes: Int?
 }
 
 internal class MutableNotificationDetailsState(
@@ -79,4 +99,6 @@ internal class MutableNotificationDetailsState(
     override val isCoinEditable: Boolean = args.coinEditable
     override var coinInfo: CoinInfo by mutableStateOf(CoinInfo.fromArgs(args))
     override var notificationState: UiState<Notification?> by mutableStateOf(UiState.Loading)
+    override var notificationSaved: Boolean by mutableStateOf(false)
+    override var warningMessageRes: Int? by mutableStateOf(null)
 }

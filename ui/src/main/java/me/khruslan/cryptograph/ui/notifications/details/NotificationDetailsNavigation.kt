@@ -61,7 +61,7 @@ internal data class NotificationDetailsArgs(
 
 internal fun NavGraphBuilder.notificationDetailsScreen(
     onCoinFieldClick: (coinId: String) -> Unit,
-    onBackActionClick: () -> Unit,
+    onCloseScreen: () -> Unit,
 ) {
     val arguments = listOf(
         navArgument(NOTIFICATION_ID_ARG) { type = NavType.LongType; defaultValue = 0L },
@@ -89,8 +89,9 @@ internal fun NavGraphBuilder.notificationDetailsScreen(
             onRetryClick = viewModel::reloadNotification,
             onSaveNotification = viewModel::saveNotification,
             onDeleteActionClick = viewModel::deleteNotification,
+            onWarningShown = viewModel::warningShown,
             onCoinFieldClick = navInterceptor(onCoinFieldClick),
-            onBackActionClick = navInterceptor(onBackActionClick)
+            onCloseScreen = navInterceptor(onCloseScreen)
         )
     }
 }

@@ -2,6 +2,7 @@ package me.khruslan.cryptograph.ui.notifications.details
 
 import androidx.annotation.VisibleForTesting
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.mapSaver
@@ -141,6 +142,9 @@ internal class NotificationDetailsFormStateImpl(
         val triggerPrice = triggerPrice.text
         val notificationTitleState = getNotificationTitleState(notificationTitle)
         val triggerPriceState = getTriggerPriceState(triggerPrice)
+
+        this.notificationTitleState = notificationTitleState
+        this.triggerPriceState = triggerPriceState
         if (!notificationTitleState.isValid || !triggerPriceState.isValid) return
 
         val notification = Notification(
@@ -225,12 +229,18 @@ internal fun rememberNotificationDetailsFormState(
     notification: Notification?,
 ): NotificationDetailsFormState {
     val clock = Clock.systemDefaultZone()
-
-    return rememberSaveable(notification, saver = NotificationDetailsFormStateSaver) {
+    val state = rememberSaveable(notification, saver = NotificationDetailsFormStateSaver) {
         NotificationDetailsFormStateImpl(coinInfo, notification, clock)
-    }.apply {
-        this.coinInfo = coinInfo
     }
+
+    LaunchedEffect(coinInfo) {
+        state.coinInfo = coinInfo
+        if (state.triggerPrice.text.isNotEmpty()) {
+            state.validateTriggerPrice(false)
+        }
+    }
+
+    return state
 }
 
 private val NotificationDetailsFormStateSaver = run {

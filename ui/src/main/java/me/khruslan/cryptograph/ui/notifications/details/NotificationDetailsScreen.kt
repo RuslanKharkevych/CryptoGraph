@@ -34,6 +34,8 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextFieldColors
@@ -89,10 +91,26 @@ internal fun NotificationDetailsScreen(
     onRetryClick: () -> Unit,
     onSaveNotification: (notification: Notification) -> Unit,
     onDeleteActionClick: () -> Unit,
+    onWarningShown: () -> Unit,
     onCoinFieldClick: (coinId: String) -> Unit,
-    onBackActionClick: () -> Unit,
+    onCloseScreen: () -> Unit,
 ) {
+    val snackbarHostState = remember { SnackbarHostState() }
     val topBarScrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
+
+    if (notificationDetailsState.notificationSaved) {
+        LaunchedEffect(Unit) {
+            onCloseScreen()
+        }
+    }
+
+    notificationDetailsState.warningMessageRes?.let { resId ->
+        val snackbarMessage = stringResource(resId)
+        LaunchedEffect(snackbarMessage) {
+            snackbarHostState.showSnackbar(snackbarMessage)
+            onWarningShown()
+        }
+    }
 
     Scaffold(
         modifier = Modifier.nestedScroll(topBarScrollBehavior.nestedScrollConnection),
@@ -101,10 +119,13 @@ internal fun NotificationDetailsScreen(
                 scrollBehavior = topBarScrollBehavior,
                 title = notificationDetailsState.topBarTitle,
                 deleteActionVisible = notificationDetailsState.isDeletable,
-                onBackActionClick = onBackActionClick,
+                onBackActionClick = onCloseScreen,
                 onDeleteActionClick = onDeleteActionClick
             )
         },
+        snackbarHost = {
+            SnackbarHost(snackbarHostState)
+        }
     ) { contentPadding ->
         Crossfade(
             modifier = Modifier
@@ -604,8 +625,9 @@ private fun NotificationDetailsScreenPreview() {
             onRetryClick = {},
             onSaveNotification = {},
             onDeleteActionClick = {},
+            onWarningShown = {},
             onCoinFieldClick = {},
-            onBackActionClick = {}
+            onCloseScreen = {}
         )
     }
 }

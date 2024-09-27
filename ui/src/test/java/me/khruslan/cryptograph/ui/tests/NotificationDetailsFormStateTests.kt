@@ -12,6 +12,7 @@ import me.khruslan.cryptograph.ui.notifications.details.NotificationDetailsFormS
 import me.khruslan.cryptograph.ui.notifications.details.NotificationTitleState
 import me.khruslan.cryptograph.ui.notifications.details.NotificationTriggerPriceState
 import me.khruslan.cryptograph.ui.notifications.details.NotificationTriggerType
+import org.junit.Assert.fail
 import org.junit.Test
 import java.time.Clock
 import java.time.Instant
@@ -59,7 +60,7 @@ internal class NotificationDetailsFormStateTests {
     }
 
     @Test
-    fun `Build notification`() {
+    fun `Build notification - success`() {
         val (coin, notification) = STUB_COIN_NOTIFICATIONS[2]
         initFormState(coin)
 
@@ -74,6 +75,28 @@ internal class NotificationDetailsFormStateTests {
             buildNotification { actualNotification = it }
             assertThat(actualNotification).isEqualTo(expectedNotification)
         }
+    }
+
+    @Test
+    fun `Build notification - notification title invalid`() {
+        initFormState()
+        formState.updateNotificationTitle(TextFieldValue())
+        formState.buildNotification(onSuccess = { fail() })
+
+        val expectedState = NotificationTitleState.Blank
+        val actualState = formState.notificationTitleState
+        assertThat(actualState).isEqualTo(expectedState)
+    }
+
+    @Test
+    fun `Build notification - trigger price invalid`() {
+        initFormState()
+        formState.updateTriggerPrice(TextFieldValue())
+        formState.buildNotification(onSuccess = { fail() })
+
+        val expectedState = NotificationTriggerPriceState.Empty
+        val actualState = formState.triggerPriceState
+        assertThat(actualState).isEqualTo(expectedState)
     }
 
     @Test

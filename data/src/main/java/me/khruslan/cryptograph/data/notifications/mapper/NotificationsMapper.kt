@@ -22,6 +22,7 @@ internal class NotificationsMapperImpl(
     private val dispatcher: CoroutineDispatcher,
 ) : NotificationsMapper {
 
+    // TODO: Sort by created / updated at descending
     override suspend fun mapNotifications(
         notifications: List<NotificationDto>,
     ): List<Notification> {
