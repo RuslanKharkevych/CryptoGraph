@@ -12,7 +12,7 @@ import me.khruslan.cryptograph.data.preferences.local.ThemeValue
 val PREVIEW_PREFERENCES
     get() = STUB_PREFERENCES
 
-internal val STUB_PREFERENCES
+val STUB_PREFERENCES
     get() = Preferences(
         theme = Theme.Dark,
         chartStyle = ChartStyle.Default,

@@ -83,4 +83,10 @@
     <string name="delete_notification_alert_msg">Are you sure you want to delete the notification?</string>
     <string name="discard_changes_alert_msg">Are you sure you want to leave? Any unsaved changes will be lost</string>
     <!-- endregion Notification Details -->
+
+    <!-- region Preferences -->
+    <string name="update_theme_warning_msg">Failed to update the theme. Please try again</string>
+    <string name="update_chart_style_warning_msg">Failed to update the chart style. Please try again</string>
+    <string name="update_chart_period_warning_msg">Failed to update the chart period. Please try again</string>
+    <!-- endregion Preferences -->
 </resources>
