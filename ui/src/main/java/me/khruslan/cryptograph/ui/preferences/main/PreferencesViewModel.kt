@@ -55,6 +55,10 @@ internal class PreferencesViewModel(
         }
     }
 
+    fun warningShown() {
+        _preferencesState.warningMessageRes = null
+    }
+
     private fun loadPreferences() {
         viewModelScope.launch {
             preferencesRepository.preferences.collect { preferences ->

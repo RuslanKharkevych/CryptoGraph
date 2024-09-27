@@ -87,4 +87,13 @@ internal class PreferencesViewModelTests {
         val actualWarningMessageRes = viewModel.preferencesState.warningMessageRes
         assertThat(actualWarningMessageRes).isEqualTo(expectedWarningMessageRes)
     }
+
+    @Test
+    fun `Warning shown`() {
+        fakePreferencesRepository.isDatabaseCorrupted = true
+        viewModel.updateTheme(Theme.Light)
+        viewModel.warningShown()
+
+        assertThat(viewModel.preferencesState.warningMessageRes).isNull()
+    }
 }

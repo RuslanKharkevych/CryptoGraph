@@ -14,6 +14,8 @@ import me.khruslan.cryptograph.ui.notifications.details.navigateToNotificationDe
 import me.khruslan.cryptograph.ui.notifications.details.notificationDetailsScreen
 import me.khruslan.cryptograph.ui.notifications.main.navigateToNotifications
 import me.khruslan.cryptograph.ui.notifications.main.notificationsScreen
+import me.khruslan.cryptograph.ui.preferences.main.navigateToPreferences
+import me.khruslan.cryptograph.ui.preferences.main.preferencesScreen
 import me.khruslan.cryptograph.ui.util.navigation.Transitions
 
 @Composable
@@ -32,9 +34,7 @@ internal fun CryptoGraphNavHost() {
         coinsScreen(
             onCoinClick = navController::navigateToCoinHistory,
             onNotificationsActionClick = navController::navigateToNotifications,
-            onPreferencesActionClick = {
-                // TODO: Navigate to the preferences screen
-            }
+            onPreferencesActionClick = navController::navigateToPreferences
         )
 
         coinHistoryScreen(
@@ -56,6 +56,10 @@ internal fun CryptoGraphNavHost() {
         notificationDetailsScreen(
             onCoinFieldClick = navController::showCoinPicker,
             onCloseScreen = navController::popBackStack
+        )
+
+        preferencesScreen(
+            onBackActionClick = navController::popBackStack
         )
     }
 }
