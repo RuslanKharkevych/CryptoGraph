@@ -57,9 +57,8 @@ internal object Transitions {
     private val NavBackStackEntry.isModalScreen
         get() = destination.arguments.containsKey(MODAL_SCREEN_MARKER_ARG_KEY)
 
-    // TODO: Tune animation spec
     private val animationSpec
-        get() = tween<IntOffset>()
+        get() = tween<IntOffset>(durationMillis = 350)
 }
 
 internal fun NavGraphBuilder.modal(
