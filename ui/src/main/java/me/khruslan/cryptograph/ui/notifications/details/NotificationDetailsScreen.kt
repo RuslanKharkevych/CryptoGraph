@@ -1,5 +1,6 @@
 package me.khruslan.cryptograph.ui.notifications.details
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.basicMarquee
@@ -71,7 +72,8 @@ import me.khruslan.cryptograph.data.notifications.Notification
 import me.khruslan.cryptograph.ui.R
 import me.khruslan.cryptograph.ui.coins.shared.CoinInfo
 import me.khruslan.cryptograph.ui.core.CryptoGraphTheme
-import me.khruslan.cryptograph.ui.notifications.details.confirmation.DeleteNotificationConfirmationDialog
+import me.khruslan.cryptograph.ui.notifications.details.confirmation.ConfirmationAlertDialog
+import me.khruslan.cryptograph.ui.notifications.details.confirmation.rememberConfirmationAlertState
 import me.khruslan.cryptograph.ui.notifications.details.date.ExpirationDatePickerDialog
 import me.khruslan.cryptograph.ui.util.CurrencyBitcoin
 import me.khruslan.cryptograph.ui.util.PreviewScreenSizesLightDark
@@ -80,7 +82,6 @@ import me.khruslan.cryptograph.ui.util.components.FullScreenError
 import me.khruslan.cryptograph.ui.util.components.FullScreenLoader
 import me.khruslan.cryptograph.ui.util.getCurrentLocale
 import me.khruslan.cryptograph.ui.util.previewPlaceholder
-import me.khruslan.cryptograph.ui.util.rememberAlertState
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
@@ -99,7 +100,8 @@ internal fun NotificationDetailsScreen(
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
     val topBarScrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
-    val deleteNotificationConfirmationAlertState = rememberAlertState()
+    val deleteNotificationAlertState = rememberConfirmationAlertState()
+    val discardChangesAlertState = rememberConfirmationAlertState()
 
     if (notificationDetailsState.notificationSavedOrDeleted) {
         LaunchedEffect(Unit) {
@@ -107,10 +109,19 @@ internal fun NotificationDetailsScreen(
         }
     }
 
-    if (deleteNotificationConfirmationAlertState.isVisible) {
-        DeleteNotificationConfirmationDialog(
+    if (deleteNotificationAlertState.isVisible) {
+        ConfirmationAlertDialog(
+            message = stringResource(R.string.delete_notification_alert_msg),
             onConfirm = onDeleteNotification,
-            onDismiss = deleteNotificationConfirmationAlertState::dismiss
+            onDismiss = deleteNotificationAlertState::dismiss
+        )
+    }
+
+    if (discardChangesAlertState.isVisible) {
+        ConfirmationAlertDialog(
+            message = stringResource(R.string.discard_changes_alert_msg),
+            onConfirm = onCloseScreen,
+            onDismiss = discardChangesAlertState::dismiss
         )
     }
 
@@ -122,6 +133,10 @@ internal fun NotificationDetailsScreen(
         }
     }
 
+    BackHandler {
+        discardChangesAlertState.show()
+    }
+
     Scaffold(
         modifier = Modifier.nestedScroll(topBarScrollBehavior.nestedScrollConnection),
         topBar = {
@@ -129,8 +144,8 @@ internal fun NotificationDetailsScreen(
                 scrollBehavior = topBarScrollBehavior,
                 title = notificationDetailsState.topBarTitle,
                 deleteActionVisible = notificationDetailsState.isDeletable,
-                onBackActionClick = onCloseScreen,
-                onDeleteActionClick = deleteNotificationConfirmationAlertState::show
+                onBackActionClick = discardChangesAlertState::show,
+                onDeleteActionClick = deleteNotificationAlertState::show
             )
         },
         snackbarHost = {
@@ -152,7 +167,8 @@ internal fun NotificationDetailsScreen(
                     isCoinEditable = notificationDetailsState.isCoinEditable,
                     notification = state.data,
                     onCoinFieldClick = onCoinFieldClick,
-                    onSaveNotification = onSaveNotification
+                    onSaveNotification = onSaveNotification,
+                    onDiscardButtonClick = discardChangesAlertState::show
                 )
 
                 is UiState.Error -> FullScreenError(
@@ -223,6 +239,7 @@ private fun NotificationForm(
     notification: Notification?,
     onCoinFieldClick: (coinId: String) -> Unit,
     onSaveNotification: (notification: Notification) -> Unit,
+    onDiscardButtonClick: () -> Unit,
 ) {
     val formState = rememberNotificationDetailsFormState(coinInfo, notification)
     val focusManager = LocalFocusManager.current
@@ -293,9 +310,7 @@ private fun NotificationForm(
                     focusManager.clearFocus()
                     formState.buildNotification(onSuccess = onSaveNotification)
                 },
-                onDiscardClick = {
-                    // TODO: Show confirmation dialog
-                }
+                onDiscardClick = onDiscardButtonClick
             )
         }
     }

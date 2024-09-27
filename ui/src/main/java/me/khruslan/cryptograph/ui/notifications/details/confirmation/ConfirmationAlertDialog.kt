@@ -11,7 +11,8 @@ import me.khruslan.cryptograph.ui.R
 import me.khruslan.cryptograph.ui.core.CryptoGraphTheme
 
 @Composable
-internal fun DeleteNotificationConfirmationDialog(
+internal fun ConfirmationAlertDialog(
+    message: String,
     onConfirm: () -> Unit,
     onDismiss: () -> Unit,
 ) {
@@ -24,7 +25,7 @@ internal fun DeleteNotificationConfirmationDialog(
         onDismissRequest = onDismiss,
         text = {
             Text(
-                text = stringResource(R.string.delete_notification_alert_title),
+                text = message,
                 style = MaterialTheme.typography.bodyLarge
             )
         },
@@ -48,7 +49,8 @@ internal fun DeleteNotificationConfirmationDialog(
 @PreviewLightDark
 private fun DeleteNotificationConfirmationDialogPreview() {
     CryptoGraphTheme {
-        DeleteNotificationConfirmationDialog(
+        ConfirmationAlertDialog(
+            message = stringResource(R.string.delete_notification_alert_msg),
             onConfirm = {},
             onDismiss = {}
         )

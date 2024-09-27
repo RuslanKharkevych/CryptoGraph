@@ -1,4 +1,4 @@
-package me.khruslan.cryptograph.ui.util
+package me.khruslan.cryptograph.ui.notifications.details.confirmation
 
 import androidx.annotation.VisibleForTesting
 import androidx.compose.runtime.Composable
@@ -7,7 +7,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 
-internal interface AlertState {
+internal interface ConfirmationAlertState {
     val isVisible: Boolean
 
     fun show()
@@ -15,7 +15,7 @@ internal interface AlertState {
 }
 
 @VisibleForTesting
-internal class AlertStateImpl : AlertState {
+internal class ConfirmationAlertStateImpl : ConfirmationAlertState {
     override var isVisible by mutableStateOf(false)
 
     override fun show() {
@@ -28,8 +28,8 @@ internal class AlertStateImpl : AlertState {
 }
 
 @Composable
-internal fun rememberAlertState(): AlertState {
+internal fun rememberConfirmationAlertState(): ConfirmationAlertState {
     return remember {
-        AlertStateImpl()
+        ConfirmationAlertStateImpl()
     }
 }
