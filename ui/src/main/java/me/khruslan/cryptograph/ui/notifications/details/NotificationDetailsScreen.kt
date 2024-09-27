@@ -98,7 +98,7 @@ internal fun NotificationDetailsScreen(
     val snackbarHostState = remember { SnackbarHostState() }
     val topBarScrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
 
-    if (notificationDetailsState.notificationSaved) {
+    if (notificationDetailsState.notificationSavedOrDeleted) {
         LaunchedEffect(Unit) {
             onCloseScreen()
         }
@@ -120,7 +120,7 @@ internal fun NotificationDetailsScreen(
                 title = notificationDetailsState.topBarTitle,
                 deleteActionVisible = notificationDetailsState.isDeletable,
                 onBackActionClick = onCloseScreen,
-                onDeleteActionClick = onDeleteActionClick
+                onDeleteActionClick = onDeleteActionClick // TODO: Show confirmation alert
             )
         },
         snackbarHost = {

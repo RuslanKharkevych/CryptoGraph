@@ -77,6 +77,7 @@
     <string name="save_btn_label">Save</string>
     <string name="discard_btn_label">Discard</string>
     <string name="save_notification_warning_msg">Failed to save the notification. Please try again</string>
+    <string name="delete_notification_warning_msg">Failed to delete the notification. Please try again</string>
     <string name="date_picker_positive_btn">Confirm</string>
     <string name="date_picker_negative_btn">Cancel</string>
     <!-- endregion Notification Details -->

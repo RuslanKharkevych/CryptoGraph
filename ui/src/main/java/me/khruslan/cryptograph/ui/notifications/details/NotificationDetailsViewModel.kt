@@ -26,7 +26,7 @@ internal class NotificationDetailsViewModel(
     private val _notificationDetailsState = MutableNotificationDetailsState(args)
     val notificationDetailsState: NotificationDetailsState = _notificationDetailsState
 
-    private var notificationSaving = false
+    private var notificationUpdating = false
 
     init {
         if (args.notificationId == 0L) {
@@ -42,22 +42,34 @@ internal class NotificationDetailsViewModel(
     }
 
     fun saveNotification(notification: Notification) {
-        if (notificationSaving) return
-        notificationSaving = true
+        if (notificationUpdating) return
+        notificationUpdating = true
 
         viewModelScope.launch {
             try {
                 notificationsRepository.addOrUpdateNotification(notification)
-                _notificationDetailsState.notificationSaved = true
+                _notificationDetailsState.notificationSavedOrDeleted = true
             } catch (_: DataException) {
                 _notificationDetailsState.warningMessageRes = R.string.save_notification_warning_msg
-                notificationSaving = false
+                notificationUpdating = false
             }
         }
     }
 
     fun deleteNotification() {
-        // TODO: Implement logic of deleting notification
+        if (notificationUpdating) return
+        notificationUpdating = true
+
+        viewModelScope.launch {
+            try {
+                notificationsRepository.deleteNotification(args.notificationId)
+                _notificationDetailsState.notificationSavedOrDeleted = true
+            } catch (_: DataException) {
+                _notificationDetailsState.warningMessageRes =
+                    R.string.delete_notification_warning_msg
+                notificationUpdating = false
+            }
+        }
     }
 
     fun updateCoinInfo(coinInfo: CoinInfo) {
@@ -87,18 +99,18 @@ internal interface NotificationDetailsState {
     val isCoinEditable: Boolean
     val coinInfo: CoinInfo
     val notificationState: UiState<Notification?>
-    val notificationSaved: Boolean
+    val notificationSavedOrDeleted: Boolean
     val warningMessageRes: Int?
 }
 
 internal class MutableNotificationDetailsState(
-    args: NotificationDetailsArgs
+    args: NotificationDetailsArgs,
 ) : NotificationDetailsState {
     override val notificationTitle: String? = args.notificationTitle
     override val isDeletable: Boolean = args.notificationId != 0L
     override val isCoinEditable: Boolean = args.coinEditable
     override var coinInfo: CoinInfo by mutableStateOf(CoinInfo.fromArgs(args))
     override var notificationState: UiState<Notification?> by mutableStateOf(UiState.Loading)
-    override var notificationSaved: Boolean by mutableStateOf(false)
+    override var notificationSavedOrDeleted: Boolean by mutableStateOf(false)
     override var warningMessageRes: Int? by mutableStateOf(null)
 }

@@ -65,7 +65,7 @@ internal class NotificationsLocalDataSourceTests {
     fun `Delete notification`() = runTest {
         val notification = STUB_DTO_NOTIFICATIONS[0].copy(id = 0L)
         dataSource.addOrUpdateNotification(notification)
-        dataSource.deleteNotification(notification)
+        dataSource.deleteNotification(notification.id)
 
         dataSource.getNotifications().test {
             assertThat(awaitItem()).isEmpty()

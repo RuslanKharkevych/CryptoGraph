@@ -34,7 +34,7 @@ internal class FakeNotificationsLocalDataSource : NotificationsLocalDataSource {
         }
     }
 
-    override suspend fun deleteNotification(notification: NotificationDto) {
-        notificationsFlow.update { it - notification }
+    override suspend fun deleteNotification(id: Long) {
+        notificationsFlow.update { it - getNotification(id) }
     }
 }

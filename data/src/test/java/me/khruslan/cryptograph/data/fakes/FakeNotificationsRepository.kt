@@ -20,7 +20,7 @@ class FakeNotificationsRepository : NotificationsRepository {
         throw UnsupportedOperationException()
     }
 
-    override suspend fun deleteNotification(notification: Notification) {
+    override suspend fun deleteNotification(id: Long) {
         throw UnsupportedOperationException()
     }
 }

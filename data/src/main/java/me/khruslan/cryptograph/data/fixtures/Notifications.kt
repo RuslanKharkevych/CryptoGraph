@@ -38,7 +38,7 @@ val STUB_NOTIFICATIONS
             Notification(
                 id = 1L,
                 coinId = "Qwsogvtv82FCd",
-                title = "Bitcoin < 5000$",
+                title = "Bitcoin < 50000$",
                 createdAt = LocalDate.parse("2024-09-13"),
                 expirationDate = null,
                 trigger = NotificationTrigger.PriceLessThen(50000.0)
@@ -46,7 +46,7 @@ val STUB_NOTIFICATIONS
             Notification(
                 id = 2L,
                 coinId = "razxDUgYGNAdQ",
-                title = "Ethereum > 3000$",
+                title = "Ethereum > 4000$",
                 createdAt = LocalDate.parse("2024-09-13"),
                 expirationDate = LocalDate.parse("2025-09-13"),
                 trigger = NotificationTrigger.PriceMoreThen(4000.0)
@@ -66,20 +66,20 @@ internal val STUB_DTO_NOTIFICATIONS
             NotificationDto(
                 id = 1L,
                 coinUuid = "Qwsogvtv82FCd",
-                title = "Bitcoin < 5000$",
+                title = "Bitcoin < 50000$",
                 createdAtDate = "2024-09-13",
                 expirationDate = null,
-                priceLessThenTrigger = 5000.0,
+                priceLessThenTrigger = 50000.0,
                 priceMoreThenTrigger = null
             ),
             NotificationDto(
                 id = 2L,
                 coinUuid = "razxDUgYGNAdQ",
-                title = "Ethereum > 3000$",
+                title = "Ethereum > 4000$",
                 createdAtDate = "2024-09-13",
                 expirationDate = "2025-09-13",
                 priceLessThenTrigger = null,
-                priceMoreThenTrigger = 3000.0
+                priceMoreThenTrigger = 4000.0
             ),
             NotificationDto(
                 id = 3L,

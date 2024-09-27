@@ -17,7 +17,7 @@ internal interface NotificationsLocalDataSource {
     fun getNotifications(coinUuid: String? = null): Flow<List<NotificationDto>>
     suspend fun getNotification(id: Long): NotificationDto
     suspend fun addOrUpdateNotification(notification: NotificationDto)
-    suspend fun deleteNotification(notification: NotificationDto)
+    suspend fun deleteNotification(id: Long)
 }
 
 internal class NotificationsLocalDataSourceImpl(
@@ -61,20 +61,20 @@ internal class NotificationsLocalDataSourceImpl(
         }
     }
 
-    override suspend fun deleteNotification(notification: NotificationDto) {
+    override suspend fun deleteNotification(id: Long) {
         withContext(dispatcher) {
             try {
-                deleteNotificationInternal(notification)
-                Logger.info(LOG_TAG, "Deleted $notification")
+                deleteNotificationInternal(id)
+                Logger.info(LOG_TAG, "Deleted notification: $id")
             } catch (e: DbException) {
-                Logger.error(LOG_TAG, "Failed to delete $notification", e)
+                Logger.error(LOG_TAG, "Failed to delete notification: $id", e)
                 throw DatabaseException(e)
             }
         }
     }
 
-    private fun deleteNotificationInternal(notification: NotificationDto) {
-        if (!box.remove(notification)) {
+    private fun deleteNotificationInternal(id: Long) {
+        if (!box.remove(id)) {
             throw DbException("No notification exists with the given ID")
         }
     }

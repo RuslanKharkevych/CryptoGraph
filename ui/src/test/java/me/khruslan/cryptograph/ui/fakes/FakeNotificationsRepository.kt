@@ -13,7 +13,9 @@ import me.khruslan.cryptograph.data.notifications.NotificationsRepository
 internal class FakeNotificationsRepository : NotificationsRepository {
 
     var isDatabaseCorrupted = false
+
     var notificationsAdded = 0
+    var notificationsDeleted = 0
 
     private val notificationsFlow = MutableStateFlow(STUB_NOTIFICATIONS)
 
@@ -41,8 +43,10 @@ internal class FakeNotificationsRepository : NotificationsRepository {
         }
     }
 
-    override suspend fun deleteNotification(notification: Notification) {
-        notificationsFlow.update { it - notification }
+    override suspend fun deleteNotification(id: Long) {
+        checkIfDataIsValid()
+        notificationsFlow.update { it - getNotification(id) }
+        notificationsDeleted++
     }
 
     private fun checkIfDataIsValid() {

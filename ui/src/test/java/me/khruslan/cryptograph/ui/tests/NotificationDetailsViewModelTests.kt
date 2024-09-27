@@ -92,7 +92,7 @@ internal class NotificationDetailsViewModelTests {
         initViewModel()
         viewModel.saveNotification(STUB_NOTIFICATIONS[0])
 
-        assertThat(viewModel.notificationDetailsState.notificationSaved).isTrue()
+        assertThat(viewModel.notificationDetailsState.notificationSavedOrDeleted).isTrue()
     }
 
     @Test
@@ -107,13 +107,41 @@ internal class NotificationDetailsViewModelTests {
     }
 
     @Test
-    fun `Save notification - already saving`() = runTest {
+    fun `Save notification - updating`() = runTest {
         initViewModel()
         val notification = STUB_NOTIFICATIONS[0].copy(id = 0L)
         viewModel.saveNotification(notification)
         viewModel.saveNotification(notification)
 
         assertThat(fakeNotificationsRepository.notificationsAdded).isEqualTo(1)
+    }
+
+    @Test
+    fun `Delete notification - success`() = runTest {
+        initViewModel()
+        viewModel.deleteNotification()
+
+        assertThat(viewModel.notificationDetailsState.notificationSavedOrDeleted).isTrue()
+    }
+
+    @Test
+    fun `Delete notification - failure`() = runTest {
+        initViewModel()
+        fakeNotificationsRepository.isDatabaseCorrupted = true
+        viewModel.deleteNotification()
+
+        val expectedWarningMessageRes = R.string.delete_notification_warning_msg
+        val actualWarningMessageRes = viewModel.notificationDetailsState.warningMessageRes
+        assertThat(actualWarningMessageRes).isEqualTo(expectedWarningMessageRes)
+    }
+
+    @Test
+    fun `Delete notification - updating`() = runTest {
+        initViewModel()
+        viewModel.deleteNotification()
+        viewModel.deleteNotification()
+
+        assertThat(fakeNotificationsRepository.notificationsDeleted).isEqualTo(1)
     }
 
     @Test

@@ -59,7 +59,7 @@ internal class NotificationsRepositoryTests {
     fun `Delete notification`() = runTest {
         val notification = STUB_NOTIFICATIONS[0]
         repository.addOrUpdateNotification(notification)
-        repository.deleteNotification(notification)
+        repository.deleteNotification(notification.id)
 
         repository.getNotifications(null).test {
             assertThat(awaitItem()).isEmpty()
