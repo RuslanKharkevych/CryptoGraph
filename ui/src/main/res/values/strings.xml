@@ -11,6 +11,8 @@
     <string name="retry_btn_desc">Retry</string>
     <string name="back_action_desc">Go back</string>
     <string name="close_action_desc">Close</string>
+    <string name="dialog_positive_btn">Confirm</string>
+    <string name="dialog_negative_btn">Cancel</string>
     <!-- endregion Common -->
 
     <!-- region Coins -->
@@ -78,7 +80,6 @@
     <string name="discard_btn_label">Discard</string>
     <string name="save_notification_warning_msg">Failed to save the notification. Please try again</string>
     <string name="delete_notification_warning_msg">Failed to delete the notification. Please try again</string>
-    <string name="date_picker_positive_btn">Confirm</string>
-    <string name="date_picker_negative_btn">Cancel</string>
+    <string name="delete_notification_alert_title">Are you sure you want to delete the notification?</string>
     <!-- endregion Notification Details -->
 </resources>

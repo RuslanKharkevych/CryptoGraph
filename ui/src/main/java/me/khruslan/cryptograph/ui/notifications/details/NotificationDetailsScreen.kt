@@ -71,6 +71,7 @@ import me.khruslan.cryptograph.data.notifications.Notification
 import me.khruslan.cryptograph.ui.R
 import me.khruslan.cryptograph.ui.coins.shared.CoinInfo
 import me.khruslan.cryptograph.ui.core.CryptoGraphTheme
+import me.khruslan.cryptograph.ui.notifications.details.confirmation.DeleteNotificationConfirmationDialog
 import me.khruslan.cryptograph.ui.notifications.details.date.ExpirationDatePickerDialog
 import me.khruslan.cryptograph.ui.util.CurrencyBitcoin
 import me.khruslan.cryptograph.ui.util.PreviewScreenSizesLightDark
@@ -79,6 +80,7 @@ import me.khruslan.cryptograph.ui.util.components.FullScreenError
 import me.khruslan.cryptograph.ui.util.components.FullScreenLoader
 import me.khruslan.cryptograph.ui.util.getCurrentLocale
 import me.khruslan.cryptograph.ui.util.previewPlaceholder
+import me.khruslan.cryptograph.ui.util.rememberAlertState
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
@@ -90,18 +92,26 @@ internal fun NotificationDetailsScreen(
     notificationDetailsState: NotificationDetailsState,
     onRetryClick: () -> Unit,
     onSaveNotification: (notification: Notification) -> Unit,
-    onDeleteActionClick: () -> Unit,
+    onDeleteNotification: () -> Unit,
     onWarningShown: () -> Unit,
     onCoinFieldClick: (coinId: String) -> Unit,
     onCloseScreen: () -> Unit,
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
     val topBarScrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
+    val deleteNotificationConfirmationAlertState = rememberAlertState()
 
     if (notificationDetailsState.notificationSavedOrDeleted) {
         LaunchedEffect(Unit) {
             onCloseScreen()
         }
+    }
+
+    if (deleteNotificationConfirmationAlertState.isVisible) {
+        DeleteNotificationConfirmationDialog(
+            onConfirm = onDeleteNotification,
+            onDismiss = deleteNotificationConfirmationAlertState::dismiss
+        )
     }
 
     notificationDetailsState.warningMessageRes?.let { resId ->
@@ -120,7 +130,7 @@ internal fun NotificationDetailsScreen(
                 title = notificationDetailsState.topBarTitle,
                 deleteActionVisible = notificationDetailsState.isDeletable,
                 onBackActionClick = onCloseScreen,
-                onDeleteActionClick = onDeleteActionClick // TODO: Show confirmation alert
+                onDeleteActionClick = deleteNotificationConfirmationAlertState::show
             )
         },
         snackbarHost = {
@@ -624,7 +634,7 @@ private fun NotificationDetailsScreenPreview() {
             notificationDetailsState = notificationState,
             onRetryClick = {},
             onSaveNotification = {},
-            onDeleteActionClick = {},
+            onDeleteNotification = {},
             onWarningShown = {},
             onCoinFieldClick = {},
             onCloseScreen = {}

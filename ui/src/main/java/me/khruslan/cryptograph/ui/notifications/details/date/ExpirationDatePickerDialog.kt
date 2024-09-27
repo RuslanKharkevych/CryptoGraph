@@ -50,12 +50,12 @@ internal fun ExpirationDatePickerDialog(
         onDismissRequest = onDismiss,
         confirmButton = {
             TextButton(onClick = ::confirmDate) {
-                Text(text = stringResource(R.string.date_picker_positive_btn))
+                Text(text = stringResource(R.string.dialog_positive_btn))
             }
         },
         dismissButton = {
             TextButton(onClick = onDismiss) {
-                Text(text = stringResource(R.string.date_picker_negative_btn))
+                Text(text = stringResource(R.string.dialog_negative_btn))
             }
         },
         content = {

@@ -88,7 +88,7 @@ internal fun NavGraphBuilder.notificationDetailsScreen(
             notificationDetailsState = viewModel.notificationDetailsState,
             onRetryClick = viewModel::reloadNotification,
             onSaveNotification = viewModel::saveNotification,
-            onDeleteActionClick = viewModel::deleteNotification,
+            onDeleteNotification = viewModel::deleteNotification,
             onWarningShown = viewModel::warningShown,
             onCoinFieldClick = navInterceptor(onCoinFieldClick),
             onCloseScreen = navInterceptor(onCloseScreen)
