@@ -63,11 +63,14 @@ import com.patrykandpatrick.vico.core.entry.ChartEntryModel
 import com.patrykandpatrick.vico.core.marker.Marker
 import me.khruslan.cryptograph.data.coins.CoinPrice
 import me.khruslan.cryptograph.data.fixtures.PREVIEW_COIN_HISTORY
+import me.khruslan.cryptograph.data.preferences.ChartPeriod
+import me.khruslan.cryptograph.data.preferences.ChartStyle
 import me.khruslan.cryptograph.ui.R
 import me.khruslan.cryptograph.ui.coins.history.chart.PriceMarkerComponent
 import me.khruslan.cryptograph.ui.coins.history.chart.PriceMarkerLabelFormatter
 import me.khruslan.cryptograph.ui.coins.shared.PinCoinButton
 import me.khruslan.cryptograph.ui.core.CryptoGraphTheme
+import me.khruslan.cryptograph.ui.util.ChoiceItems
 import me.khruslan.cryptograph.ui.util.PreviewScreenSizesLightDark
 import me.khruslan.cryptograph.ui.util.UiState
 import me.khruslan.cryptograph.ui.util.components.FullScreenError
@@ -75,6 +78,7 @@ import me.khruslan.cryptograph.ui.util.components.FullScreenLoader
 import me.khruslan.cryptograph.ui.util.toColor
 import me.khruslan.cryptograph.ui.util.typeface
 
+// TODO: Fix issue with dark theme UI when coin color is black(-ish)
 @Composable
 internal fun CoinHistoryScreen(
     coinHistoryState: CoinHistoryState,
@@ -212,7 +216,7 @@ private fun PriceChart(
             bottomAxis = rememberBottomAxis(
                 dateFormatter = chartState.dateFormatter,
                 spacing = chartState.bottomAxisSpacing,
-                addExtremeLabelPadding = chartState.style == CoinHistoryChartStyle.ColumnChart
+                addExtremeLabelPadding = chartState.style == ChartStyle.Column
             ),
             horizontalLayout = HorizontalLayout.FullWidth(),
             marker = rememberMarker(
@@ -226,10 +230,10 @@ private fun PriceChart(
 @Composable
 private fun FilterChips(
     color: Color,
-    selectedStyle: CoinHistoryChartStyle,
-    selectedPeriod: CoinHistoryChartPeriod,
-    onStyleSelected: (CoinHistoryChartStyle) -> Unit,
-    onPeriodSelected: (CoinHistoryChartPeriod) -> Unit,
+    selectedStyle: ChartStyle,
+    selectedPeriod: ChartPeriod,
+    onStyleSelected: (ChartStyle) -> Unit,
+    onPeriodSelected: (ChartPeriod) -> Unit,
 ) {
     val styleFilterChips = @Composable {
         StyleFilterChips(
@@ -266,16 +270,16 @@ private fun FilterChips(
 @Composable
 private fun StyleFilterChips(
     color: Color,
-    selectedStyle: CoinHistoryChartStyle,
-    onStyleSelected: (CoinHistoryChartStyle) -> Unit,
+    selectedStyle: ChartStyle,
+    onStyleSelected: (ChartStyle) -> Unit,
 ) {
     Column(modifier = Modifier.padding(horizontal = 16.dp)) {
         Text(
-            text = stringResource(R.string.style_label),
+            text = stringResource(R.string.chart_style_group_title),
             style = MaterialTheme.typography.bodyLarge
         )
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            CoinHistoryChartStyle.entries.forEach { style ->
+            ChoiceItems.ChartStyles.forEach { (style, labelRes) ->
                 FilterChip(
                     selected = style == selectedStyle,
                     onClick = { onStyleSelected(style) },
@@ -284,7 +288,7 @@ private fun StyleFilterChips(
                     ),
                     label = {
                         Text(
-                            text = stringResource(style.nameRes),
+                            text = stringResource(labelRes),
                             style = MaterialTheme.typography.labelSmall
                         )
                     }
@@ -298,16 +302,16 @@ private fun StyleFilterChips(
 @Composable
 private fun PeriodFilterChips(
     color: Color,
-    selectedPeriod: CoinHistoryChartPeriod,
-    onPeriodSelected: (CoinHistoryChartPeriod) -> Unit,
+    selectedPeriod: ChartPeriod,
+    onPeriodSelected: (ChartPeriod) -> Unit,
 ) {
     Column(modifier = Modifier.padding(horizontal = 16.dp)) {
         Text(
-            text = stringResource(R.string.period_label),
+            text = stringResource(R.string.chart_period_group_title),
             style = MaterialTheme.typography.bodyLarge
         )
         FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            CoinHistoryChartPeriod.entries.forEach { period ->
+            ChoiceItems.ChartPeriods.forEach { (period, labelRes) ->
                 FilterChip(
                     selected = period == selectedPeriod,
                     onClick = { onPeriodSelected(period) },
@@ -316,7 +320,7 @@ private fun PeriodFilterChips(
                     ),
                     label = {
                         Text(
-                            text = stringResource(period.nameRes),
+                            text = stringResource(labelRes),
                             style = MaterialTheme.typography.labelSmall
                         )
                     }
@@ -327,9 +331,9 @@ private fun PeriodFilterChips(
 }
 
 @Composable
-private fun rememberChart(style: CoinHistoryChartStyle, color: Color): Chart<ChartEntryModel> {
+private fun rememberChart(style: ChartStyle, color: Color): Chart<ChartEntryModel> {
     return when (style) {
-        CoinHistoryChartStyle.LineChart -> lineChart(
+        ChartStyle.Line -> lineChart(
             lines = listOf(
                 lineSpec(
                     lineColor = color,
@@ -345,7 +349,7 @@ private fun rememberChart(style: CoinHistoryChartStyle, color: Color): Chart<Cha
             )
         )
 
-        CoinHistoryChartStyle.ColumnChart -> columnChart(
+        ChartStyle.Column -> columnChart(
             columns = listOf(
                 lineComponent(
                     color = color.copy(alpha = 0.5f),
@@ -386,7 +390,7 @@ private fun rememberBottomAxis(
 }
 
 @Composable
-private fun rememberMarker(chartStyle: CoinHistoryChartStyle, indicatorColor: Color): Marker {
+private fun rememberMarker(chartStyle: ChartStyle, indicatorColor: Color): Marker {
     val labelTextStyle = MaterialTheme.typography.labelSmall
     val label = textComponent(
         color = MaterialTheme.colorScheme.onBackground,
@@ -398,7 +402,7 @@ private fun rememberMarker(chartStyle: CoinHistoryChartStyle, indicatorColor: Co
         ShapeComponent(
             shape = Shapes.pillShape,
             color = indicatorColor.toArgb()
-        ).takeIf { chartStyle == CoinHistoryChartStyle.LineChart }
+        ).takeIf { chartStyle == ChartStyle.Line }
     }
 
     return remember(indicator) {

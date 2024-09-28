@@ -3,7 +3,7 @@ package me.khruslan.cryptograph.ui.data
 import com.patrykandpatrick.vico.core.entry.FloatEntry
 import com.patrykandpatrick.vico.core.entry.entryOf
 import me.khruslan.cryptograph.data.coins.CoinPrice
-import me.khruslan.cryptograph.ui.coins.history.CoinHistoryChartPeriod
+import me.khruslan.cryptograph.data.preferences.ChartPeriod
 import java.time.Clock
 import java.time.Instant
 import java.time.LocalDate
@@ -22,7 +22,7 @@ internal class CoinHistoryChartStateDataProvider {
 
     val chartData = generateChartData()
 
-    fun getChartEntriesFilteredByPeriod(period: CoinHistoryChartPeriod): List<List<FloatEntry>> {
+    fun getChartEntriesFilteredByPeriod(period: ChartPeriod): List<List<FloatEntry>> {
         val filteredChartData = getChartDataFilteredByPeriod(period)
         return listOf(
             filteredChartData.mapIndexed { index, coinPrice ->
@@ -31,11 +31,11 @@ internal class CoinHistoryChartStateDataProvider {
         )
     }
 
-    fun getBottomAxisSpacingForPeriod(period: CoinHistoryChartPeriod): Int {
+    fun getBottomAxisSpacingForPeriod(period: ChartPeriod): Int {
         return when (period) {
-            CoinHistoryChartPeriod.OneWeek -> 1
-            CoinHistoryChartPeriod.TwoWeeks -> 2
-            CoinHistoryChartPeriod.OneMonth -> 3
+            ChartPeriod.OneWeek -> 1
+            ChartPeriod.TwoWeeks -> 2
+            ChartPeriod.OneMonth -> 3
             else -> 4
         }
     }
@@ -56,16 +56,16 @@ internal class CoinHistoryChartStateDataProvider {
         return chartData
     }
 
-    private fun getChartDataFilteredByPeriod(period: CoinHistoryChartPeriod): List<CoinPrice> {
+    private fun getChartDataFilteredByPeriod(period: ChartPeriod): List<CoinPrice> {
         return when (period) {
-            CoinHistoryChartPeriod.OneWeek -> chartData.take(7)
-            CoinHistoryChartPeriod.TwoWeeks -> chartData.take(14)
-            CoinHistoryChartPeriod.OneMonth -> chartData.slice(0..29 step 2)
-            CoinHistoryChartPeriod.ThreeMonths -> chartData.slice(0..90 step 4)
-            CoinHistoryChartPeriod.SixMonths -> chartData.slice(0..180 step 8)
-            CoinHistoryChartPeriod.OneYear -> chartData.slice(0..365 step 15)
-            CoinHistoryChartPeriod.ThreeYears -> chartData.slice(0..1095 step 44)
-            CoinHistoryChartPeriod.FiveYears -> chartData.slice(0..1825 step 74)
+            ChartPeriod.OneWeek -> chartData.take(7)
+            ChartPeriod.TwoWeeks -> chartData.take(14)
+            ChartPeriod.OneMonth -> chartData.slice(0..29 step 2)
+            ChartPeriod.ThreeMonths -> chartData.slice(0..90 step 4)
+            ChartPeriod.SixMonths -> chartData.slice(0..180 step 8)
+            ChartPeriod.OneYear -> chartData.slice(0..365 step 15)
+            ChartPeriod.ThreeYears -> chartData.slice(0..1095 step 44)
+            ChartPeriod.FiveYears -> chartData.slice(0..1825 step 74)
         }
     }
 }

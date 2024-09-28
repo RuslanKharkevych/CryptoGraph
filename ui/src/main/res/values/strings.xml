@@ -26,26 +26,23 @@
     <string name="trending_up_icon_desc">Trending up</string>
     <string name="trending_down_icon_desc">Trending down</string>
     <string name="trending_flat_icon_desc">Trending flat</string>
+    <string name="coin_picker_title">Select coin</string>
     <!-- endregion Coins -->
 
     <!-- region Coin History -->
-    <string name="style_label">Style</string>
-    <string name="style_graph_chip_label">Graph</string>
-    <string name="style_chart_chip_label">Chart</string>
-    <string name="period_label">Period</string>
-    <string name="period_one_week_chip_label">1w</string>
-    <string name="period_two_weeks_chip_label">2w</string>
-    <string name="period_one_month_chip_label">1m</string>
-    <string name="period_three_months_chip_label">3m</string>
-    <string name="period_six_months_chip_label">6m</string>
-    <string name="period_one_year_chip_label">1y</string>
-    <string name="period_three_years_chip_label">3y</string>
-    <string name="period_five_years_chip_label">5y</string>
+    <string name="chart_style_group_title">Style</string>
+    <string name="chart_style_column_label">Graph</string>
+    <string name="chart_style_line_label">Chart</string>
+    <string name="chart_period_group_title">Period</string>
+    <string name="chart_period_one_week_label">1w</string>
+    <string name="chart_period_two_weeks_label">2w</string>
+    <string name="chart_period_one_month_label">1m</string>
+    <string name="chart_period_three_months_label">3m</string>
+    <string name="chart_period_six_months_label">6m</string>
+    <string name="chart_period_one_year_label">1y</string>
+    <string name="chart_period_three_years_label">3y</string>
+    <string name="chart_period_five_years_label">5y</string>
     <!-- endregion Coin History -->
-
-    <!-- region Coin Picker -->
-    <string name="coin_picker_title">Select a coin</string>
-    <!-- endregion Coin Picker -->
 
     <!-- region Notifications -->
     <string name="all_notifications_top_bar_title">Notifications</string>
@@ -86,9 +83,15 @@
 
     <!-- region Preferences -->
     <string name="preferences_top_bar_title">Preferences</string>
-    <string name="theme_preference_label">Theme</string>
-    <string name="chart_style_preference_label">Chart style</string>
-    <string name="chart_period_preference_label">Chart period</string>
+    <string name="theme_preference_title">Theme</string>
+    <string name="theme_system_default_label">System default</string>
+    <string name="theme_light_label">Light</string>
+    <string name="theme_dark_label">Dark</string>
+    <string name="chart_style_preference_title">Chart style</string>
+    <string name="chart_period_preference_title">Chart period</string>
+    <string name="select_theme_dialog_title">Select theme</string>
+    <string name="select_chart_style_dialog_title">Select chart style</string>
+    <string name="select_chart_period_dialog_title">Select chart period</string>
     <string name="update_theme_warning_msg">Failed to update the theme. Please try again</string>
     <string name="update_chart_style_warning_msg">Failed to update the chart style. Please try again</string>
     <string name="update_chart_period_warning_msg">Failed to update the chart period. Please try again</string>

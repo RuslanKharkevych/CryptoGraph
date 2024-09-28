@@ -73,7 +73,6 @@ import me.khruslan.cryptograph.ui.R
 import me.khruslan.cryptograph.ui.coins.shared.CoinInfo
 import me.khruslan.cryptograph.ui.core.CryptoGraphTheme
 import me.khruslan.cryptograph.ui.notifications.details.confirmation.ConfirmationAlertDialog
-import me.khruslan.cryptograph.ui.notifications.details.confirmation.rememberConfirmationAlertState
 import me.khruslan.cryptograph.ui.notifications.details.date.ExpirationDatePickerDialog
 import me.khruslan.cryptograph.ui.util.CurrencyBitcoin
 import me.khruslan.cryptograph.ui.util.PreviewScreenSizesLightDark
@@ -82,6 +81,7 @@ import me.khruslan.cryptograph.ui.util.components.FullScreenError
 import me.khruslan.cryptograph.ui.util.components.FullScreenLoader
 import me.khruslan.cryptograph.ui.util.getCurrentLocale
 import me.khruslan.cryptograph.ui.util.previewPlaceholder
+import me.khruslan.cryptograph.ui.util.rememberAlertState
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
@@ -100,8 +100,8 @@ internal fun NotificationDetailsScreen(
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
     val topBarScrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
-    val deleteNotificationAlertState = rememberConfirmationAlertState()
-    val discardChangesAlertState = rememberConfirmationAlertState()
+    val deleteNotificationAlertState = rememberAlertState()
+    val discardChangesAlertState = rememberAlertState()
 
     if (notificationDetailsState.notificationSavedOrDeleted) {
         LaunchedEffect(Unit) {

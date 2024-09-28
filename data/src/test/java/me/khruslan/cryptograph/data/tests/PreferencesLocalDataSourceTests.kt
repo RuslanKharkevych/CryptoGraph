@@ -44,7 +44,7 @@ internal class PreferencesLocalDataSourceTests {
 
     @Test
     fun `Update chart style`() = runTest {
-        val chartStyleValue = ChartStyleValue.GRAPH
+        val chartStyleValue = ChartStyleValue.LINE
         dataSource.updateChartStyle(chartStyleValue)
 
         dataSource.preferences.test {

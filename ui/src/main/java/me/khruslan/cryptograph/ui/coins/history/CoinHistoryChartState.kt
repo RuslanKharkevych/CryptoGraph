@@ -1,6 +1,5 @@
 package me.khruslan.cryptograph.ui.coins.history
 
-import androidx.annotation.StringRes
 import androidx.annotation.VisibleForTesting
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -20,7 +19,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import me.khruslan.cryptograph.base.Logger
 import me.khruslan.cryptograph.data.coins.CoinPrice
-import me.khruslan.cryptograph.ui.R
+import me.khruslan.cryptograph.data.preferences.ChartPeriod
+import me.khruslan.cryptograph.data.preferences.ChartStyle
 import me.khruslan.cryptograph.ui.util.getCurrentLocale
 import java.time.Clock
 import java.time.LocalDate
@@ -38,13 +38,13 @@ private const val MONTH_OF_YEAR_PATTERN = "MMM yy"
 
 internal interface CoinHistoryChartState {
     val model: ChartEntryModel
-    val style: CoinHistoryChartStyle
-    val period: CoinHistoryChartPeriod
+    val style: ChartStyle
+    val period: ChartPeriod
     val dateFormatter: AxisValueFormatter<AxisPosition.Horizontal.Bottom>
     val bottomAxisSpacing: Int
 
-    fun updateStyle(style: CoinHistoryChartStyle)
-    fun updatePeriod(period: CoinHistoryChartPeriod)
+    fun updateStyle(style: ChartStyle)
+    fun updatePeriod(period: ChartPeriod)
 }
 
 @VisibleForTesting
@@ -56,10 +56,10 @@ internal class CoinHistoryChartStateImpl(
     private val clock: Clock,
 ) : CoinHistoryChartState {
 
-    override var style by mutableStateOf(CoinHistoryChartStyle.ColumnChart)
+    override var style by mutableStateOf(ChartStyle.Column)
         private set
 
-    override var period by mutableStateOf(CoinHistoryChartPeriod.OneWeek)
+    override var period by mutableStateOf(ChartPeriod.OneWeek)
         private set
 
     override val model
@@ -91,11 +91,11 @@ internal class CoinHistoryChartStateImpl(
         updateEntries()
     }
 
-    override fun updateStyle(style: CoinHistoryChartStyle) {
+    override fun updateStyle(style: ChartStyle) {
         this.style = style
     }
 
-    override fun updatePeriod(period: CoinHistoryChartPeriod) {
+    override fun updatePeriod(period: ChartPeriod) {
         this.period = period
         updateEntries()
     }
@@ -155,34 +155,19 @@ internal class CoinHistoryChartStateImpl(
     }
 }
 
-internal enum class CoinHistoryChartStyle(@StringRes val nameRes: Int) {
-    ColumnChart(R.string.style_chart_chip_label),
-    LineChart(R.string.style_graph_chip_label)
-}
-
-internal enum class CoinHistoryChartPeriod(@StringRes val nameRes: Int) {
-    OneWeek(R.string.period_one_week_chip_label),
-    TwoWeeks(R.string.period_two_weeks_chip_label),
-    OneMonth(R.string.period_one_month_chip_label),
-    ThreeMonths(R.string.period_three_months_chip_label),
-    SixMonths(R.string.period_six_months_chip_label),
-    OneYear(R.string.period_one_year_chip_label),
-    ThreeYears(R.string.period_three_years_chip_label),
-    FiveYears(R.string.period_five_years_chip_label)
-}
-
-private val CoinHistoryChartPeriod.datePeriod
+private val ChartPeriod.datePeriod
     get() = when (this) {
-        CoinHistoryChartPeriod.OneWeek -> Period.ofWeeks(1)
-        CoinHistoryChartPeriod.TwoWeeks -> Period.ofWeeks(2)
-        CoinHistoryChartPeriod.OneMonth -> Period.ofMonths(1)
-        CoinHistoryChartPeriod.ThreeMonths -> Period.ofMonths(3)
-        CoinHistoryChartPeriod.SixMonths -> Period.ofMonths(6)
-        CoinHistoryChartPeriod.OneYear -> Period.ofYears(1)
-        CoinHistoryChartPeriod.ThreeYears -> Period.ofYears(3)
-        CoinHistoryChartPeriod.FiveYears -> Period.ofYears(5)
+        ChartPeriod.OneWeek -> Period.ofWeeks(1)
+        ChartPeriod.TwoWeeks -> Period.ofWeeks(2)
+        ChartPeriod.OneMonth -> Period.ofMonths(1)
+        ChartPeriod.ThreeMonths -> Period.ofMonths(3)
+        ChartPeriod.SixMonths -> Period.ofMonths(6)
+        ChartPeriod.OneYear -> Period.ofYears(1)
+        ChartPeriod.ThreeYears -> Period.ofYears(3)
+        ChartPeriod.FiveYears -> Period.ofYears(5)
     }
 
+// TODO: Style and period must survive configuration changes
 @Composable
 internal fun rememberCoinHistoryChartState(coinHistory: List<CoinPrice>): CoinHistoryChartState {
     val coroutineScope = rememberCoroutineScope()

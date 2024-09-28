@@ -38,7 +38,7 @@ internal class PreferencesRepositoryTests {
 
     @Test
     fun `Update chart style`() = runTest {
-        val chartStyle = ChartStyle.Graph
+        val chartStyle = ChartStyle.Line
         repository.updateChartStyle(chartStyle)
 
         repository.preferences.test {

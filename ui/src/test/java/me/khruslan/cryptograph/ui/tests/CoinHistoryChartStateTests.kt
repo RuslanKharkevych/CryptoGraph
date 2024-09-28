@@ -4,10 +4,10 @@ import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
-import me.khruslan.cryptograph.ui.coins.history.CoinHistoryChartPeriod
+import me.khruslan.cryptograph.data.preferences.ChartPeriod
+import me.khruslan.cryptograph.data.preferences.ChartStyle
 import me.khruslan.cryptograph.ui.coins.history.CoinHistoryChartState
 import me.khruslan.cryptograph.ui.coins.history.CoinHistoryChartStateImpl
-import me.khruslan.cryptograph.ui.coins.history.CoinHistoryChartStyle
 import me.khruslan.cryptograph.ui.data.CoinHistoryChartStateDataProvider
 import org.junit.Before
 import org.junit.BeforeClass
@@ -46,13 +46,13 @@ internal class CoinHistoryChartStateTests {
     }
 
     @RunWith(Parameterized::class)
-    class StyleTests(private val style: CoinHistoryChartStyle) : CoreTests() {
+    class StyleTests(private val style: ChartStyle) : CoreTests() {
 
         companion object {
             @JvmStatic
             @Parameterized.Parameters(name = "{0}")
             fun data(): Collection<Array<Any>> {
-                return CoinHistoryChartStyle.entries.map { arrayOf(it) }
+                return ChartStyle.entries.map { arrayOf(it) }
             }
         }
 
@@ -64,13 +64,13 @@ internal class CoinHistoryChartStateTests {
     }
 
     @RunWith(Parameterized::class)
-    class PeriodTests(private val period: CoinHistoryChartPeriod) : CoreTests() {
+    class PeriodTests(private val period: ChartPeriod) : CoreTests() {
 
         companion object {
             @JvmStatic
             @Parameterized.Parameters(name = "{0}")
             fun data(): Collection<Array<Any>> {
-                return CoinHistoryChartPeriod.entries.map { arrayOf(it) }
+                return ChartPeriod.entries.map { arrayOf(it) }
             }
         }
 

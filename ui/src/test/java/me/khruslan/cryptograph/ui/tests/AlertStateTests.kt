@@ -1,18 +1,18 @@
 package me.khruslan.cryptograph.ui.tests
 
 import com.google.common.truth.Truth.assertThat
-import me.khruslan.cryptograph.ui.notifications.details.confirmation.ConfirmationAlertState
-import me.khruslan.cryptograph.ui.notifications.details.confirmation.ConfirmationAlertStateImpl
+import me.khruslan.cryptograph.ui.util.AlertState
+import me.khruslan.cryptograph.ui.util.AlertStateImpl
 import org.junit.Before
 import org.junit.Test
 
-internal class ConfirmationAlertStateTests {
+internal class AlertStateTests {
 
-    private lateinit var alertState: ConfirmationAlertState
+    private lateinit var alertState: AlertState
 
     @Before
     fun setUp() {
-        alertState = ConfirmationAlertStateImpl()
+        alertState = AlertStateImpl()
     }
 
     @Test

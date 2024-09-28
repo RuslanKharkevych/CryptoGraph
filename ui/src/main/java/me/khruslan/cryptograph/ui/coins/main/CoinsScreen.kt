@@ -3,7 +3,10 @@ package me.khruslan.cryptograph.ui.coins.main
 import androidx.annotation.StringRes
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.foundation.background
 import androidx.compose.foundation.basicMarquee
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -18,7 +21,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Notifications
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -39,6 +41,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -207,11 +210,9 @@ private fun CoinCard(
     onPinButtonClick: (coinId: String) -> Unit,
     onUnpinButtonClick: (coinId: String) -> Unit,
 ) {
-    Card(
+    CoinCardContainer(
         modifier = modifier,
-        colors = CardDefaults.cardColors().copy(
-            containerColor = coin.colorHex.toColor().copy(alpha = 0.2f)
-        ),
+        containerColor = coin.colorHex.toColor().copy(alpha = 0.2f),
         onClick = { onCoinClick(coin) }
     ) {
         Row(
@@ -252,11 +253,29 @@ private fun CoinCard(
 }
 
 @Composable
+private fun CoinCardContainer(
+    modifier: Modifier,
+    containerColor: Color,
+    onClick: () -> Unit,
+    content: @Composable ColumnScope.() -> Unit
+) {
+    Card(
+        modifier = modifier,
+        onClick = onClick
+    ) {
+        Column(
+            modifier = Modifier.background(containerColor),
+            content = content
+        )
+    }
+}
+
+@Composable
 private fun CoinPriceAndChange(
     modifier: Modifier,
     price: String?,
     change: String?,
-    changeTrend: ChangeTrend
+    changeTrend: ChangeTrend,
 ) {
     Row(
         modifier = modifier.basicMarquee(),

@@ -15,13 +15,13 @@ val PREVIEW_PREFERENCES
 val STUB_PREFERENCES
     get() = Preferences(
         theme = Theme.Dark,
-        chartStyle = ChartStyle.Default,
+        chartStyle = ChartStyle.Column,
         chartPeriod = ChartPeriod.OneMonth
     )
 
 internal val STUB_DTO_PREFERENCES
     get() = PreferencesDto(
         themeValue = ThemeValue.DARK,
-        chartStyleValue = ChartStyleValue.DEFAULT,
+        chartStyleValue = ChartStyleValue.COLUMN,
         chartPeriodValue = ChartPeriodValue.ONE_MONTH
     )

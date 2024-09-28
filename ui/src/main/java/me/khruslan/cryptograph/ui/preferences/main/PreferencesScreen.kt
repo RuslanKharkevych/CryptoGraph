@@ -27,16 +27,19 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import me.khruslan.cryptograph.data.fixtures.STUB_PREFERENCES
+import me.khruslan.cryptograph.data.fixtures.PREVIEW_PREFERENCES
 import me.khruslan.cryptograph.data.preferences.ChartPeriod
 import me.khruslan.cryptograph.data.preferences.ChartStyle
 import me.khruslan.cryptograph.data.preferences.Preferences
 import me.khruslan.cryptograph.data.preferences.Theme
 import me.khruslan.cryptograph.ui.R
 import me.khruslan.cryptograph.ui.core.CryptoGraphTheme
+import me.khruslan.cryptograph.ui.preferences.main.selection.PreferenceSelectionDialog
 import me.khruslan.cryptograph.ui.util.ArrowDown
+import me.khruslan.cryptograph.ui.util.ChoiceItems
 import me.khruslan.cryptograph.ui.util.PreviewScreenSizesLightDark
 import me.khruslan.cryptograph.ui.util.components.FullScreenLoader
+import me.khruslan.cryptograph.ui.util.rememberAlertState
 
 @Composable
 internal fun PreferencesScreen(
@@ -118,31 +121,59 @@ private fun PreferencesList(
     onChartStyleSelected: (chartStyle: ChartStyle) -> Unit,
     onChartPeriodSelected: (chartPeriod: ChartPeriod) -> Unit,
 ) {
+    val themeAlertState = rememberAlertState()
+    val chartStyleAlertState = rememberAlertState()
+    val chartPeriodAlertState = rememberAlertState()
+
+    if (themeAlertState.isVisible) {
+        PreferenceSelectionDialog(
+            title = stringResource(R.string.select_theme_dialog_title),
+            items = ChoiceItems.Themes,
+            selectedItem = preferences.theme,
+            onItemSelected = onThemeSelected,
+            onDismiss = themeAlertState::dismiss
+        )
+    }
+
+    if (chartStyleAlertState.isVisible) {
+        PreferenceSelectionDialog(
+            title = stringResource(R.string.select_chart_style_dialog_title),
+            items = ChoiceItems.ChartStyles,
+            selectedItem = preferences.chartStyle,
+            onItemSelected = onChartStyleSelected,
+            onDismiss = chartStyleAlertState::dismiss
+        )
+    }
+
+    if (chartPeriodAlertState.isVisible) {
+        PreferenceSelectionDialog(
+            title = stringResource(R.string.select_chart_period_dialog_title),
+            items = ChoiceItems.ChartPeriods,
+            selectedItem = preferences.chartPeriod,
+            onItemSelected = onChartPeriodSelected,
+            onDismiss = chartPeriodAlertState::dismiss
+        )
+    }
+
     Column {
         PreferenceItem(
-            label = stringResource(R.string.theme_preference_label),
-            onClick = {
-                // TODO: Show theme selection dialog
-            }
+            title = stringResource(R.string.theme_preference_title),
+            onClick = themeAlertState::show
         )
         PreferenceItem(
-            label = stringResource(R.string.chart_style_preference_label),
-            onClick = {
-                // TODO: Show chart style selection dialog
-            }
+            title = stringResource(R.string.chart_style_preference_title),
+            onClick = chartStyleAlertState::show
         )
         PreferenceItem(
-            label = stringResource(R.string.chart_period_preference_label),
-            onClick = {
-                // TODO: Show chart period selection dialog
-            }
+            title = stringResource(R.string.chart_period_preference_title),
+            onClick = chartPeriodAlertState::show
         )
         Spacer(modifier = Modifier.weight(1f))
         Text(
             modifier = Modifier
                 .align(Alignment.CenterHorizontally)
                 .padding(bottom = 16.dp),
-            text = "V$appVersion",
+            text = "v$appVersion",
             style = MaterialTheme.typography.bodyMedium,
             fontWeight = FontWeight.Medium
         )
@@ -150,12 +181,12 @@ private fun PreferencesList(
 }
 
 @Composable
-private fun PreferenceItem(label: String, onClick: () -> Unit) {
+private fun PreferenceItem(title: String, onClick: () -> Unit) {
     ListItem(
         modifier = Modifier.clickable(onClick = onClick),
         headlineContent = {
             Text(
-                text = label,
+                text = title,
                 fontWeight = FontWeight.Medium
             )
         },
@@ -177,7 +208,7 @@ private fun PreferencesScreenPreview() {
     val appVersion = "1.0.0"
     val preferencesState = remember {
         MutablePreferencesState(appVersion).apply {
-            preferences = STUB_PREFERENCES
+            preferences = PREVIEW_PREFERENCES
         }
     }
 
