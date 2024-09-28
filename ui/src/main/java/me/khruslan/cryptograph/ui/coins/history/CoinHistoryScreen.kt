@@ -34,6 +34,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.compositeOver
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -78,7 +79,6 @@ import me.khruslan.cryptograph.ui.util.components.FullScreenLoader
 import me.khruslan.cryptograph.ui.util.toColor
 import me.khruslan.cryptograph.ui.util.typeface
 
-// TODO: Fix issue with dark theme UI when coin color is black(-ish)
 @Composable
 internal fun CoinHistoryScreen(
     coinHistoryState: CoinHistoryState,
@@ -194,7 +194,7 @@ private fun PriceChart(
         verticalArrangement = Arrangement.SpaceBetween
     ) {
         FilterChips(
-            color = color.copy(alpha = 0.35f),
+            color = color.compositeOverContainer(alpha = 0.2f),
             selectedStyle = chartState.style,
             selectedPeriod = chartState.period,
             onStyleSelected = chartState::updateStyle,
@@ -336,12 +336,13 @@ private fun rememberChart(style: ChartStyle, color: Color): Chart<ChartEntryMode
         ChartStyle.Line -> lineChart(
             lines = listOf(
                 lineSpec(
-                    lineColor = color,
+                    lineColor = MaterialTheme.colorScheme.outline,
+                    lineThickness = 1.dp,
                     lineBackgroundShader = DynamicShaders.fromBrush(
                         brush = Brush.verticalGradient(
                             colors = listOf(
-                                color.copy(alpha = 0.5f),
-                                color.copy(alpha = 0.15f)
+                                color.compositeOverContainer(alpha = 0.4f),
+                                color.compositeOverContainer(alpha = 0.2f)
                             ),
                         ),
                     )
@@ -352,9 +353,9 @@ private fun rememberChart(style: ChartStyle, color: Color): Chart<ChartEntryMode
         ChartStyle.Column -> columnChart(
             columns = listOf(
                 lineComponent(
-                    color = color.copy(alpha = 0.5f),
-                    strokeColor = color,
-                    strokeWidth = 2.dp
+                    color = color.compositeOverContainer(alpha = 0.4f),
+                    strokeColor = MaterialTheme.colorScheme.outline,
+                    strokeWidth = 1.dp
                 )
             ),
             spacing = 2.dp
@@ -415,6 +416,11 @@ private fun rememberMarker(chartStyle: ChartStyle, indicatorColor: Color): Marke
             labelFormatter = PriceMarkerLabelFormatter()
         }
     }
+}
+
+@Composable
+private fun Color.compositeOverContainer(alpha: Float): Color {
+    return copy(alpha = alpha).compositeOver(MaterialTheme.colorScheme.surfaceContainerHighest)
 }
 
 @Composable
