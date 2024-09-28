@@ -4,8 +4,10 @@ import androidx.annotation.VisibleForTesting
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.Saver
+import androidx.compose.runtime.saveable.listSaver
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import com.patrykandpatrick.vico.core.axis.AxisPosition
 import com.patrykandpatrick.vico.core.axis.formatter.AxisValueFormatter
@@ -54,12 +56,14 @@ internal class CoinHistoryChartStateImpl(
     private val dispatcher: CoroutineDispatcher,
     private val locale: Locale,
     private val clock: Clock,
+    style: ChartStyle = ChartStyle.Column,
+    period: ChartPeriod = ChartPeriod.OneWeek,
 ) : CoinHistoryChartState {
 
-    override var style by mutableStateOf(ChartStyle.Column)
+    override var style by mutableStateOf(style)
         private set
 
-    override var period by mutableStateOf(ChartPeriod.OneWeek)
+    override var period by mutableStateOf(period)
         private set
 
     override val model
@@ -167,19 +171,53 @@ private val ChartPeriod.datePeriod
         ChartPeriod.FiveYears -> Period.ofYears(5)
     }
 
-// TODO: Style and period must survive configuration changes
 @Composable
 internal fun rememberCoinHistoryChartState(coinHistory: List<CoinPrice>): CoinHistoryChartState {
     val coroutineScope = rememberCoroutineScope()
+    val dispatcher = Dispatchers.Default
     val locale = getCurrentLocale()
+    val clock = Clock.systemUTC()
 
-    return remember {
+    val saver = coinHistoryChartStateSaver(
+        chartData = coinHistory,
+        externalScope = coroutineScope,
+        dispatcher = dispatcher,
+        locale = locale,
+        clock = clock
+    )
+
+    return rememberSaveable(saver = saver) {
         CoinHistoryChartStateImpl(
             chartData = coinHistory,
             externalScope = coroutineScope,
-            dispatcher = Dispatchers.Default,
+            dispatcher = dispatcher,
             locale = locale,
-            clock = Clock.systemUTC()
+            clock = clock
         )
     }
+}
+
+private fun coinHistoryChartStateSaver(
+    chartData: List<CoinPrice>,
+    externalScope: CoroutineScope,
+    dispatcher: CoroutineDispatcher,
+    locale: Locale,
+    clock: Clock,
+): Saver<CoinHistoryChartStateImpl, Any> {
+    return listSaver(
+        save = { chartState ->
+            listOf(chartState.style, chartState.period)
+        },
+        restore = { list ->
+            CoinHistoryChartStateImpl(
+                chartData = chartData,
+                externalScope = externalScope,
+                dispatcher = dispatcher,
+                locale = locale,
+                clock = clock,
+                style = list[0] as ChartStyle,
+                period = list[1] as ChartPeriod
+            )
+        }
+    )
 }
