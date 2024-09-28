@@ -31,8 +31,8 @@
 
     <!-- region Coin History -->
     <string name="chart_style_group_title">Style</string>
-    <string name="chart_style_column_label">Graph</string>
-    <string name="chart_style_line_label">Chart</string>
+    <string name="chart_style_column_chart_label">Column chart</string>
+    <string name="chart_style_line_chart_label">Line chart</string>
     <string name="chart_period_group_title">Period</string>
     <string name="chart_period_one_week_label">1w</string>
     <string name="chart_period_two_weeks_label">2w</string>

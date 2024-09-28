@@ -32,8 +32,8 @@ internal class PreferencesMapper {
 
     fun mapChartStyle(chartStyle: ChartStyle): Int {
         return when (chartStyle) {
-            ChartStyle.Column -> ChartStyleValue.COLUMN
-            ChartStyle.Line -> ChartStyleValue.LINE
+            ChartStyle.ColumnChart -> ChartStyleValue.COLUMN_CHART
+            ChartStyle.LineChart -> ChartStyleValue.LINE_CHART
         }
     }
 
@@ -64,7 +64,7 @@ internal class PreferencesMapper {
             mapChartStyleInternal(chartStyleValue)
         } catch (e: IllegalArgumentException) {
             Logger.error(LOG_TAG, "Failed to map chart style value: $chartStyleValue", e)
-            ChartStyle.Column
+            ChartStyle.ColumnChart
         }
     }
 
@@ -88,8 +88,8 @@ internal class PreferencesMapper {
 
     private fun mapChartStyleInternal(chartStyleValue: Int) : ChartStyle {
         return when (chartStyleValue) {
-            ChartStyleValue.COLUMN -> ChartStyle.Column
-            ChartStyleValue.LINE -> ChartStyle.Line
+            ChartStyleValue.COLUMN_CHART -> ChartStyle.ColumnChart
+            ChartStyleValue.LINE_CHART -> ChartStyle.LineChart
             else -> throw IllegalArgumentException("Invalid char style value: $chartStyleValue")
         }
     }

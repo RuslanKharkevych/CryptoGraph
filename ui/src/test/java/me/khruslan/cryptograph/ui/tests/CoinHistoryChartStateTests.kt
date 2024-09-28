@@ -2,7 +2,6 @@ package me.khruslan.cryptograph.ui.tests
 
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import me.khruslan.cryptograph.data.preferences.ChartPeriod
 import me.khruslan.cryptograph.data.preferences.ChartStyle
@@ -37,10 +36,11 @@ internal class CoinHistoryChartStateTests {
         fun setUp() {
             chartState = CoinHistoryChartStateImpl(
                 chartData = dataProvider.chartData,
-                externalScope = TestScope(),
-                dispatcher = UnconfinedTestDispatcher(),
                 locale = dataProvider.locale,
-                clock = dataProvider.clock
+                clock = dataProvider.clock,
+                dispatcher = UnconfinedTestDispatcher(),
+                defaultPeriod = ChartPeriod.OneWeek,
+                defaultStyle = ChartStyle.ColumnChart
             )
         }
     }

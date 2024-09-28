@@ -13,8 +13,8 @@ enum class Theme {
 }
 
 enum class ChartStyle {
-    Column,
-    Line
+    ColumnChart,
+    LineChart
 }
 
 enum class ChartPeriod {

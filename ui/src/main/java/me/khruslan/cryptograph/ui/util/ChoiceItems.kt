@@ -32,8 +32,8 @@ internal object ChoiceItems {
 
     private val ChartStyle.labelRes
         get() = when (this) {
-            ChartStyle.Column -> R.string.chart_style_column_label
-            ChartStyle.Line -> R.string.chart_style_line_label
+            ChartStyle.ColumnChart -> R.string.chart_style_column_chart_label
+            ChartStyle.LineChart -> R.string.chart_style_line_chart_label
         }
 
     private val ChartPeriod.labelRes

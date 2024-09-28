@@ -60,7 +60,7 @@ internal class PreferencesViewModelTests {
 
     @Test
     fun `Update chart style - success`() = runTest {
-        val chartStyle = ChartStyle.Line
+        val chartStyle = ChartStyle.LineChart
         viewModel.updateChartStyle(chartStyle)
 
         val expectedPreferences = STUB_PREFERENCES.copy(chartStyle = chartStyle)
@@ -71,7 +71,7 @@ internal class PreferencesViewModelTests {
     @Test
     fun `Update chart style - failure`() = runTest {
         fakePreferencesRepository.isDatabaseCorrupted = true
-        viewModel.updateChartStyle(ChartStyle.Column)
+        viewModel.updateChartStyle(ChartStyle.ColumnChart)
 
         val expectedWarningMessageRes = R.string.update_chart_style_warning_msg
         val actualWarningMessageRes = viewModel.preferencesState.warningMessageRes

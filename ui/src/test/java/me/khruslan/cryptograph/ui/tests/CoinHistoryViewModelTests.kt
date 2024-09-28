@@ -3,10 +3,12 @@ package me.khruslan.cryptograph.ui.tests
 import androidx.lifecycle.SavedStateHandle
 import com.google.common.truth.Truth.assertThat
 import me.khruslan.cryptograph.data.fixtures.STUB_COIN_HISTORY
+import me.khruslan.cryptograph.data.fixtures.STUB_PREFERENCES
 import me.khruslan.cryptograph.ui.R
 import me.khruslan.cryptograph.ui.coins.history.CoinHistoryArgKeys
 import me.khruslan.cryptograph.ui.coins.history.CoinHistoryViewModel
 import me.khruslan.cryptograph.ui.fakes.FakeCoinsRepository
+import me.khruslan.cryptograph.ui.fakes.FakePreferencesRepository
 import me.khruslan.cryptograph.ui.rules.MainDispatcherRule
 import me.khruslan.cryptograph.ui.util.UiState
 import org.junit.Before
@@ -26,13 +28,29 @@ internal class CoinHistoryViewModelTests {
     val mainDispatcherRule = MainDispatcherRule()
 
     private lateinit var fakeCoinsRepository: FakeCoinsRepository
+    private lateinit var fakePreferencesRepository: FakePreferencesRepository
     private lateinit var viewModel: CoinHistoryViewModel
 
     @Before
     fun setUp() {
         val savedStateHandle = SavedStateHandle(COIN_HISTORY_ARGS)
         fakeCoinsRepository = FakeCoinsRepository()
-        viewModel = CoinHistoryViewModel(savedStateHandle, fakeCoinsRepository)
+        fakePreferencesRepository = FakePreferencesRepository()
+
+        viewModel = CoinHistoryViewModel(
+            savedStateHandle = savedStateHandle,
+            coinsRepository = fakeCoinsRepository,
+            preferencesRepository = fakePreferencesRepository
+        )
+    }
+
+    @Test
+    fun `Load preferences`() {
+        val chartStyle = viewModel.coinHistoryState.defaultChartStyle
+        val chartPeriod = viewModel.coinHistoryState.defaultChartPeriod
+
+        assertThat(chartStyle).isEqualTo(STUB_PREFERENCES.chartStyle)
+        assertThat(chartPeriod).isEqualTo(STUB_PREFERENCES.chartPeriod)
     }
 
     @Test

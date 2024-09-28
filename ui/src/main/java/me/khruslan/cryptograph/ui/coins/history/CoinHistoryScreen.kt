@@ -126,7 +126,9 @@ internal fun CoinHistoryScreen(
 
                 is UiState.Data -> PriceChart(
                     color = coinHistoryState.colorHex.toColor(),
-                    prices = chartState.data
+                    prices = chartState.data,
+                    chartPeriod = coinHistoryState.defaultChartPeriod,
+                    chartStyle = coinHistoryState.defaultChartStyle
                 )
 
                 is UiState.Error -> FullScreenError(
@@ -186,8 +188,14 @@ private fun TopBar(
 private fun PriceChart(
     color: Color,
     prices: List<CoinPrice>,
+    chartPeriod: ChartPeriod,
+    chartStyle: ChartStyle,
 ) {
-    val chartState = rememberCoinHistoryChartState(prices)
+    val chartState = rememberCoinHistoryChartState(
+        coinHistory = prices,
+        defaultChartPeriod = chartPeriod,
+        defaultChartStyle = chartStyle
+    )
 
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -216,7 +224,7 @@ private fun PriceChart(
             bottomAxis = rememberBottomAxis(
                 dateFormatter = chartState.dateFormatter,
                 spacing = chartState.bottomAxisSpacing,
-                addExtremeLabelPadding = chartState.style == ChartStyle.Column
+                addExtremeLabelPadding = chartState.style == ChartStyle.ColumnChart
             ),
             horizontalLayout = HorizontalLayout.FullWidth(),
             marker = rememberMarker(
@@ -333,7 +341,7 @@ private fun PeriodFilterChips(
 @Composable
 private fun rememberChart(style: ChartStyle, color: Color): Chart<ChartEntryModel> {
     return when (style) {
-        ChartStyle.Line -> lineChart(
+        ChartStyle.LineChart -> lineChart(
             lines = listOf(
                 lineSpec(
                     lineColor = MaterialTheme.colorScheme.outline,
@@ -350,7 +358,7 @@ private fun rememberChart(style: ChartStyle, color: Color): Chart<ChartEntryMode
             )
         )
 
-        ChartStyle.Column -> columnChart(
+        ChartStyle.ColumnChart -> columnChart(
             columns = listOf(
                 lineComponent(
                     color = color.compositeOverContainer(alpha = 0.4f),
@@ -403,7 +411,7 @@ private fun rememberMarker(chartStyle: ChartStyle, indicatorColor: Color): Marke
         ShapeComponent(
             shape = Shapes.pillShape,
             color = indicatorColor.toArgb()
-        ).takeIf { chartStyle == ChartStyle.Line }
+        ).takeIf { chartStyle == ChartStyle.LineChart }
     }
 
     return remember(indicator) {

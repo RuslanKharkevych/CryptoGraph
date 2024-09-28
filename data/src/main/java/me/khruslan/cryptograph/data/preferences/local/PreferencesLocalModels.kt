@@ -18,8 +18,8 @@ internal object ThemeValue {
 }
 
 internal object ChartStyleValue {
-    const val COLUMN = 0
-    const val LINE = 1
+    const val COLUMN_CHART = 0
+    const val LINE_CHART = 1
 }
 
 internal object ChartPeriodValue {

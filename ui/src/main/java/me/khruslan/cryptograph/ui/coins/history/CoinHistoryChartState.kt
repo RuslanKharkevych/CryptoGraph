@@ -4,21 +4,17 @@ import androidx.annotation.VisibleForTesting
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.Saver
 import androidx.compose.runtime.saveable.listSaver
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import com.patrykandpatrick.vico.core.axis.AxisPosition
 import com.patrykandpatrick.vico.core.axis.formatter.AxisValueFormatter
-import com.patrykandpatrick.vico.core.entry.ChartEntry
 import com.patrykandpatrick.vico.core.entry.ChartEntryModel
 import com.patrykandpatrick.vico.core.entry.ChartEntryModelProducer
 import com.patrykandpatrick.vico.core.entry.entryOf
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import me.khruslan.cryptograph.base.Logger
 import me.khruslan.cryptograph.data.coins.CoinPrice
 import me.khruslan.cryptograph.data.preferences.ChartPeriod
@@ -52,18 +48,17 @@ internal interface CoinHistoryChartState {
 @VisibleForTesting
 internal class CoinHistoryChartStateImpl(
     private val chartData: List<CoinPrice>,
-    private val externalScope: CoroutineScope,
-    private val dispatcher: CoroutineDispatcher,
     private val locale: Locale,
     private val clock: Clock,
-    style: ChartStyle = ChartStyle.Column,
-    period: ChartPeriod = ChartPeriod.OneWeek,
+    dispatcher: CoroutineDispatcher,
+    defaultStyle: ChartStyle,
+    defaultPeriod: ChartPeriod,
 ) : CoinHistoryChartState {
 
-    override var style by mutableStateOf(style)
+    override var style by mutableStateOf(defaultStyle)
         private set
 
-    override var period by mutableStateOf(period)
+    override var period by mutableStateOf(defaultPeriod)
         private set
 
     override val model
@@ -84,16 +79,11 @@ internal class CoinHistoryChartStateImpl(
         }
     }
 
-    private val entryModelProducer = ChartEntryModelProducer(
-        emptyList<ChartEntry>(),
-        dispatcher = dispatcher
-    )
+    private var filteredData = filterChartDataByDatePeriod(period.datePeriod)
+    private val entryModelProducer = ChartEntryModelProducer(entries, dispatcher = dispatcher)
 
-    private var filteredData = emptyMap<Int, CoinPrice>()
-
-    init {
-        updateEntries()
-    }
+    private val entries
+        get() = filteredData.map { entryOf(it.key, it.value.price) }
 
     override fun updateStyle(style: ChartStyle) {
         this.style = style
@@ -105,16 +95,12 @@ internal class CoinHistoryChartStateImpl(
     }
 
     private fun updateEntries() {
-        val datePeriod = period.datePeriod
-        externalScope.launch(dispatcher) {
-            filterChartDataByDatePeriod(datePeriod)
-            val entries = filteredData.map { entryOf(it.key, it.value.price) }
-            entryModelProducer.setEntriesSuspending(entries).await()
-        }
+        filteredData = filterChartDataByDatePeriod(period.datePeriod)
+        entryModelProducer.setEntries(entries)
     }
 
-    private fun filterChartDataByDatePeriod(datePeriod: Period) {
-        filteredData = chartData
+    private fun filterChartDataByDatePeriod(datePeriod: Period): Map<Int, CoinPrice> {
+        return chartData
             .filterByDatePeriod(datePeriod)
             .pruneToMaxCount()
             .associateByIndexReversed()
@@ -172,15 +158,17 @@ private val ChartPeriod.datePeriod
     }
 
 @Composable
-internal fun rememberCoinHistoryChartState(coinHistory: List<CoinPrice>): CoinHistoryChartState {
-    val coroutineScope = rememberCoroutineScope()
-    val dispatcher = Dispatchers.Default
+internal fun rememberCoinHistoryChartState(
+    coinHistory: List<CoinPrice>,
+    defaultChartStyle: ChartStyle,
+    defaultChartPeriod: ChartPeriod,
+): CoinHistoryChartState {
     val locale = getCurrentLocale()
     val clock = Clock.systemUTC()
+    val dispatcher = Dispatchers.Default
 
     val saver = coinHistoryChartStateSaver(
         chartData = coinHistory,
-        externalScope = coroutineScope,
         dispatcher = dispatcher,
         locale = locale,
         clock = clock
@@ -189,17 +177,17 @@ internal fun rememberCoinHistoryChartState(coinHistory: List<CoinPrice>): CoinHi
     return rememberSaveable(saver = saver) {
         CoinHistoryChartStateImpl(
             chartData = coinHistory,
-            externalScope = coroutineScope,
-            dispatcher = dispatcher,
             locale = locale,
-            clock = clock
+            clock = clock,
+            dispatcher = dispatcher,
+            defaultStyle = defaultChartStyle,
+            defaultPeriod = defaultChartPeriod
         )
     }
 }
 
 private fun coinHistoryChartStateSaver(
     chartData: List<CoinPrice>,
-    externalScope: CoroutineScope,
     dispatcher: CoroutineDispatcher,
     locale: Locale,
     clock: Clock,
@@ -211,12 +199,11 @@ private fun coinHistoryChartStateSaver(
         restore = { list ->
             CoinHistoryChartStateImpl(
                 chartData = chartData,
-                externalScope = externalScope,
-                dispatcher = dispatcher,
                 locale = locale,
                 clock = clock,
-                style = list[0] as ChartStyle,
-                period = list[1] as ChartPeriod
+                dispatcher = dispatcher,
+                defaultStyle = list[0] as ChartStyle,
+                defaultPeriod = list[1] as ChartPeriod
             )
         }
     )
