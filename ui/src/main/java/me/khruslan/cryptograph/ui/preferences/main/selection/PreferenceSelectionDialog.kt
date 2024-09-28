@@ -42,7 +42,6 @@ import me.khruslan.cryptograph.ui.core.CryptoGraphTheme
 import me.khruslan.cryptograph.ui.util.ChoiceItem
 import me.khruslan.cryptograph.ui.util.ChoiceItems
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun <T> PreferenceSelectionDialog(
     title: String,
@@ -51,8 +50,6 @@ internal fun <T> PreferenceSelectionDialog(
     onItemSelected: (item: T) -> Unit,
     onDismiss: () -> Unit,
 ) {
-    val topBarScrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
-
     fun selectItemAndDismiss(item: T) {
         onItemSelected(item)
         onDismiss()
@@ -60,25 +57,46 @@ internal fun <T> PreferenceSelectionDialog(
 
     Dialog(onDismissRequest = onDismiss) {
         BoxWithConstraints(contentAlignment = Alignment.Center) {
-            Column(
-                modifier = Modifier
-                    .heightIn(max = maxHeight * 0.9f)
-                    .clip(MaterialTheme.shapes.large)
-                    .background(MaterialTheme.colorScheme.surfaceContainerHigh)
-                    .nestedScroll(topBarScrollBehavior.nestedScrollConnection)
-            ) {
-                TopBar(
-                    title = title,
-                    scrollBehavior = topBarScrollBehavior,
-                    onDismiss = onDismiss
-                )
-                ChoiceItemsList(
-                    items = items,
-                    selectedItem = selectedItem,
-                    onItemSelected = ::selectItemAndDismiss
-                )
-            }
+            PreferenceSelectionDialogContent(
+                modifier = Modifier.heightIn(max = maxHeight * 0.9f),
+                title = title,
+                items = items,
+                selectedItem = selectedItem,
+                onItemSelected = ::selectItemAndDismiss,
+                onDismiss = onDismiss
+            )
         }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun <T> PreferenceSelectionDialogContent(
+    modifier: Modifier,
+    title: String,
+    items: List<ChoiceItem<T>>,
+    selectedItem: T,
+    onItemSelected: (item: T) -> Unit,
+    onDismiss: () -> Unit,
+) {
+    val topBarScrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
+
+    Column(
+        modifier = modifier
+            .clip(MaterialTheme.shapes.large)
+            .background(MaterialTheme.colorScheme.surfaceContainerHigh)
+            .nestedScroll(topBarScrollBehavior.nestedScrollConnection)
+    ) {
+        TopBar(
+            title = title,
+            scrollBehavior = topBarScrollBehavior,
+            onDismiss = onDismiss
+        )
+        ChoiceItemsList(
+            items = items,
+            selectedItem = selectedItem,
+            onItemSelected = onItemSelected
+        )
     }
 }
 
@@ -152,12 +170,12 @@ private fun <T> ChoiceItemsList(
     }
 }
 
-// TODO: Fix preview
 @Composable
 @PreviewLightDark
-private fun PreferenceSelectionAlertDialogPreview() {
+private fun PreferenceSelectionDialogPreview() {
     CryptoGraphTheme {
-        PreferenceSelectionDialog(
+        PreferenceSelectionDialogContent(
+            modifier = Modifier,
             title = stringResource(R.string.select_theme_dialog_title),
             items = ChoiceItems.Themes,
             selectedItem = Theme.SystemDefault,
