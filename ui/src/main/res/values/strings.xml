@@ -86,6 +86,9 @@
 
     <!-- region Preferences -->
     <string name="preferences_top_bar_title">Preferences</string>
+    <string name="theme_preference_label">Theme</string>
+    <string name="chart_style_preference_label">Chart style</string>
+    <string name="chart_period_preference_label">Chart period</string>
     <string name="update_theme_warning_msg">Failed to update the theme. Please try again</string>
     <string name="update_chart_style_warning_msg">Failed to update the chart style. Please try again</string>
     <string name="update_chart_period_warning_msg">Failed to update the chart period. Please try again</string>

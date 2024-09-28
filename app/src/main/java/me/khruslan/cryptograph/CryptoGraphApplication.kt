@@ -19,7 +19,7 @@ internal class CryptoGraphApplication: Application(), ImageLoaderFactory {
         startKoin {
             androidLogger(level = if (BuildConfig.DEBUG) Level.DEBUG else Level.NONE)
             androidContext(this@CryptoGraphApplication)
-            modules(dataModule, uiModule)
+            modules(appModule, dataModule, uiModule)
         }
     }
 

@@ -6,6 +6,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
+import me.khruslan.cryptograph.base.AppVersion
 import me.khruslan.cryptograph.data.common.DataException
 import me.khruslan.cryptograph.data.preferences.ChartPeriod
 import me.khruslan.cryptograph.data.preferences.ChartStyle
@@ -15,10 +16,11 @@ import me.khruslan.cryptograph.data.preferences.Theme
 import me.khruslan.cryptograph.ui.R
 
 internal class PreferencesViewModel(
-    private val preferencesRepository: PreferencesRepository
+    appVersion: AppVersion,
+    private val preferencesRepository: PreferencesRepository,
 ) : ViewModel() {
 
-    private val _preferencesState = MutablePreferencesState()
+    private val _preferencesState = MutablePreferencesState(appVersion.name)
     val preferencesState: PreferencesState = _preferencesState
 
     init {
@@ -70,10 +72,11 @@ internal class PreferencesViewModel(
 
 internal interface PreferencesState {
     val preferences: Preferences?
+    val appVersion: String
     val warningMessageRes: Int?
 }
 
-internal class MutablePreferencesState : PreferencesState {
+internal class MutablePreferencesState(override val appVersion: String) : PreferencesState {
     override var preferences: Preferences? by mutableStateOf(null)
     override var warningMessageRes: Int? by mutableStateOf(null)
 }

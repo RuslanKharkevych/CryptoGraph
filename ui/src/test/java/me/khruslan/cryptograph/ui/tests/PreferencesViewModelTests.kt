@@ -2,6 +2,7 @@ package me.khruslan.cryptograph.ui.tests
 
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.test.runTest
+import me.khruslan.cryptograph.base.AppVersion
 import me.khruslan.cryptograph.data.fixtures.STUB_PREFERENCES
 import me.khruslan.cryptograph.data.preferences.ChartPeriod
 import me.khruslan.cryptograph.data.preferences.ChartStyle
@@ -14,6 +15,8 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 
+private const val APP_VERSION_NAME = "1.0.0"
+
 internal class PreferencesViewModelTests {
 
     @get:Rule
@@ -24,8 +27,15 @@ internal class PreferencesViewModelTests {
 
     @Before
     fun setUp() {
+        val appVersion = AppVersion(APP_VERSION_NAME)
         fakePreferencesRepository = FakePreferencesRepository()
-        viewModel = PreferencesViewModel(fakePreferencesRepository)
+        viewModel = PreferencesViewModel(appVersion, fakePreferencesRepository)
+    }
+
+    @Test
+    fun `Get app version`() {
+        val appVersion = viewModel.preferencesState.appVersion
+        assertThat(appVersion).isEqualTo(APP_VERSION_NAME)
     }
 
     @Test
