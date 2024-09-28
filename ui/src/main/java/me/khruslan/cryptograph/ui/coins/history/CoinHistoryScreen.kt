@@ -446,6 +446,8 @@ private fun CoinHistoryScreenPreview() {
 
         MutableCoinHistoryState(args).apply {
             chartState = UiState.Data(data = PREVIEW_COIN_HISTORY)
+            defaultChartStyle = ChartStyle.ColumnChart
+            defaultChartPeriod = ChartPeriod.OneWeek
         }
     }
 

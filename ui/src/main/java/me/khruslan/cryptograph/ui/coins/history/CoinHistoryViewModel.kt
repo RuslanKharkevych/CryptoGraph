@@ -31,7 +31,7 @@ internal class CoinHistoryViewModel(
     val coinHistoryState: CoinHistoryState = _coinHistoryState
 
     init {
-        loadPreferencesAndCoinHistory()
+        loadData()
     }
 
     fun pinCoin() {
@@ -67,14 +67,17 @@ internal class CoinHistoryViewModel(
         }
     }
 
-    private fun loadPreferencesAndCoinHistory() {
+    private fun loadData() {
         viewModelScope.launch {
-            preferencesRepository.preferences.collect { preferences ->
-                _coinHistoryState.defaultChartStyle = preferences.chartStyle
-                _coinHistoryState.defaultChartPeriod = preferences.chartPeriod
-                loadCoinHistory()
-            }
+            loadPreferences()
+            loadCoinHistory()
         }
+    }
+
+    private suspend fun loadPreferences() {
+        val preferences = preferencesRepository.getPreferences()
+        _coinHistoryState.defaultChartStyle = preferences.chartStyle
+        _coinHistoryState.defaultChartPeriod = preferences.chartPeriod
     }
 
     private suspend fun loadCoinHistory() {

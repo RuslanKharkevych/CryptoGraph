@@ -25,7 +25,7 @@ internal object ChoiceItems {
 
     private val Theme.labelRes
         get() = when (this) {
-            Theme.SystemDefault -> R.string.theme_system_default_label
+            Theme.Auto -> R.string.theme_auto_label
             Theme.Light -> R.string.theme_light_label
             Theme.Dark -> R.string.theme_dark_label
         }

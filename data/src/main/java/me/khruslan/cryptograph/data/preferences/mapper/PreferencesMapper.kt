@@ -24,7 +24,7 @@ internal class PreferencesMapper {
 
     fun mapTheme(theme: Theme): Int {
         return when (theme) {
-            Theme.SystemDefault -> ThemeValue.SYSTEM_DEFAULT
+            Theme.Auto -> ThemeValue.AUTO
             Theme.Light -> ThemeValue.LIGHT
             Theme.Dark -> ThemeValue.DARK
         }
@@ -55,7 +55,7 @@ internal class PreferencesMapper {
             mapThemeInternal(themeValue)
         } catch (e: IllegalArgumentException) {
             Logger.error(LOG_TAG, "Failed to map theme value: $themeValue", e)
-            Theme.SystemDefault
+            Theme.Auto
         }
     }
 
@@ -79,7 +79,7 @@ internal class PreferencesMapper {
 
     private fun mapThemeInternal(themeValue: Int): Theme {
         return when (themeValue) {
-            ThemeValue.SYSTEM_DEFAULT -> Theme.SystemDefault
+            ThemeValue.AUTO -> Theme.Auto
             ThemeValue.LIGHT -> Theme.Light
             ThemeValue.DARK -> Theme.Dark
             else -> throw IllegalArgumentException("Invalid theme value: $themeValue")

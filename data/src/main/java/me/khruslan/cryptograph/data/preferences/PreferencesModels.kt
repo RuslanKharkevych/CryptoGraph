@@ -7,7 +7,7 @@ data class Preferences(
 )
 
 enum class Theme {
-    SystemDefault,
+    Auto,
     Light,
     Dark
 }

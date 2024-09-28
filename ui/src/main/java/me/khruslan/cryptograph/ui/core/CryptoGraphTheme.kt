@@ -1,5 +1,10 @@
 package me.khruslan.cryptograph.ui.core
 
+import android.app.UiModeManager
+import android.content.Context
+import android.os.Build
+import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.MaterialTheme
@@ -7,14 +12,27 @@ import androidx.compose.material3.Typography
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.core.content.getSystemService
+import me.khruslan.cryptograph.data.preferences.Theme
 import me.khruslan.cryptograph.ui.R
 
 @Composable
-internal fun CryptoGraphTheme(content: @Composable () -> Unit) {
+internal fun CryptoGraphTheme(
+    theme: Theme = Theme.Auto,
+    content: @Composable () -> Unit,
+) {
+    val context = LocalContext.current
+
+    LaunchedEffect(theme) {
+        context.setTheme(theme)
+    }
+
     MaterialTheme(
         colorScheme = cryptoGraphColorTheme(),
         typography = CryptoGraphTypography,
@@ -67,4 +85,44 @@ private val CryptoGraphTypography = Typography().run {
         labelMedium = labelMedium.copy(fontFamily = NunitoFontFamily),
         labelSmall = labelSmall.copy(fontFamily = NunitoFontFamily)
     )
+}
+
+internal fun Context.setTheme(theme: Theme) {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+        setThemeApi31(theme)
+    } else {
+        setThemeApi23(theme)
+    }
+}
+
+@RequiresApi(Build.VERSION_CODES.S)
+private fun Context.setThemeApi31(theme: Theme) {
+    val uiModeManager = getSystemService<UiModeManager>()
+    if (uiModeManager != null) {
+        val nightMode = getNightModeApi31(theme)
+        uiModeManager.setApplicationNightMode(nightMode)
+    } else {
+        setThemeApi23(theme)
+    }
+}
+
+private fun setThemeApi23(theme: Theme) {
+    val nightMode = getNightModeApi23(theme)
+    AppCompatDelegate.setDefaultNightMode(nightMode)
+}
+
+private fun getNightModeApi31(theme: Theme): Int {
+    return when (theme) {
+        Theme.Auto -> UiModeManager.MODE_NIGHT_AUTO
+        Theme.Light -> UiModeManager.MODE_NIGHT_NO
+        Theme.Dark -> UiModeManager.MODE_NIGHT_YES
+    }
+}
+
+private fun getNightModeApi23(theme: Theme): Int {
+    return when (theme) {
+        Theme.Auto -> AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
+        Theme.Light -> AppCompatDelegate.MODE_NIGHT_NO
+        Theme.Dark -> AppCompatDelegate.MODE_NIGHT_YES
+    }
 }

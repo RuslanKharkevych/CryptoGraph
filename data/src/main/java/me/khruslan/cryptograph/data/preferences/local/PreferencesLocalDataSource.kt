@@ -15,7 +15,8 @@ import me.khruslan.cryptograph.data.common.DatabaseException
 private const val LOG_TAG = "PreferencesLocalDataSource"
 
 internal interface PreferencesLocalDataSource {
-    val preferences: Flow<PreferencesDto>
+    val preferencesFlow: Flow<PreferencesDto>
+    suspend fun getPreferences(): PreferencesDto
     suspend fun updateTheme(themeValue: Int)
     suspend fun updateChartStyle(chartStyleValue: Int)
     suspend fun updateChartPeriod(chartPeriodValue: Int)
@@ -26,11 +27,8 @@ internal class PreferencesLocalDataSourceImpl(
     private val dispatcher: CoroutineDispatcher,
 ) : PreferencesLocalDataSource {
 
-    private val _preferences
-        get() = box.all.firstOrDefault()
-
     @OptIn(ExperimentalCoroutinesApi::class)
-    override val preferences: Flow<PreferencesDto>
+    override val preferencesFlow: Flow<PreferencesDto>
         get() {
             return box.query().build().subscribe().toFlow().map { preferences ->
                 preferences.firstOrDefault()
@@ -39,10 +37,23 @@ internal class PreferencesLocalDataSourceImpl(
             }
         }
 
+    override suspend fun getPreferences(): PreferencesDto {
+        return withContext(dispatcher) {
+            try {
+                getPreferencesInternal()
+            } catch (e: DbException) {
+                Logger.error(LOG_TAG, "Failed to load preferences", e)
+                PreferencesDto()
+            }
+        }
+    }
+
     override suspend fun updateTheme(themeValue: Int) {
         withContext(dispatcher) {
             try {
-                box.put(_preferences.copy(themeValue = themeValue))
+                updatePreferences { preferences ->
+                    preferences.copy(themeValue = themeValue)
+                }
                 Logger.info(LOG_TAG, "Updated theme value: $themeValue")
             } catch (e: DbException) {
                 Logger.error(LOG_TAG, "Failed to update theme value: $themeValue", e)
@@ -54,7 +65,9 @@ internal class PreferencesLocalDataSourceImpl(
     override suspend fun updateChartStyle(chartStyleValue: Int) {
         withContext(dispatcher) {
             try {
-                box.put(_preferences.copy(chartStyleValue = chartStyleValue))
+                updatePreferences { preferences ->
+                    preferences.copy(chartStyleValue = chartStyleValue)
+                }
                 Logger.info(LOG_TAG, "Updated chart style value: $chartStyleValue")
             } catch (e: DbException) {
                 Logger.error(LOG_TAG, "Failed to update chart style value: $chartStyleValue", e)
@@ -66,13 +79,24 @@ internal class PreferencesLocalDataSourceImpl(
     override suspend fun updateChartPeriod(chartPeriodValue: Int) {
         withContext(dispatcher) {
             try {
-                box.put(_preferences.copy(chartPeriodValue = chartPeriodValue))
+                updatePreferences { preferences ->
+                    preferences.copy(chartPeriodValue = chartPeriodValue)
+                }
                 Logger.info(LOG_TAG, "Updated chart period value: $chartPeriodValue")
             } catch (e: DbException) {
                 Logger.error(LOG_TAG, "Failed to update chart period value: $chartPeriodValue", e)
                 throw DatabaseException(e)
             }
         }
+    }
+
+    private fun getPreferencesInternal(): PreferencesDto {
+        return box.all.firstOrDefault()
+    }
+
+    private inline fun updatePreferences(transformation: (PreferencesDto) -> PreferencesDto) {
+        val preferences = getPreferencesInternal()
+        box.put(transformation(preferences))
     }
 
     private fun List<PreferencesDto>.firstOrDefault(): PreferencesDto {

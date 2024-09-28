@@ -4,6 +4,7 @@ import app.cash.turbine.test
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.test.runTest
 import me.khruslan.cryptograph.data.fakes.FakePreferencesLocalDataSource
+import me.khruslan.cryptograph.data.fixtures.STUB_PREFERENCES
 import me.khruslan.cryptograph.data.preferences.ChartPeriod
 import me.khruslan.cryptograph.data.preferences.ChartStyle
 import me.khruslan.cryptograph.data.preferences.PreferencesRepository
@@ -26,11 +27,17 @@ internal class PreferencesRepositoryTests {
     }
 
     @Test
+    fun `Get preferences`() = runTest {
+        val preferences = repository.getPreferences()
+        assertThat(preferences).isEqualTo(STUB_PREFERENCES)
+    }
+
+    @Test
     fun `Update theme`() = runTest {
         val theme = Theme.Dark
         repository.updateTheme(theme)
 
-        repository.preferences.test {
+        repository.preferencesFlow.test {
             val preferences = awaitItem()
             assertThat(preferences.theme).isEqualTo(theme)
         }
@@ -41,7 +48,7 @@ internal class PreferencesRepositoryTests {
         val chartStyle = ChartStyle.LineChart
         repository.updateChartStyle(chartStyle)
 
-        repository.preferences.test {
+        repository.preferencesFlow.test {
             val preferences = awaitItem()
             assertThat(preferences.chartStyle).isEqualTo(chartStyle)
         }
@@ -52,7 +59,7 @@ internal class PreferencesRepositoryTests {
         val chartPeriod = ChartPeriod.ThreeYears
         repository.updateChartPeriod(chartPeriod)
 
-        repository.preferences.test {
+        repository.preferencesFlow.test {
             val preferences = awaitItem()
             assertThat(preferences.chartPeriod).isEqualTo(chartPeriod)
         }

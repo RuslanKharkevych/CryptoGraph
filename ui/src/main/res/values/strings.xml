@@ -84,7 +84,7 @@
     <!-- region Preferences -->
     <string name="preferences_top_bar_title">Preferences</string>
     <string name="theme_preference_title">Theme</string>
-    <string name="theme_system_default_label">System default</string>
+    <string name="theme_auto_label">Auto</string>
     <string name="theme_light_label">Light</string>
     <string name="theme_dark_label">Dark</string>
     <string name="chart_style_preference_title">Chart style</string>

@@ -178,7 +178,7 @@ private fun PreferenceSelectionDialogPreview() {
             modifier = Modifier,
             title = stringResource(R.string.select_theme_dialog_title),
             items = ChoiceItems.Themes,
-            selectedItem = Theme.SystemDefault,
+            selectedItem = Theme.Auto,
             onItemSelected = {},
             onDismiss = {}
         )

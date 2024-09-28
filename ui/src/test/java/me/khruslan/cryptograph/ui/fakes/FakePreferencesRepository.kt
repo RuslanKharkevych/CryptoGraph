@@ -7,6 +7,7 @@ import me.khruslan.cryptograph.data.common.ErrorType
 import me.khruslan.cryptograph.data.fixtures.STUB_PREFERENCES
 import me.khruslan.cryptograph.data.preferences.ChartPeriod
 import me.khruslan.cryptograph.data.preferences.ChartStyle
+import me.khruslan.cryptograph.data.preferences.Preferences
 import me.khruslan.cryptograph.data.preferences.PreferencesRepository
 import me.khruslan.cryptograph.data.preferences.Theme
 
@@ -14,21 +15,25 @@ internal class FakePreferencesRepository : PreferencesRepository {
 
     var isDatabaseCorrupted = false
 
-    override val preferences = MutableStateFlow(STUB_PREFERENCES)
+    override val preferencesFlow = MutableStateFlow(STUB_PREFERENCES)
+
+    override suspend fun getPreferences(): Preferences {
+        return preferencesFlow.value
+    }
 
     override suspend fun updateTheme(theme: Theme) {
         checkIfDataIsValid()
-        preferences.update { it.copy(theme = theme) }
+        preferencesFlow.update { it.copy(theme = theme) }
     }
 
     override suspend fun updateChartStyle(chartStyle: ChartStyle) {
         checkIfDataIsValid()
-        preferences.update { it.copy(chartStyle = chartStyle) }
+        preferencesFlow.update { it.copy(chartStyle = chartStyle) }
     }
 
     override suspend fun updateChartPeriod(chartPeriod: ChartPeriod) {
         checkIfDataIsValid()
-        preferences.update { it.copy(chartPeriod = chartPeriod) }
+        preferencesFlow.update { it.copy(chartPeriod = chartPeriod) }
     }
 
     private fun checkIfDataIsValid() {

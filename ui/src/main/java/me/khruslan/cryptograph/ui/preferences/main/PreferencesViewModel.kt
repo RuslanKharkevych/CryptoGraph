@@ -63,7 +63,7 @@ internal class PreferencesViewModel(
 
     private fun loadPreferences() {
         viewModelScope.launch {
-            preferencesRepository.preferences.collect { preferences ->
+            preferencesRepository.preferencesFlow.collect { preferences ->
                 _preferencesState.preferences = preferences
             }
         }
