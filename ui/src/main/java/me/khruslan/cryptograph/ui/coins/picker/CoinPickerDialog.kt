@@ -49,7 +49,6 @@ import me.khruslan.cryptograph.ui.util.components.FullScreenError
 import me.khruslan.cryptograph.ui.util.components.FullScreenLoader
 import me.khruslan.cryptograph.ui.util.toColor
 
-// TODO: Update background color
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun CoinPickerDialog(
@@ -66,6 +65,7 @@ internal fun CoinPickerDialog(
             .fillMaxHeight(0.8f)
             .clip(MaterialTheme.shapes.large)
             .nestedScroll(topBarScrollBehavior.nestedScrollConnection),
+        containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
         topBar = {
             TopBar(
                 scrollBehavior = topBarScrollBehavior,
@@ -113,7 +113,8 @@ private fun TopBar(
         modifier = Modifier.shadow(shadow),
         scrollBehavior = scrollBehavior,
         colors = TopAppBarDefaults.topAppBarColors(
-            scrolledContainerColor = MaterialTheme.colorScheme.surface
+            containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
+            scrolledContainerColor = MaterialTheme.colorScheme.surfaceContainerHigh
         ),
         title = {
             Text(
@@ -167,7 +168,7 @@ private fun CoinItem(
             containerColor = if (isSelected) {
                 coin.colorHex.toColor().copy(alpha = 0.2f)
             } else {
-                MaterialTheme.colorScheme.surface
+                MaterialTheme.colorScheme.surfaceContainerHigh
             }
         ),
         headlineContent = {
