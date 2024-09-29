@@ -48,7 +48,7 @@ internal class NotificationDetailsViewModel(
         viewModelScope.launch {
             try {
                 notificationsRepository.addOrUpdateNotification(notification)
-                _notificationDetailsState.notificationSavedOrDeleted = true
+                _notificationDetailsState.notificationSaved = true
             } catch (_: DataException) {
                 _notificationDetailsState.warningMessageRes = R.string.save_notification_warning_msg
                 notificationUpdating = false
@@ -63,7 +63,7 @@ internal class NotificationDetailsViewModel(
         viewModelScope.launch {
             try {
                 notificationsRepository.deleteNotification(args.notificationId)
-                _notificationDetailsState.notificationSavedOrDeleted = true
+                _notificationDetailsState.notificationDeleted = true
             } catch (_: DataException) {
                 _notificationDetailsState.warningMessageRes =
                     R.string.delete_notification_warning_msg
@@ -99,7 +99,8 @@ internal interface NotificationDetailsState {
     val isCoinEditable: Boolean
     val coinInfo: CoinInfo
     val notificationState: UiState<Notification?>
-    val notificationSavedOrDeleted: Boolean
+    val notificationSaved: Boolean
+    val notificationDeleted: Boolean
     val warningMessageRes: Int?
 }
 
@@ -111,6 +112,7 @@ internal class MutableNotificationDetailsState(
     override val isCoinEditable: Boolean = args.coinEditable
     override var coinInfo: CoinInfo by mutableStateOf(CoinInfo.fromArgs(args))
     override var notificationState: UiState<Notification?> by mutableStateOf(UiState.Loading)
-    override var notificationSavedOrDeleted: Boolean by mutableStateOf(false)
+    override var notificationSaved: Boolean by mutableStateOf(false)
+    override var notificationDeleted: Boolean by mutableStateOf(false)
     override var warningMessageRes: Int? by mutableStateOf(null)
 }

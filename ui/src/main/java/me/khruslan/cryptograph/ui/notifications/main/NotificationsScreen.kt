@@ -1,11 +1,13 @@
 package me.khruslan.cryptograph.ui.notifications.main
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -23,7 +25,11 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
@@ -46,6 +52,10 @@ import me.khruslan.cryptograph.data.notifications.Notification
 import me.khruslan.cryptograph.data.notifications.NotificationTrigger
 import me.khruslan.cryptograph.ui.R
 import me.khruslan.cryptograph.ui.core.CryptoGraphTheme
+import me.khruslan.cryptograph.ui.notifications.permission.NotificationPermissionState
+import me.khruslan.cryptograph.ui.notifications.permission.PermissionStatus
+import me.khruslan.cryptograph.ui.notifications.permission.rememberNotificationPermissionState
+import me.khruslan.cryptograph.ui.notifications.permission.shouldShowRationale
 import me.khruslan.cryptograph.ui.util.ArrowDown
 import me.khruslan.cryptograph.ui.util.CurrencyBitcoin
 import me.khruslan.cryptograph.ui.util.PreviewScreenSizesLightDark
@@ -54,6 +64,7 @@ import me.khruslan.cryptograph.ui.util.components.FullScreenError
 import me.khruslan.cryptograph.ui.util.components.FullScreenLoader
 import me.khruslan.cryptograph.ui.util.getCurrentLocale
 import me.khruslan.cryptograph.ui.util.previewPlaceholder
+import me.khruslan.cryptograph.ui.util.rememberMessageState
 import me.khruslan.cryptograph.ui.util.toColor
 import java.time.format.DateTimeFormatter
 
@@ -68,6 +79,9 @@ internal fun NotificationsScreen(
     onNotificationClick: (notification: CoinNotification) -> Unit,
     onCloseActionClick: () -> Unit,
 ) {
+    val snackbarHostState = remember { SnackbarHostState() }
+    val snackbarMessageState = snackbarHostState.rememberMessageState()
+    val permissionState = rememberNotificationPermissionState(onError = snackbarMessageState::show)
     val topBarScrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
 
     Scaffold(
@@ -76,6 +90,10 @@ internal fun NotificationsScreen(
             TopBar(
                 scrollBehavior = topBarScrollBehavior,
                 title = getTopBarTitle(notificationsState.coinName),
+                shadowAlwaysVisible = isTopBarShadowAlwaysVisible(
+                    permissionStatus = permissionState.status,
+                    listState = notificationsState.listState
+                ),
                 onCloseActionClick = onCloseActionClick
             )
         },
@@ -86,6 +104,9 @@ internal fun NotificationsScreen(
                     contentDescription = stringResource(R.string.add_notification_btn_desc)
                 )
             }
+        },
+        snackbarHost = {
+            SnackbarHost(snackbarHostState)
         }
     ) { contentPadding ->
         Crossfade(
@@ -103,8 +124,10 @@ internal fun NotificationsScreen(
                         EmptyPlaceholder(notificationsState.coinName)
                     } else {
                         NotificationsList(
+                            permissionState = permissionState,
                             coinNotifications = state.data,
-                            onNotificationClick = onNotificationClick
+                            scrollBehavior = topBarScrollBehavior,
+                            onNotificationClick = onNotificationClick,
                         )
                     }
                 }
@@ -123,11 +146,16 @@ internal fun NotificationsScreen(
 private fun TopBar(
     scrollBehavior: TopAppBarScrollBehavior,
     title: String,
+    shadowAlwaysVisible: Boolean,
     onCloseActionClick: () -> Unit,
 ) {
     val shadow by animateDpAsState(
         label = "NotificationsTopBarShadowDpAnimation",
-        targetValue = 8.dp * scrollBehavior.state.overlappedFraction
+        targetValue = if (shadowAlwaysVisible) {
+            8.dp
+        } else {
+            8.dp * scrollBehavior.state.overlappedFraction
+        }
     )
 
     TopAppBar(
@@ -175,29 +203,51 @@ private fun EmptyPlaceholder(coinName: String?) {
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun NotificationsList(
+    permissionState: NotificationPermissionState,
     coinNotifications: List<CoinNotification>,
+    scrollBehavior: TopAppBarScrollBehavior,
     onNotificationClick: (notification: CoinNotification) -> Unit,
 ) {
-    LazyVerticalGrid(columns = GridCells.Adaptive(400.dp)) {
-        items(
-            count = coinNotifications.count(),
-            key = { index -> coinNotifications[index].notification.id }
-        ) { index ->
-            val coinNotification = coinNotifications[index]
+    val permissionBannerVisible = permissionState.status is PermissionStatus.Denied
 
-            NotificationCard(
-                modifier = Modifier
-                    .animateItem()
-                    .padding(
-                        horizontal = 16.dp,
-                        vertical = 8.dp
-                    ),
-                coin = coinNotification.coin,
-                notification = coinNotification.notification,
-                onClick = { onNotificationClick(coinNotification) }
+    Column {
+        AnimatedVisibility(permissionBannerVisible) {
+            PermissionStatusBanner(
+                scrollBehavior = scrollBehavior,
+                status = permissionState.status,
+                onEnableButtonClick = permissionState::launchPermissionRequest,
+                onSettingsButtonClick = permissionState::openNotificationSettings
             )
+        }
+
+        LazyVerticalGrid(
+            columns = GridCells.Adaptive(400.dp),
+            contentPadding = PaddingValues(
+                top = if (permissionBannerVisible) 8.dp else 0.dp,
+                bottom = 8.dp
+            )
+        ) {
+            items(
+                count = coinNotifications.count(),
+                key = { index -> coinNotifications[index].notification.id }
+            ) { index ->
+                val coinNotification = coinNotifications[index]
+
+                NotificationCard(
+                    modifier = Modifier
+                        .animateItem()
+                        .padding(
+                            horizontal = 16.dp,
+                            vertical = 8.dp
+                        ),
+                    coin = coinNotification.coin,
+                    notification = coinNotification.notification,
+                    onClick = { onNotificationClick(coinNotification) }
+                )
+            }
         }
     }
 }
@@ -256,6 +306,53 @@ private fun NotificationCard(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun PermissionStatusBanner(
+    scrollBehavior: TopAppBarScrollBehavior,
+    status: PermissionStatus,
+    onEnableButtonClick: () -> Unit,
+    onSettingsButtonClick: () -> Unit,
+) {
+    Surface(
+        color = MaterialTheme.colorScheme.surfaceContainerHigh,
+        shadowElevation = 8.dp * scrollBehavior.state.overlappedFraction
+    ) {
+        Crossfade(
+            targetState = status,
+            label = "PermissionStatusBannerCrossfade"
+        ) { status ->
+            Column(modifier = Modifier.fillMaxWidth()) {
+                Text(
+                    modifier = Modifier
+                        .padding(top = 16.dp)
+                        .padding(horizontal = 16.dp),
+                    text = status.message,
+                    style = MaterialTheme.typography.bodyLarge
+                )
+                TextButton(
+                    modifier = Modifier
+                        .align(Alignment.End)
+                        .padding(horizontal = 16.dp),
+                    onClick = {
+                        when {
+                            status == PermissionStatus.Granted -> {}
+                            status.shouldShowRationale -> onEnableButtonClick()
+                            else -> onSettingsButtonClick()
+                        }
+                    }
+                ) {
+                    Text(
+                        text = status.buttonLabel,
+                        style = MaterialTheme.typography.labelLarge,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+            }
+        }
+    }
+}
+
 @Composable
 private fun getTopBarTitle(coinName: String?): String {
     return if (coinName != null) {
@@ -263,6 +360,14 @@ private fun getTopBarTitle(coinName: String?): String {
     } else {
         stringResource(R.string.all_notifications_top_bar_title)
     }
+}
+
+private fun isTopBarShadowAlwaysVisible(
+    permissionStatus: PermissionStatus,
+    listState: UiState<List<CoinNotification>>,
+): Boolean {
+    if (permissionStatus is PermissionStatus.Granted) return false
+    return listState is UiState.Data && listState.data.isNotEmpty()
 }
 
 private val NotificationTrigger.label: String
@@ -291,6 +396,24 @@ private val Notification.dateLabel: String
             ?: stringResource(R.string.notification_expiration_date_not_applicable_label)
 
         return "$createdAtDateString - $expirationDateString"
+    }
+
+private val PermissionStatus.message
+    @Composable
+    get() = stringResource(
+        when {
+            this == PermissionStatus.Granted -> R.string.notification_permission_banner_enabled_msg
+            shouldShowRationale -> R.string.notification_permission_banner_rationale_msg
+            else -> R.string.notification_permission_banner_disabled_msg
+        }
+    )
+
+private val PermissionStatus.buttonLabel
+    @Composable
+    get() = when {
+        this == PermissionStatus.Granted -> ""
+        shouldShowRationale -> stringResource(R.string.notification_permission_banner_enable_btn)
+        else -> stringResource(R.string.notification_permission_banner_settings_btn)
     }
 
 @Composable

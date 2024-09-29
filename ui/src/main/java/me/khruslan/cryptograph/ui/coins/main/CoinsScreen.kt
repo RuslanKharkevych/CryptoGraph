@@ -7,6 +7,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -181,7 +182,10 @@ private fun CoinsList(
     onPinButtonClick: (coinId: String) -> Unit,
     onUnpinButtonClick: (coinId: String) -> Unit,
 ) {
-    LazyVerticalGrid(columns = GridCells.Adaptive(400.dp)) {
+    LazyVerticalGrid(
+        columns = GridCells.Adaptive(400.dp),
+        contentPadding = PaddingValues(bottom = 8.dp)
+    ) {
         items(
             count = coins.count(),
             key = { index -> coins[index].id }

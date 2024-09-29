@@ -90,7 +90,7 @@ internal class NotificationDetailsViewModelTests {
         initViewModel()
         viewModel.saveNotification(STUB_NOTIFICATIONS[0])
 
-        assertThat(viewModel.notificationDetailsState.notificationSavedOrDeleted).isTrue()
+        assertThat(viewModel.notificationDetailsState.notificationSaved).isTrue()
     }
 
     @Test
@@ -119,7 +119,7 @@ internal class NotificationDetailsViewModelTests {
         initViewModel()
         viewModel.deleteNotification()
 
-        assertThat(viewModel.notificationDetailsState.notificationSavedOrDeleted).isTrue()
+        assertThat(viewModel.notificationDetailsState.notificationDeleted).isTrue()
     }
 
     @Test

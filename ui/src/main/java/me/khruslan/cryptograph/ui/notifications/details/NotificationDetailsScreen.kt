@@ -74,6 +74,8 @@ import me.khruslan.cryptograph.ui.coins.shared.CoinInfo
 import me.khruslan.cryptograph.ui.core.CryptoGraphTheme
 import me.khruslan.cryptograph.ui.notifications.details.confirmation.ConfirmationAlertDialog
 import me.khruslan.cryptograph.ui.notifications.details.date.ExpirationDatePickerDialog
+import me.khruslan.cryptograph.ui.notifications.permission.deniedOrNeverAsked
+import me.khruslan.cryptograph.ui.notifications.permission.rememberNotificationPermissionState
 import me.khruslan.cryptograph.ui.util.CurrencyBitcoin
 import me.khruslan.cryptograph.ui.util.PreviewScreenSizesLightDark
 import me.khruslan.cryptograph.ui.util.UiState
@@ -102,8 +104,19 @@ internal fun NotificationDetailsScreen(
     val topBarScrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
     val deleteNotificationAlertState = rememberAlertState()
     val discardChangesAlertState = rememberAlertState()
+    val permissionState = rememberNotificationPermissionState(onResult = { onCloseScreen() })
 
-    if (notificationDetailsState.notificationSavedOrDeleted) {
+    if (notificationDetailsState.notificationSaved) {
+        LaunchedEffect(Unit) {
+            if (permissionState.status.deniedOrNeverAsked) {
+                permissionState.launchPermissionRequest()
+            } else {
+                onCloseScreen()
+            }
+        }
+    }
+
+    if (notificationDetailsState.notificationDeleted) {
         LaunchedEffect(Unit) {
             onCloseScreen()
         }

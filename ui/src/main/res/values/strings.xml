@@ -53,6 +53,12 @@
     <string name="notification_trigger_price_more_then_desc">Price more then %s$</string>
     <string name="notification_expiration_date_not_applicable_label">N/A</string>
     <string name="add_notification_btn_desc">Add new notification</string>
+    <string name="notification_permission_banner_enabled_msg">Push notifications are enabled. You will now get notified about price updates</string>
+    <string name="notification_permission_banner_disabled_msg">Push notifications are disabled. You won\'t get notified about price updates</string>
+    <string name="notification_permission_banner_rationale_msg">Enable push notifications to get notified about price updates</string>
+    <string name="notification_permission_banner_enable_btn">ENABLE</string>
+    <string name="notification_permission_banner_settings_btn">SETTINGS</string>
+    <string name="notification_permission_request_error_msg">Failed to enable notifications, please try again</string>
     <!-- endregion Notifications -->
 
     <!-- region Notification Details -->
@@ -79,6 +85,7 @@
     <string name="delete_notification_warning_msg">Failed to delete the notification. Please try again</string>
     <string name="delete_notification_alert_msg">Are you sure you want to delete the notification?</string>
     <string name="discard_changes_alert_msg">Are you sure you want to leave? Any unsaved changes will be lost</string>
+    <string name="notification_settings_error_msg">Failed to open notification settings. Please try again</string>
     <!-- endregion Notification Details -->
 
     <!-- region Preferences -->
