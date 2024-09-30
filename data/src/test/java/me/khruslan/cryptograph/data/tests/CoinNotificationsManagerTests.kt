@@ -32,7 +32,7 @@ internal class CoinNotificationsManagerTests {
 
     @Test
     fun `Get coin notifications`() = runTest {
-        coinNotificationsManager.getCoinNotifications(null).test {
+        coinNotificationsManager.getCoinNotifications().test {
             assertThat(awaitItem()).isEqualTo(STUB_COIN_NOTIFICATIONS)
         }
     }

@@ -1,4 +1,4 @@
-package me.khruslan.cryptograph.ui.notifications.permission
+package me.khruslan.cryptograph.ui.notifications.shared
 
 import android.Manifest
 import android.app.Activity

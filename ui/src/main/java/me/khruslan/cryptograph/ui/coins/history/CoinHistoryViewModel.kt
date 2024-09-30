@@ -19,6 +19,7 @@ import me.khruslan.cryptograph.ui.R
 import me.khruslan.cryptograph.ui.util.UiState
 import me.khruslan.cryptograph.ui.util.displayMessageRes
 
+// TODO: Integrate unread notifications count
 internal class CoinHistoryViewModel(
     savedStateHandle: SavedStateHandle,
     private val coinsRepository: CoinsRepository,

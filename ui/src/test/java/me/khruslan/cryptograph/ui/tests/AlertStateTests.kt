@@ -1,8 +1,8 @@
 package me.khruslan.cryptograph.ui.tests
 
 import com.google.common.truth.Truth.assertThat
-import me.khruslan.cryptograph.ui.util.AlertState
-import me.khruslan.cryptograph.ui.util.AlertStateImpl
+import me.khruslan.cryptograph.ui.util.state.AlertState
+import me.khruslan.cryptograph.ui.util.state.AlertStateImpl
 import org.junit.Before
 import org.junit.Test
 

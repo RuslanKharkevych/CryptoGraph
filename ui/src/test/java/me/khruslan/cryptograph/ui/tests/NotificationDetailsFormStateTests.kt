@@ -48,7 +48,7 @@ internal class NotificationDetailsFormStateTests {
             assertThat(this.coinInfo).isEqualTo(CoinInfo.fromCoin(coin))
             assertThat(notificationTitle).isEqualTo(TextFieldValue(notification.title))
             assertThat(notificationTitleState).isEqualTo(NotificationTitleState.Default)
-            assertThat(triggerType).isEqualTo(NotificationTriggerType.PriceMoreThen)
+            assertThat(triggerType).isEqualTo(NotificationTriggerType.PriceMoreThan)
             assertThat(triggerTypeDropdownExpanded).isFalse()
             assertThat(triggerPrice)
                 .isEqualTo(TextFieldValue(notification.trigger.targetPrice.toString()))
@@ -65,7 +65,7 @@ internal class NotificationDetailsFormStateTests {
 
         with(formState) {
             updateNotificationTitle(TextFieldValue(notification.title))
-            updateTriggerType(NotificationTriggerType.PriceLessThen)
+            updateTriggerType(NotificationTriggerType.PriceLessThan)
             updateTriggerPrice(TextFieldValue(notification.trigger.targetPrice.toString()))
             updateExpirationDate(notification.expirationDate)
 
@@ -134,7 +134,7 @@ internal class NotificationDetailsFormStateTests {
     fun `Update trigger type - trigger price unfocused`() {
         initFormState()
         formState.updateTriggerPrice(TextFieldValue("20000"))
-        formState.updateTriggerType(NotificationTriggerType.PriceMoreThen)
+        formState.updateTriggerType(NotificationTriggerType.PriceMoreThan)
 
         val expectedState = NotificationTriggerPriceState.PriceTooSmall
         val actualState = formState.triggerPriceState
@@ -146,7 +146,7 @@ internal class NotificationDetailsFormStateTests {
         initFormState()
         formState.validateTriggerPrice(isFocused = true)
         formState.updateTriggerPrice(TextFieldValue("20000"))
-        formState.updateTriggerType(NotificationTriggerType.PriceMoreThen)
+        formState.updateTriggerType(NotificationTriggerType.PriceMoreThan)
 
         val expectedState = NotificationTriggerPriceState.Default
         val actualState = formState.triggerPriceState
@@ -241,9 +241,9 @@ internal class NotificationDetailsFormStateTests {
     }
 
     @Test
-    fun `Validate trigger price - price less then`() {
+    fun `Validate trigger price - price less than`() {
         initFormState()
-        formState.updateTriggerType(NotificationTriggerType.PriceLessThen)
+        formState.updateTriggerType(NotificationTriggerType.PriceLessThan)
         formState.updateTriggerPrice(TextFieldValue("50000.0"))
         formState.validateTriggerPrice(isFocused = false)
 
@@ -255,7 +255,7 @@ internal class NotificationDetailsFormStateTests {
     @Test
     fun `Validate trigger price - price too big`() {
         initFormState()
-        formState.updateTriggerType(NotificationTriggerType.PriceLessThen)
+        formState.updateTriggerType(NotificationTriggerType.PriceLessThan)
         formState.updateTriggerPrice(TextFieldValue("70000.00"))
         formState.validateTriggerPrice(isFocused = false)
 
@@ -265,9 +265,9 @@ internal class NotificationDetailsFormStateTests {
     }
 
     @Test
-    fun `Validate trigger price - price more then`() {
+    fun `Validate trigger price - price more than`() {
         initFormState()
-        formState.updateTriggerType(NotificationTriggerType.PriceMoreThen)
+        formState.updateTriggerType(NotificationTriggerType.PriceMoreThan)
         formState.updateTriggerPrice(TextFieldValue("75000"))
         formState.validateTriggerPrice(isFocused = false)
 
@@ -279,7 +279,7 @@ internal class NotificationDetailsFormStateTests {
     @Test
     fun `Validate trigger price - price too small`() {
         initFormState()
-        formState.updateTriggerType(NotificationTriggerType.PriceMoreThen)
+        formState.updateTriggerType(NotificationTriggerType.PriceMoreThan)
         formState.updateTriggerPrice(TextFieldValue("45000"))
         formState.validateTriggerPrice(isFocused = false)
 

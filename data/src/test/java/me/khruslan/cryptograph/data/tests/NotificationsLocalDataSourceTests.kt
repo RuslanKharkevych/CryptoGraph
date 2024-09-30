@@ -53,7 +53,7 @@ internal class NotificationsLocalDataSourceTests {
         val initialNotification = STUB_DTO_NOTIFICATIONS[0].copy(id = 0L)
         dataSource.addOrUpdateNotification(initialNotification)
 
-        val updatedNotification = initialNotification.copy(priceLessThenTrigger = 100.0)
+        val updatedNotification = initialNotification.copy(priceLessThanTrigger = 100.0)
         dataSource.addOrUpdateNotification(updatedNotification)
 
         dataSource.getNotifications().test {

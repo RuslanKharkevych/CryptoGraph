@@ -6,7 +6,7 @@ import me.khruslan.cryptograph.data.coins.CoinsRepository
 import me.khruslan.cryptograph.data.notifications.NotificationsRepository
 
 interface CoinNotificationsManager {
-    fun getCoinNotifications(coinId: String?): Flow<List<CoinNotification>>
+    fun getCoinNotifications(coinId: String? = null): Flow<List<CoinNotification>>
 }
 
 internal class CoinNotificationsManagerImpl(

@@ -19,7 +19,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Notifications
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -57,6 +56,7 @@ import me.khruslan.cryptograph.data.coins.Coin
 import me.khruslan.cryptograph.data.fixtures.PREVIEW_COINS
 import me.khruslan.cryptograph.ui.R
 import me.khruslan.cryptograph.ui.coins.shared.CoinTitleAndIcon
+import me.khruslan.cryptograph.ui.coins.shared.NotificationsAction
 import me.khruslan.cryptograph.ui.coins.shared.PinCoinButton
 import me.khruslan.cryptograph.ui.core.CryptoGraphTheme
 import me.khruslan.cryptograph.ui.core.DarkGreen
@@ -99,6 +99,7 @@ internal fun CoinsScreen(
         topBar = {
             TopBar(
                 scrollBehavior = topBarScrollBehavior,
+                unreadNotificationsCount = coinsState.unreadNotificationsCount,
                 onNotificationsActionClick = onNotificationsActionClick,
                 onPreferencesActionClick = onPreferencesActionClick
             )
@@ -137,6 +138,7 @@ internal fun CoinsScreen(
 @Composable
 private fun TopBar(
     scrollBehavior: TopAppBarScrollBehavior,
+    unreadNotificationsCount: Int,
     onNotificationsActionClick: () -> Unit,
     onPreferencesActionClick: () -> Unit,
 ) {
@@ -159,12 +161,10 @@ private fun TopBar(
             )
         },
         actions = {
-            IconButton(onClick = onNotificationsActionClick) {
-                Icon(
-                    imageVector = Icons.Outlined.Notifications,
-                    contentDescription = stringResource(R.string.notifications_action_desc)
-                )
-            }
+            NotificationsAction(
+                unreadNotificationsCount = unreadNotificationsCount,
+                onClick = onNotificationsActionClick
+            )
             IconButton(onClick = onPreferencesActionClick) {
                 Icon(
                     imageVector = Icons.Outlined.Settings,
@@ -354,6 +354,7 @@ private fun CoinsScreenPreview() {
     val coinsState = remember {
         MutableCoinsState().apply {
             listState = UiState.Data(coins)
+            unreadNotificationsCount = 1
         }
     }
 

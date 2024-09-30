@@ -11,6 +11,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.text.input.TextFieldValue
 import me.khruslan.cryptograph.data.notifications.Notification
+import me.khruslan.cryptograph.data.notifications.NotificationStatus
 import me.khruslan.cryptograph.data.notifications.NotificationTrigger
 import me.khruslan.cryptograph.ui.coins.shared.CoinInfo
 import java.time.Clock
@@ -153,8 +154,11 @@ internal class NotificationDetailsFormStateImpl(
             coinId = coinInfo.id,
             title = notificationTitle,
             createdAt = createdAt ?: LocalDate.now(clock),
+            completedAt = null,
             expirationDate = expirationDate,
-            trigger = buildTrigger(triggerType, triggerPrice.toDouble())
+            trigger = buildTrigger(triggerType, triggerPrice.toDouble()),
+            status = NotificationStatus.Pending,
+            unread = false
         )
 
         onSuccess(notification)
@@ -180,7 +184,7 @@ internal class NotificationDetailsFormStateImpl(
             ?: return NotificationTriggerPriceState.Default
 
         return when (triggerType) {
-            NotificationTriggerType.PriceLessThen -> {
+            NotificationTriggerType.PriceLessThan -> {
                 if (price <= currentCoinPrice) {
                     NotificationTriggerPriceState.Default
                 } else {
@@ -188,7 +192,7 @@ internal class NotificationDetailsFormStateImpl(
                 }
             }
 
-            NotificationTriggerType.PriceMoreThen -> {
+            NotificationTriggerType.PriceMoreThan -> {
                 if (price >= currentCoinPrice) {
                     NotificationTriggerPriceState.Default
                 } else {
@@ -200,15 +204,15 @@ internal class NotificationDetailsFormStateImpl(
 
     private fun buildTrigger(type: NotificationTriggerType, price: Double): NotificationTrigger {
         return when (type) {
-            NotificationTriggerType.PriceLessThen -> NotificationTrigger.PriceLessThen(price)
-            NotificationTriggerType.PriceMoreThen -> NotificationTrigger.PriceMoreThen(price)
+            NotificationTriggerType.PriceLessThan -> NotificationTrigger.PriceLessThan(price)
+            NotificationTriggerType.PriceMoreThan -> NotificationTrigger.PriceMoreThan(price)
         }
     }
 }
 
 internal enum class NotificationTriggerType(val label: String) {
-    PriceLessThen("<"),
-    PriceMoreThen(">")
+    PriceLessThan("<"),
+    PriceMoreThan(">")
 }
 
 internal enum class NotificationTitleState(val isValid: Boolean) {
@@ -308,8 +312,8 @@ private val Notification?.titleTextFieldValue
 
 private val Notification?.triggerType
     get() = when (this?.trigger) {
-        is NotificationTrigger.PriceLessThen -> NotificationTriggerType.PriceLessThen
-        is NotificationTrigger.PriceMoreThen, null -> NotificationTriggerType.PriceMoreThen
+        is NotificationTrigger.PriceLessThan -> NotificationTriggerType.PriceLessThan
+        is NotificationTrigger.PriceMoreThan, null -> NotificationTriggerType.PriceMoreThan
     }
 
 private val Notification?.priceTextFieldValue

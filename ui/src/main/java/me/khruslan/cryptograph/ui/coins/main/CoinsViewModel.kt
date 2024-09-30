@@ -11,17 +11,22 @@ import kotlinx.coroutines.launch
 import me.khruslan.cryptograph.data.coins.Coin
 import me.khruslan.cryptograph.data.coins.CoinsRepository
 import me.khruslan.cryptograph.data.common.DataException
+import me.khruslan.cryptograph.data.notifications.NotificationsRepository
 import me.khruslan.cryptograph.ui.R
 import me.khruslan.cryptograph.ui.util.UiState
 import me.khruslan.cryptograph.ui.util.displayMessageRes
 
-internal class CoinsViewModel(private val coinsRepository: CoinsRepository) : ViewModel() {
+internal class CoinsViewModel(
+    private val coinsRepository: CoinsRepository,
+    private val notificationsRepository: NotificationsRepository,
+) : ViewModel() {
 
     private val _coinsState = MutableCoinsState()
     val coinsState: CoinsState = _coinsState
 
     init {
         loadCoins()
+        loadUnreadNotifications()
     }
 
     fun reloadCoins() {
@@ -64,17 +69,27 @@ internal class CoinsViewModel(private val coinsRepository: CoinsRepository) : Vi
             }
         }
     }
+
+    private fun loadUnreadNotifications() {
+        viewModelScope.launch {
+            notificationsRepository.getNotifications().collect { notifications ->
+                _coinsState.unreadNotificationsCount = notifications.count { notification ->
+                    notification.unread
+                }
+            }
+        }
+    }
 }
 
 @Stable
 internal interface CoinsState {
     val listState: UiState<List<Coin>>
     val warningMessageRes: Int?
-    val notificationBadgeCount: Int
+    val unreadNotificationsCount: Int
 }
 
 internal class MutableCoinsState : CoinsState {
     override var listState: UiState<List<Coin>> by mutableStateOf(UiState.Loading)
     override var warningMessageRes: Int? by mutableStateOf(null)
-    override var notificationBadgeCount: Int by mutableIntStateOf(0)
+    override var unreadNotificationsCount: Int by mutableIntStateOf(0)
 }

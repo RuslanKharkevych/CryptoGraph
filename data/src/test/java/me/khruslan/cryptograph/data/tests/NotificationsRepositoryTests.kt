@@ -12,6 +12,14 @@ import me.khruslan.cryptograph.data.notifications.NotificationsRepositoryImpl
 import me.khruslan.cryptograph.data.notifications.mapper.NotificationsMapper
 import org.junit.Before
 import org.junit.Test
+import java.time.Clock
+import java.time.Instant
+import java.time.ZoneId
+
+private val CLOCK: Clock = Clock.fixed(
+    Instant.parse("2024-09-30T00:06:14.00Z"),
+    ZoneId.of("Asia/Tokyo")
+)
 
 internal class NotificationsRepositoryTests {
 
@@ -24,7 +32,7 @@ internal class NotificationsRepositoryTests {
 
         repository = NotificationsRepositoryImpl(
             localDataSource = FakeNotificationsLocalDataSource(),
-            mapper = NotificationsMapper(dispatcher)
+            mapper = NotificationsMapper(dispatcher, CLOCK)
         )
     }
 
@@ -42,7 +50,7 @@ internal class NotificationsRepositoryTests {
         val notification = STUB_NOTIFICATIONS[0]
         repository.addOrUpdateNotification(notification)
 
-        repository.getNotifications(null).test {
+        repository.getNotifications().test {
             assertThat(awaitItem()).containsExactly(notification)
         }
     }
@@ -55,7 +63,7 @@ internal class NotificationsRepositoryTests {
         val updatedNotification = STUB_NOTIFICATIONS[0]
         repository.addOrUpdateNotification(updatedNotification)
 
-        repository.getNotifications(null).test {
+        repository.getNotifications().test {
             assertThat(awaitItem()).containsExactly(updatedNotification)
         }
     }
@@ -66,7 +74,7 @@ internal class NotificationsRepositoryTests {
         repository.addOrUpdateNotification(notification)
         repository.deleteNotification(notification.id)
 
-        repository.getNotifications(null).test {
+        repository.getNotifications().test {
             assertThat(awaitItem()).isEmpty()
         }
     }

@@ -9,6 +9,14 @@ import me.khruslan.cryptograph.data.fixtures.STUB_NOTIFICATIONS
 import me.khruslan.cryptograph.data.notifications.mapper.NotificationsMapper
 import org.junit.Before
 import org.junit.Test
+import java.time.Clock
+import java.time.Instant
+import java.time.ZoneId
+
+private val CLOCK: Clock = Clock.fixed(
+    Instant.parse("2024-09-30T00:06:14.00Z"),
+    ZoneId.of("Asia/Tokyo")
+)
 
 internal class NotificationsMapperTests {
 
@@ -19,6 +27,7 @@ internal class NotificationsMapperTests {
     fun setUp() {
         mapper = NotificationsMapper(
             dispatcher = UnconfinedTestDispatcher(),
+            clock = CLOCK,
         )
     }
 

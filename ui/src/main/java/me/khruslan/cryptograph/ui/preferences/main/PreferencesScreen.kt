@@ -39,7 +39,7 @@ import me.khruslan.cryptograph.ui.util.ArrowDown
 import me.khruslan.cryptograph.ui.util.ChoiceItems
 import me.khruslan.cryptograph.ui.util.PreviewScreenSizesLightDark
 import me.khruslan.cryptograph.ui.util.components.FullScreenLoader
-import me.khruslan.cryptograph.ui.util.rememberAlertState
+import me.khruslan.cryptograph.ui.util.state.rememberAlertState
 
 @Composable
 internal fun PreferencesScreen(

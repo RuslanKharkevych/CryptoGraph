@@ -1,4 +1,4 @@
-package me.khruslan.cryptograph.ui.util
+package me.khruslan.cryptograph.ui.util.state
 
 import androidx.annotation.VisibleForTesting
 import androidx.compose.runtime.Composable

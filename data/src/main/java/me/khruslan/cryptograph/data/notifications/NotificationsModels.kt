@@ -7,15 +7,24 @@ data class Notification(
     val coinId: String,
     val title: String,
     val createdAt: LocalDate,
+    val completedAt: LocalDate?,
     val expirationDate: LocalDate?,
     val trigger: NotificationTrigger,
+    val status: NotificationStatus,
+    val unread: Boolean,
 )
+
+enum class NotificationStatus {
+    Pending,
+    Completed,
+    Expired
+}
 
 sealed class NotificationTrigger(val targetPrice: Double) {
 
-    class PriceLessThen(targetPrice: Double): NotificationTrigger(targetPrice) {
+    class PriceLessThan(targetPrice: Double) : NotificationTrigger(targetPrice) {
         override fun equals(other: Any?): Boolean {
-            return other is PriceLessThen && targetPrice == other.targetPrice
+            return other is PriceLessThan && targetPrice == other.targetPrice
         }
 
         override fun hashCode(): Int {
@@ -23,13 +32,13 @@ sealed class NotificationTrigger(val targetPrice: Double) {
         }
 
         override fun toString(): String {
-            return "PriceLessThen(targetPrice=$targetPrice)"
+            return "PriceLessThan(targetPrice=$targetPrice)"
         }
     }
 
-    class PriceMoreThen(targetPrice: Double) : NotificationTrigger(targetPrice) {
+    class PriceMoreThan(targetPrice: Double) : NotificationTrigger(targetPrice) {
         override fun equals(other: Any?): Boolean {
-            return other is PriceMoreThen && targetPrice == other.targetPrice
+            return other is PriceMoreThan && targetPrice == other.targetPrice
         }
 
         override fun hashCode(): Int {
@@ -37,7 +46,7 @@ sealed class NotificationTrigger(val targetPrice: Double) {
         }
 
         override fun toString(): String {
-            return "PriceMoreThen(targetPrice=$targetPrice)"
+            return "PriceMoreThan(targetPrice=$targetPrice)"
         }
     }
 }

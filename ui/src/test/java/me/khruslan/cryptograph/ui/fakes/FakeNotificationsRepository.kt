@@ -17,6 +17,9 @@ internal class FakeNotificationsRepository : NotificationsRepository {
     var notificationsAdded = 0
     var notificationsDeleted = 0
 
+    val unreadNotificationsCount
+        get() = notificationsFlow.value.count { it.unread }
+
     private val notificationsFlow = MutableStateFlow(STUB_NOTIFICATIONS)
 
     override fun getNotifications(coinId: String?): Flow<List<Notification>> {

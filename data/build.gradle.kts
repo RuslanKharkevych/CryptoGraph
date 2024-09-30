@@ -47,9 +47,11 @@ dependencies {
     implementation(libs.coroutines)
     coreLibraryDesugaring(libs.desugaring)
     implementation(libs.koin.android)
+    implementation(libs.koin.workManager)
     implementation(libs.okhttp)
     implementation(libs.okhttp.loggingInterceptor)
     implementation(libs.serializationJson)
+    implementation(libs.workRuntime)
 
     testImplementation(libs.coroutinesTest)
     testImplementation(libs.junit)

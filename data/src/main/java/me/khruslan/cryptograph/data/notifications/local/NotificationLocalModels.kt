@@ -9,7 +9,9 @@ internal data class NotificationDto(
     var coinUuid: String = "",
     var title: String = "",
     var createdAtDate: String = "",
+    var completedAtDate: String? = null,
     var expirationDate: String? = null,
-    var priceLessThenTrigger: Double? = null,
-    var priceMoreThenTrigger: Double? = null,
+    var priceLessThanTrigger: Double? = null,
+    var priceMoreThanTrigger: Double? = null,
+    var finalized: Boolean = false,
 )

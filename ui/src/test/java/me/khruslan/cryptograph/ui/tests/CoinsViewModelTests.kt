@@ -5,6 +5,7 @@ import me.khruslan.cryptograph.data.fixtures.STUB_COINS
 import me.khruslan.cryptograph.ui.R
 import me.khruslan.cryptograph.ui.coins.main.CoinsViewModel
 import me.khruslan.cryptograph.ui.fakes.FakeCoinsRepository
+import me.khruslan.cryptograph.ui.fakes.FakeNotificationsRepository
 import me.khruslan.cryptograph.ui.rules.MainDispatcherRule
 import me.khruslan.cryptograph.ui.util.UiState
 import org.junit.Before
@@ -17,12 +18,14 @@ internal class CoinsViewModelTests {
     val mainDispatcherRule = MainDispatcherRule()
 
     private lateinit var fakeCoinsRepository: FakeCoinsRepository
+    private lateinit var fakeNotificationsRepository: FakeNotificationsRepository
     private lateinit var viewModel: CoinsViewModel
 
     @Before
     fun setUp() {
         fakeCoinsRepository = FakeCoinsRepository()
-        viewModel = CoinsViewModel(fakeCoinsRepository)
+        fakeNotificationsRepository = FakeNotificationsRepository()
+        viewModel = CoinsViewModel(fakeCoinsRepository, fakeNotificationsRepository)
     }
 
     @Test
@@ -98,5 +101,12 @@ internal class CoinsViewModelTests {
 
         val warningMessageRes = viewModel.coinsState.warningMessageRes
         assertThat(warningMessageRes).isNull()
+    }
+
+    @Test
+    fun `Load unread notifications`() {
+        val expectedUnreadNotificationsCount = fakeNotificationsRepository.unreadNotificationsCount
+        val actualUnreadNotificationsCount = viewModel.coinsState.unreadNotificationsCount
+        assertThat(actualUnreadNotificationsCount).isEqualTo(expectedUnreadNotificationsCount)
     }
 }

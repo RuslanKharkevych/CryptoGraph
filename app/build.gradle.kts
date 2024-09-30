@@ -53,5 +53,6 @@ dependencies {
     implementation(libs.coil.compose)
     coreLibraryDesugaring(libs.desugaring)
     implementation(libs.koin.android)
+    implementation(libs.koin.workManager)
     implementation(libs.material)
 }

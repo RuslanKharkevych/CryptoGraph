@@ -1,4 +1,4 @@
-package me.khruslan.cryptograph.ui.util
+package me.khruslan.cryptograph.ui.util.state
 
 import androidx.annotation.StringRes
 import androidx.compose.material3.SnackbarHostState

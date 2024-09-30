@@ -5,14 +5,19 @@ import kotlinx.coroutines.withContext
 import me.khruslan.cryptograph.base.Logger
 import me.khruslan.cryptograph.data.common.DataValidationException
 import me.khruslan.cryptograph.data.notifications.Notification
+import me.khruslan.cryptograph.data.notifications.NotificationStatus
 import me.khruslan.cryptograph.data.notifications.NotificationTrigger
 import me.khruslan.cryptograph.data.notifications.local.NotificationDto
+import java.time.Clock
 import java.time.DateTimeException
 import java.time.LocalDate
 
 private const val LOG_TAG = "NotificationsMapper"
 
-internal class NotificationsMapper(private val dispatcher: CoroutineDispatcher) {
+internal class NotificationsMapper(
+    private val dispatcher: CoroutineDispatcher,
+    private val clock: Clock,
+) {
 
     suspend fun mapNotifications(
         notifications: List<NotificationDto>,
@@ -42,13 +47,15 @@ internal class NotificationsMapper(private val dispatcher: CoroutineDispatcher) 
                 coinUuid = notification.coinId,
                 title = notification.title,
                 createdAtDate = notification.createdAt.toString(),
+                completedAtDate = notification.completedAt?.toString(),
                 expirationDate = notification.expirationDate?.toString(),
-                priceLessThenTrigger = notification.trigger.targetPrice.takeIf {
-                    notification.trigger is NotificationTrigger.PriceLessThen
+                priceLessThanTrigger = notification.trigger.targetPrice.takeIf {
+                    notification.trigger is NotificationTrigger.PriceLessThan
                 },
-                priceMoreThenTrigger = notification.trigger.targetPrice.takeIf {
-                    notification.trigger is NotificationTrigger.PriceMoreThen
+                priceMoreThanTrigger = notification.trigger.targetPrice.takeIf {
+                    notification.trigger is NotificationTrigger.PriceMoreThan
                 },
+                finalized = isFinalized(notification)
             )
         }
     }
@@ -59,11 +66,14 @@ internal class NotificationsMapper(private val dispatcher: CoroutineDispatcher) 
             coinId = notificationDto.coinUuid,
             title = notificationDto.title,
             createdAt = mapDate(notificationDto.createdAtDate),
+            completedAt = notificationDto.completedAtDate?.let(::mapDate),
             expirationDate = notificationDto.expirationDate?.let(::mapDate),
             trigger = mapTrigger(
-                priceLessThen = notificationDto.priceLessThenTrigger,
-                priceMoreThen = notificationDto.priceMoreThenTrigger
-            )
+                priceLessThan = notificationDto.priceLessThanTrigger,
+                priceMoreThan = notificationDto.priceMoreThanTrigger
+            ),
+            status = mapStatus(notificationDto),
+            unread = isUnread(notificationDto)
         )
     }
 
@@ -84,15 +94,37 @@ internal class NotificationsMapper(private val dispatcher: CoroutineDispatcher) 
         }
     }
 
-    private fun mapTrigger(priceLessThen: Double?, priceMoreThen: Double?): NotificationTrigger {
-        require((priceLessThen == null) xor (priceMoreThen == null)) {
-            "Invalid trigger (priceLessThen: $priceMoreThen, priceMoreThen: $priceMoreThen)"
+    private fun mapTrigger(priceLessThan: Double?, priceMoreThan: Double?): NotificationTrigger {
+        require((priceLessThan == null) xor (priceMoreThan == null)) {
+            "Invalid trigger (priceLessThan: $priceMoreThan, priceMoreThan: $priceMoreThan)"
         }
 
-        return if (priceLessThen != null) {
-            NotificationTrigger.PriceLessThen(priceLessThen)
+        return if (priceLessThan != null) {
+            NotificationTrigger.PriceLessThan(priceLessThan)
         } else {
-            NotificationTrigger.PriceMoreThen(priceMoreThen!!)
+            NotificationTrigger.PriceMoreThan(priceMoreThan!!)
         }
+    }
+
+    private fun mapStatus(notification: NotificationDto): NotificationStatus {
+        return when {
+            notification.completedAtDate != null -> NotificationStatus.Completed
+            isExpired(notification) -> NotificationStatus.Expired
+            else -> NotificationStatus.Pending
+        }
+    }
+
+    private fun isFinalized(notification: Notification): Boolean {
+        return notification.status != NotificationStatus.Pending && !notification.unread
+    }
+
+    private fun isUnread(notification: NotificationDto): Boolean {
+        val status = mapStatus(notification)
+        return status != NotificationStatus.Pending && !notification.finalized
+    }
+
+    private fun isExpired(notification: NotificationDto): Boolean {
+        val expirationDate = notification.expirationDate?.let(::mapDate) ?: return false
+        return LocalDate.now(clock).isAfter(expirationDate)
     }
 }

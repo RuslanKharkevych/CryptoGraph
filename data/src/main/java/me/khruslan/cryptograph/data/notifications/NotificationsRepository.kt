@@ -6,7 +6,7 @@ import me.khruslan.cryptograph.data.notifications.local.NotificationsLocalDataSo
 import me.khruslan.cryptograph.data.notifications.mapper.NotificationsMapper
 
 interface NotificationsRepository {
-    fun getNotifications(coinId: String?): Flow<List<Notification>>
+    fun getNotifications(coinId: String? = null): Flow<List<Notification>>
     suspend fun getNotification(id: Long): Notification
     suspend fun addOrUpdateNotification(notification: Notification)
     suspend fun deleteNotification(id: Long)

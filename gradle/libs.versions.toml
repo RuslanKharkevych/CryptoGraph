@@ -21,6 +21,7 @@ splashScreen = "1.0.1"
 truth = "1.4.4"
 turbine = "1.1.0"
 vico = "1.15.0"
+workRuntime = "2.9.1"
 
 [libraries]
 activityCompose = { group = "androidx.activity", name = "activity-compose", version.ref = "activityCompose" }
@@ -39,6 +40,7 @@ desugaring = { group = "com.android.tools", name = "desugar_jdk_libs", version.r
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 koin-android = { group = "io.insert-koin", name = "koin-android", version.ref = "koin" }
 koin-composeNavigation = { group = "io.insert-koin", name = "koin-androidx-compose-navigation", version.ref = "koin" }
+koin-workManager = { group = "io.insert-koin", name = "koin-androidx-workmanager", version.ref = "koin" }
 lifecycleViewModel = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-compose", version.ref = "lifecycle" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 navigationCompose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigationCompose" }
@@ -51,6 +53,7 @@ splashScreen = { group = "androidx.core", name = "core-splashscreen", version.re
 truth = { group = "com.google.truth", name = "truth", version.ref = "truth" }
 turbine = { group = "app.cash.turbine", name = "turbine", version.ref = "turbine" }
 vico = { group = "com.patrykandpatrick.vico", name = "compose-m3", version.ref = "vico" }
+workRuntime = { group = "androidx.work", name = "work-runtime-ktx", version.ref = "workRuntime" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

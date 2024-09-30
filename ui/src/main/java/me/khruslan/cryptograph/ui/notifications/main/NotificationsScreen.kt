@@ -52,10 +52,10 @@ import me.khruslan.cryptograph.data.notifications.Notification
 import me.khruslan.cryptograph.data.notifications.NotificationTrigger
 import me.khruslan.cryptograph.ui.R
 import me.khruslan.cryptograph.ui.core.CryptoGraphTheme
-import me.khruslan.cryptograph.ui.notifications.permission.NotificationPermissionState
-import me.khruslan.cryptograph.ui.notifications.permission.PermissionStatus
-import me.khruslan.cryptograph.ui.notifications.permission.rememberNotificationPermissionState
-import me.khruslan.cryptograph.ui.notifications.permission.shouldShowRationale
+import me.khruslan.cryptograph.ui.notifications.shared.NotificationPermissionState
+import me.khruslan.cryptograph.ui.notifications.shared.PermissionStatus
+import me.khruslan.cryptograph.ui.notifications.shared.rememberNotificationPermissionState
+import me.khruslan.cryptograph.ui.notifications.shared.shouldShowRationale
 import me.khruslan.cryptograph.ui.util.ArrowDown
 import me.khruslan.cryptograph.ui.util.CurrencyBitcoin
 import me.khruslan.cryptograph.ui.util.PreviewScreenSizesLightDark
@@ -64,7 +64,7 @@ import me.khruslan.cryptograph.ui.util.components.FullScreenError
 import me.khruslan.cryptograph.ui.util.components.FullScreenLoader
 import me.khruslan.cryptograph.ui.util.getCurrentLocale
 import me.khruslan.cryptograph.ui.util.previewPlaceholder
-import me.khruslan.cryptograph.ui.util.rememberMessageState
+import me.khruslan.cryptograph.ui.util.state.rememberMessageState
 import me.khruslan.cryptograph.ui.util.toColor
 import java.time.format.DateTimeFormatter
 
@@ -374,11 +374,11 @@ private val NotificationTrigger.label: String
     @Composable
     get() {
         val resId = when (this) {
-            is NotificationTrigger.PriceLessThen ->
-                R.string.notification_trigger_price_less_then_desc
+            is NotificationTrigger.PriceLessThan ->
+                R.string.notification_trigger_price_less_than_desc
 
-            is NotificationTrigger.PriceMoreThen ->
-                R.string.notification_trigger_price_more_then_desc
+            is NotificationTrigger.PriceMoreThan ->
+                R.string.notification_trigger_price_more_than_desc
         }
         val priceString = targetPrice.toBigDecimal().toPlainString()
 

@@ -3,11 +3,13 @@ package me.khruslan.cryptograph
 import android.app.Application
 import coil.ImageLoader
 import coil.ImageLoaderFactory
+import me.khruslan.cryptograph.data.workers.UpdateNotificationsWorker
 import me.khruslan.cryptograph.data.dataModule
 import me.khruslan.cryptograph.ui.core.buildImageLoader
 import me.khruslan.cryptograph.ui.uiModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
+import org.koin.androidx.workmanager.koin.workManagerFactory
 import org.koin.core.context.startKoin
 import org.koin.core.logger.Level
 
@@ -19,8 +21,12 @@ internal class CryptoGraphApplication : Application(), ImageLoaderFactory {
         startKoin {
             androidLogger(level = if (BuildConfig.DEBUG) Level.DEBUG else Level.NONE)
             androidContext(this@CryptoGraphApplication)
+            workManagerFactory()
             modules(appModule, dataModule, uiModule)
         }
+
+        // TODO: Also launch this flow every time coins are fetched
+        UpdateNotificationsWorker.launch(this)
     }
 
     override fun newImageLoader(): ImageLoader {
