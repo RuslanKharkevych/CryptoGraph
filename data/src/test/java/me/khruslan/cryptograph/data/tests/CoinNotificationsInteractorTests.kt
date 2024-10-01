@@ -8,22 +8,22 @@ import kotlinx.coroutines.test.runTest
 import me.khruslan.cryptograph.data.fakes.FakeCoinsRepository
 import me.khruslan.cryptograph.data.fakes.FakeNotificationsRepository
 import me.khruslan.cryptograph.data.fixtures.STUB_COIN_NOTIFICATIONS
-import me.khruslan.cryptograph.data.managers.CoinNotificationsManager
-import me.khruslan.cryptograph.data.managers.CoinNotificationsManagerImpl
-import me.khruslan.cryptograph.data.managers.CoinNotificationsMapper
+import me.khruslan.cryptograph.data.interactors.combine.CoinNotificationsInteractor
+import me.khruslan.cryptograph.data.interactors.combine.CoinNotificationsInteractorImpl
+import me.khruslan.cryptograph.data.interactors.combine.CoinNotificationsMapper
 import org.junit.Before
 import org.junit.Test
 
-internal class CoinNotificationsManagerTests {
+internal class CoinNotificationsInteractorTests {
 
-    private lateinit var coinNotificationsManager: CoinNotificationsManager
+    private lateinit var interactor: CoinNotificationsInteractor
 
     @OptIn(ExperimentalCoroutinesApi::class)
     @Before
     fun setUp() {
         val dispatcher = UnconfinedTestDispatcher()
 
-        coinNotificationsManager = CoinNotificationsManagerImpl(
+        interactor = CoinNotificationsInteractorImpl(
             coinsRepository = FakeCoinsRepository(),
             notificationsRepository = FakeNotificationsRepository(),
             mapper = CoinNotificationsMapper(dispatcher)
@@ -32,7 +32,7 @@ internal class CoinNotificationsManagerTests {
 
     @Test
     fun `Get coin notifications`() = runTest {
-        coinNotificationsManager.getCoinNotifications().test {
+        interactor.getCoinNotifications().test {
             assertThat(awaitItem()).isEqualTo(STUB_COIN_NOTIFICATIONS)
         }
     }
@@ -40,7 +40,7 @@ internal class CoinNotificationsManagerTests {
     @Test
     fun `Filter coin notifications`() = runTest {
         val coinNotification = STUB_COIN_NOTIFICATIONS[0]
-        coinNotificationsManager.getCoinNotifications(coinNotification.coin.id).test {
+        interactor.getCoinNotifications(coinNotification.coin.id).test {
             assertThat(awaitItem()).containsExactly(coinNotification)
         }
     }

@@ -4,7 +4,7 @@ import androidx.lifecycle.SavedStateHandle
 import com.google.common.truth.Truth.assertThat
 import me.khruslan.cryptograph.data.fixtures.STUB_COIN_NOTIFICATIONS
 import me.khruslan.cryptograph.ui.R
-import me.khruslan.cryptograph.ui.fakes.FakeCoinNotificationsManager
+import me.khruslan.cryptograph.ui.fakes.FakeCoinNotificationsInteractor
 import me.khruslan.cryptograph.ui.notifications.main.NotificationsViewModel
 import me.khruslan.cryptograph.ui.rules.MainDispatcherRule
 import me.khruslan.cryptograph.ui.util.UiState
@@ -17,14 +17,14 @@ internal class NotificationsViewModelTests {
     @get:Rule
     val mainDispatcherRule = MainDispatcherRule()
 
-    private lateinit var fakeCoinNotificationsManager: FakeCoinNotificationsManager
+    private lateinit var fakeCoinNotificationsInteractor: FakeCoinNotificationsInteractor
     private lateinit var viewModel: NotificationsViewModel
 
     @Before
     fun setUp() {
         val savedStateHandle = SavedStateHandle()
-        fakeCoinNotificationsManager = FakeCoinNotificationsManager()
-        viewModel = NotificationsViewModel(savedStateHandle, fakeCoinNotificationsManager)
+        fakeCoinNotificationsInteractor = FakeCoinNotificationsInteractor()
+        viewModel = NotificationsViewModel(savedStateHandle, fakeCoinNotificationsInteractor)
     }
 
     @Test
@@ -38,7 +38,7 @@ internal class NotificationsViewModelTests {
 
     @Test
     fun `Reload notifications - failure`() {
-        fakeCoinNotificationsManager.isNetworkReachable = false
+        fakeCoinNotificationsInteractor.isNetworkReachable = false
         viewModel.reloadNotifications()
 
         val expectedState = UiState.Error(R.string.network_error_msg)

@@ -1,4 +1,4 @@
-package me.khruslan.cryptograph.data.managers
+package me.khruslan.cryptograph.data.interactors.combine
 
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext

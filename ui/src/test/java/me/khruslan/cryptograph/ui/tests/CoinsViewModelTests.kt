@@ -6,6 +6,7 @@ import me.khruslan.cryptograph.ui.R
 import me.khruslan.cryptograph.ui.coins.main.CoinsViewModel
 import me.khruslan.cryptograph.ui.fakes.FakeCoinsRepository
 import me.khruslan.cryptograph.ui.fakes.FakeNotificationsRepository
+import me.khruslan.cryptograph.ui.fakes.FakeUpdateNotificationsInteractor
 import me.khruslan.cryptograph.ui.rules.MainDispatcherRule
 import me.khruslan.cryptograph.ui.util.UiState
 import org.junit.Before
@@ -19,13 +20,20 @@ internal class CoinsViewModelTests {
 
     private lateinit var fakeCoinsRepository: FakeCoinsRepository
     private lateinit var fakeNotificationsRepository: FakeNotificationsRepository
+    private lateinit var fakeUpdateNotificationsInteractor: FakeUpdateNotificationsInteractor
     private lateinit var viewModel: CoinsViewModel
 
     @Before
     fun setUp() {
         fakeCoinsRepository = FakeCoinsRepository()
         fakeNotificationsRepository = FakeNotificationsRepository()
-        viewModel = CoinsViewModel(fakeCoinsRepository, fakeNotificationsRepository)
+        fakeUpdateNotificationsInteractor = FakeUpdateNotificationsInteractor()
+
+        viewModel = CoinsViewModel(
+            coinsRepository = fakeCoinsRepository,
+            notificationsRepository = fakeNotificationsRepository,
+            updateNotificationsInteractor = fakeUpdateNotificationsInteractor
+        )
     }
 
     @Test
@@ -108,5 +116,11 @@ internal class CoinsViewModelTests {
         val expectedUnreadNotificationsCount = fakeNotificationsRepository.unreadNotificationsCount
         val actualUnreadNotificationsCount = viewModel.coinsState.unreadNotificationsCount
         assertThat(actualUnreadNotificationsCount).isEqualTo(expectedUnreadNotificationsCount)
+    }
+
+    @Test
+    fun `Update notifications`() {
+        val notificationsUpdated = fakeUpdateNotificationsInteractor.notificationsUpdated
+        assertThat(notificationsUpdated).isTrue()
     }
 }

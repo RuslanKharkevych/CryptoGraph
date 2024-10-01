@@ -1,6 +1,6 @@
 package me.khruslan.cryptograph.data.fixtures
 
-import me.khruslan.cryptograph.data.managers.CoinNotification
+import me.khruslan.cryptograph.data.interactors.combine.CoinNotification
 
 val PREVIEW_COIN_NOTIFICATIONS
     get() = PREVIEW_NOTIFICATIONS.mapIndexed { index, notification ->

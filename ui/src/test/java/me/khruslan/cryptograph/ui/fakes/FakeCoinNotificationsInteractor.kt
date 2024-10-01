@@ -5,10 +5,10 @@ import kotlinx.coroutines.flow.flowOf
 import me.khruslan.cryptograph.data.common.DataException
 import me.khruslan.cryptograph.data.common.ErrorType
 import me.khruslan.cryptograph.data.fixtures.STUB_COIN_NOTIFICATIONS
-import me.khruslan.cryptograph.data.managers.CoinNotification
-import me.khruslan.cryptograph.data.managers.CoinNotificationsManager
+import me.khruslan.cryptograph.data.interactors.combine.CoinNotification
+import me.khruslan.cryptograph.data.interactors.combine.CoinNotificationsInteractor
 
-class FakeCoinNotificationsManager : CoinNotificationsManager {
+class FakeCoinNotificationsInteractor : CoinNotificationsInteractor {
     var isNetworkReachable = true
 
     override fun getCoinNotifications(coinId: String?): Flow<List<CoinNotification>> {

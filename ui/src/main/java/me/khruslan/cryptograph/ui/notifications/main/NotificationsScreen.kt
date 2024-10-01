@@ -47,7 +47,7 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import me.khruslan.cryptograph.data.coins.Coin
 import me.khruslan.cryptograph.data.fixtures.PREVIEW_COIN_NOTIFICATIONS
-import me.khruslan.cryptograph.data.managers.CoinNotification
+import me.khruslan.cryptograph.data.interactors.combine.CoinNotification
 import me.khruslan.cryptograph.data.notifications.Notification
 import me.khruslan.cryptograph.data.notifications.NotificationTrigger
 import me.khruslan.cryptograph.ui.R

@@ -5,11 +5,16 @@ import kotlinx.coroutines.flow.flowOf
 import me.khruslan.cryptograph.data.coins.Coin
 import me.khruslan.cryptograph.data.coins.CoinPrice
 import me.khruslan.cryptograph.data.coins.CoinsRepository
+import me.khruslan.cryptograph.data.common.DataException
+import me.khruslan.cryptograph.data.common.ErrorType
 import me.khruslan.cryptograph.data.fixtures.STUB_COINS
 
 internal class FakeCoinsRepository : CoinsRepository {
 
+    var isNetworkReachable = true
+
     override fun getCoins(id: String?): Flow<List<Coin>> {
+        checkIfNetworkIsReachable()
         return flowOf(STUB_COINS.filter { id?.equals(it.id) ?: true })
     }
 
@@ -23,5 +28,9 @@ internal class FakeCoinsRepository : CoinsRepository {
 
     override suspend fun getCoinHistory(id: String): List<CoinPrice> {
         throw UnsupportedOperationException()
+    }
+
+    private fun checkIfNetworkIsReachable() {
+        if (!isNetworkReachable) throw object : DataException(ErrorType.Network) {}
     }
 }

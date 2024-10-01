@@ -1,19 +1,19 @@
-package me.khruslan.cryptograph.data.managers
+package me.khruslan.cryptograph.data.interactors.combine
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import me.khruslan.cryptograph.data.coins.CoinsRepository
 import me.khruslan.cryptograph.data.notifications.NotificationsRepository
 
-interface CoinNotificationsManager {
+interface CoinNotificationsInteractor {
     fun getCoinNotifications(coinId: String? = null): Flow<List<CoinNotification>>
 }
 
-internal class CoinNotificationsManagerImpl(
+internal class CoinNotificationsInteractorImpl(
     private val coinsRepository: CoinsRepository,
     private val notificationsRepository: NotificationsRepository,
     private val mapper: CoinNotificationsMapper,
-) : CoinNotificationsManager {
+) : CoinNotificationsInteractor {
 
     override fun getCoinNotifications(coinId: String?): Flow<List<CoinNotification>> {
         val coinsFlow = coinsRepository.getCoins(coinId)
