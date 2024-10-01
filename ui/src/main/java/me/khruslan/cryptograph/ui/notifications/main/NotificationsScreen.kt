@@ -263,7 +263,7 @@ private fun NotificationCard(
     Row(verticalAlignment = Alignment.CenterVertically) {
         AnimatedVisibility(
             modifier = Modifier.padding(start = 16.dp),
-            visible = notification.unread,
+            visible = !notification.isPending,
             content = { Badge() }
         )
         Card(
@@ -277,7 +277,8 @@ private fun NotificationCard(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(16.dp),
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 Column(
                     modifier = Modifier.weight(1f),

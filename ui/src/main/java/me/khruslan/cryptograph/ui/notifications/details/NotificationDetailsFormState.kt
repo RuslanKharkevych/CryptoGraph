@@ -155,10 +155,9 @@ internal class NotificationDetailsFormStateImpl(
             title = notificationTitle,
             createdAt = createdAt ?: LocalDate.now(clock),
             completedAt = null,
-            expirationDate = expirationDate,
+            expirationDate = expirationDate, // TODO: Validate expiration date is not in the past
             trigger = buildTrigger(triggerType, triggerPrice.toDouble()),
             status = NotificationStatus.Pending,
-            unread = false
         )
 
         onSuccess(notification)

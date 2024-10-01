@@ -26,7 +26,7 @@ internal class NotificationsViewModelTests {
     fun setUp() {
         val savedStateHandle = SavedStateHandle()
         fakeCoinNotificationsInteractor = FakeCoinNotificationsInteractor()
-        fakeCoinNotificationsInteractor = FakeCoinNotificationsInteractor()
+        fakeCompletedNotificationsInteractor = FakeCompletedNotificationsInteractor()
 
         viewModel = NotificationsViewModel(
             savedStateHandle = savedStateHandle,

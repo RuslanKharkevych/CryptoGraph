@@ -11,13 +11,15 @@ data class Notification(
     val expirationDate: LocalDate?,
     val trigger: NotificationTrigger,
     val status: NotificationStatus,
-    val unread: Boolean,
-)
+) {
+    val isPending
+        get() = status == NotificationStatus.Pending
+}
 
-enum class NotificationStatus {
-    Pending,
-    Completed,
-    Expired
+enum class NotificationStatus(val sortOrder: Int) {
+    Completed(1),
+    Expired(2),
+    Pending(3)
 }
 
 sealed class NotificationTrigger(val targetPrice: Double) {

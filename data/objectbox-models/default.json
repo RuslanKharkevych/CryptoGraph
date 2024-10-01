@@ -4,72 +4,67 @@
   "_note3": "If you have VCS merge conflicts, you must resolve them according to ObjectBox docs.",
   "entities": [
     {
-      "id": "1:547955057997265078",
-      "lastPropertyId": "9:5409619478231422256",
+      "id": "1:3532170667002877391",
+      "lastPropertyId": "8:6597489707475892362",
       "name": "NotificationDto",
       "properties": [
         {
-          "id": "1:7106719985321339603",
+          "id": "1:4813127567893691019",
           "name": "id",
           "type": 6,
           "flags": 1
         },
         {
-          "id": "2:2295596039666384630",
+          "id": "2:7558580984349494341",
           "name": "coinUuid",
           "type": 9
         },
         {
-          "id": "3:277988638767865834",
+          "id": "3:8312212814421887270",
           "name": "title",
           "type": 9
         },
         {
-          "id": "4:2188886930306334913",
+          "id": "4:7329244020704845254",
           "name": "createdAtDate",
           "type": 9
         },
         {
-          "id": "5:3898318629407691045",
+          "id": "5:7046849055914572038",
           "name": "completedAtDate",
           "type": 9
         },
         {
-          "id": "6:7459764212895865478",
+          "id": "6:1841485399794281325",
           "name": "expirationDate",
           "type": 9
         },
         {
-          "id": "7:5457335865504948753",
+          "id": "7:3742890724307396830",
           "name": "priceLessThanTrigger",
           "type": 8
         },
         {
-          "id": "8:8438210456316855998",
+          "id": "8:6597489707475892362",
           "name": "priceMoreThanTrigger",
           "type": 8
-        },
-        {
-          "id": "9:5409619478231422256",
-          "name": "finalized",
-          "type": 1
         }
       ],
       "relations": []
     },
     {
-      "id": "2:6692566711218077189",
-      "lastPropertyId": "2:4456877149738564664",
+      "id": "2:8839352983041630078",
+      "lastPropertyId": "2:2377813775812018823",
       "name": "PinnedCoinDto",
       "properties": [
         {
-          "id": "1:3142253737326082982",
+          "id": "1:4517483614697501031",
           "name": "id",
           "type": 6,
           "flags": 1
         },
         {
-          "id": "2:4456877149738564664",
+          "id": "2:2377813775812018823",
           "name": "coinUuid",
           "type": 9
         }
@@ -77,28 +72,28 @@
       "relations": []
     },
     {
-      "id": "3:1770843264139522639",
-      "lastPropertyId": "4:3270893584831329894",
+      "id": "3:4624437969011856713",
+      "lastPropertyId": "4:3545150834547636115",
       "name": "PreferencesDto",
       "properties": [
         {
-          "id": "1:8569715760183005237",
+          "id": "1:7867355828629217571",
           "name": "id",
           "type": 6,
           "flags": 1
         },
         {
-          "id": "2:5270545270919432340",
+          "id": "2:6434219769733417314",
           "name": "themeValue",
           "type": 5
         },
         {
-          "id": "3:7015457529745273918",
+          "id": "3:8521171758235067067",
           "name": "chartStyleValue",
           "type": 5
         },
         {
-          "id": "4:3270893584831329894",
+          "id": "4:3545150834547636115",
           "name": "chartPeriodValue",
           "type": 5
         }
@@ -106,7 +101,7 @@
       "relations": []
     }
   ],
-  "lastEntityId": "3:1770843264139522639",
+  "lastEntityId": "3:4624437969011856713",
   "lastIndexId": "0:0",
   "lastRelationId": "0:0",
   "lastSequenceId": "0:0",

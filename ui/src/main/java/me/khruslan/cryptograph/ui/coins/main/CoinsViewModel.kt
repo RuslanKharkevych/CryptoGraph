@@ -77,7 +77,7 @@ internal class CoinsViewModel(
         viewModelScope.launch {
             notificationsRepository.getNotifications().collect { notifications ->
                 _coinsState.unreadNotificationsCount = notifications.count { notification ->
-                    notification.unread
+                    !notification.isPending
                 }
             }
         }

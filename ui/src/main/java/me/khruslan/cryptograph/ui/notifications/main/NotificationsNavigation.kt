@@ -111,6 +111,7 @@ internal fun NavGraphBuilder.notificationsScreen(
             },
             onNotificationClick = navInterceptor { (coin, notification) ->
                 val coinInfo = CoinInfo.fromCoin(coin)
+                // TODO: Navigate to NotificationReport if status is not Pending
                 onNotificationDetails(notification, coinInfo, !args.coinSelected)
             },
             onCloseActionClick = navInterceptor(onCloseActionClick),

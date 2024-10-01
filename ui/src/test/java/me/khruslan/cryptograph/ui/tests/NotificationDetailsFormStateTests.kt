@@ -60,7 +60,7 @@ internal class NotificationDetailsFormStateTests {
 
     @Test
     fun `Build notification - success`() {
-        val (coin, notification) = STUB_COIN_NOTIFICATIONS[0]
+        val (coin, notification) = STUB_COIN_NOTIFICATIONS[2]
         initFormState(coin)
 
         with(formState) {

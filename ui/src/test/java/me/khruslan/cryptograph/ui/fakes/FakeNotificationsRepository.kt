@@ -17,9 +17,6 @@ internal class FakeNotificationsRepository : NotificationsRepository {
     var notificationsAdded = 0
     var notificationsDeleted = 0
 
-    val unreadNotificationsCount
-        get() = notificationsFlow.value.count { it.unread }
-
     private val notificationsFlow = MutableStateFlow(STUB_NOTIFICATIONS)
 
     override fun getNotifications(coinId: String?): Flow<List<Notification>> {
@@ -50,6 +47,14 @@ internal class FakeNotificationsRepository : NotificationsRepository {
         checkIfDataIsValid()
         notificationsFlow.update { it - getNotification(id) }
         notificationsDeleted++
+    }
+
+    fun getUnreadNotificationsCount(coinId: String? = null): Int {
+        return notificationsFlow.value.filter {
+            coinId?.equals(it.coinId) ?: true
+        }.count {
+            !it.isPending
+        }
     }
 
     private fun checkIfDataIsValid() {

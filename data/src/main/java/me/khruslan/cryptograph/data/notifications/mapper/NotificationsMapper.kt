@@ -25,7 +25,7 @@ internal class NotificationsMapper(
         return withContext(dispatcher) {
             notifications.mapNotNull { notificationDto ->
                 mapNotificationOrNull(notificationDto)
-            }.sortedByDescending { it.id } // TODO: Sort by status & unread flag
+            }.sortedWith(notificationsComparator())
         }
     }
 
@@ -54,8 +54,7 @@ internal class NotificationsMapper(
                 },
                 priceMoreThanTrigger = notification.trigger.targetPrice.takeIf {
                     notification.trigger is NotificationTrigger.PriceMoreThan
-                },
-                finalized = isFinalized(notification)
+                }
             )
         }
     }
@@ -72,8 +71,7 @@ internal class NotificationsMapper(
                 priceLessThan = notificationDto.priceLessThanTrigger,
                 priceMoreThan = notificationDto.priceMoreThanTrigger
             ),
-            status = mapStatus(notificationDto),
-            unread = isUnread(notificationDto)
+            status = mapStatus(notificationDto)
         )
     }
 
@@ -114,17 +112,12 @@ internal class NotificationsMapper(
         }
     }
 
-    private fun isFinalized(notification: Notification): Boolean {
-        return notification.status != NotificationStatus.Pending && !notification.unread
-    }
-
-    private fun isUnread(notification: NotificationDto): Boolean {
-        val status = mapStatus(notification)
-        return status != NotificationStatus.Pending && !notification.finalized
-    }
-
     private fun isExpired(notification: NotificationDto): Boolean {
         val expirationDate = notification.expirationDate?.let(::mapDate) ?: return false
         return LocalDate.now(clock).isAfter(expirationDate)
+    }
+
+    private fun notificationsComparator(): Comparator<Notification> {
+        return compareBy<Notification> { it.status.sortOrder }.thenByDescending { it.id }
     }
 }

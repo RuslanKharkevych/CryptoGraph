@@ -17,7 +17,6 @@ val PREVIEW_NOTIFICATIONS
             expirationDate = LocalDate.parse("2025-11-10"),
             trigger = NotificationTrigger.PriceMoreThan(600.0),
             status = NotificationStatus.Pending,
-            unread = false
         ),
         Notification(
             id = 2L,
@@ -28,7 +27,6 @@ val PREVIEW_NOTIFICATIONS
             expirationDate = null,
             trigger = NotificationTrigger.PriceLessThan(200.0),
             status = NotificationStatus.Pending,
-            unread = false
         ),
         Notification(
             id = 1L,
@@ -39,7 +37,6 @@ val PREVIEW_NOTIFICATIONS
             expirationDate = null,
             trigger = NotificationTrigger.PriceLessThan(0.99),
             status = NotificationStatus.Pending,
-            unread = false
         ),
     )
 
@@ -50,11 +47,10 @@ val STUB_NOTIFICATIONS
             coinId = "Qwsogvtv82FCd",
             title = "Bitcoin < 50000$",
             createdAt = LocalDate.parse("2024-09-13"),
-            completedAt = null,
+            completedAt = LocalDate.parse("2024-09-25"),
             expirationDate = null,
             trigger = NotificationTrigger.PriceLessThan(50000.0),
-            status = NotificationStatus.Pending,
-            unread = false
+            status = NotificationStatus.Completed,
         ),
         Notification(
             id = 5L,
@@ -65,18 +61,16 @@ val STUB_NOTIFICATIONS
             expirationDate = LocalDate.parse("2024-09-20"),
             trigger = NotificationTrigger.PriceMoreThan(4000.0),
             status = NotificationStatus.Expired,
-            unread = true
         ),
         Notification(
             id = 4L,
             coinId = "HIVsRcGKkPFtW",
             title = "Tether USD < 1$",
             createdAt = LocalDate.parse("2024-09-15"),
-            completedAt = LocalDate.parse("2024-09-25"),
+            completedAt = null,
             expirationDate = null,
             trigger = NotificationTrigger.PriceLessThan(1.0),
-            status = NotificationStatus.Completed,
-            unread = false
+            status = NotificationStatus.Pending,
         )
     )
 
@@ -87,11 +81,10 @@ internal val STUB_DTO_NOTIFICATIONS
             coinUuid = "Qwsogvtv82FCd",
             title = "Bitcoin < 50000$",
             createdAtDate = "2024-09-13",
-            completedAtDate = null,
+            completedAtDate = "2024-09-25",
             expirationDate = null,
             priceLessThanTrigger = 50000.0,
             priceMoreThanTrigger = null,
-            finalized = false
         ),
         NotificationDto(
             id = 5L,
@@ -102,17 +95,15 @@ internal val STUB_DTO_NOTIFICATIONS
             expirationDate = "2024-09-20",
             priceLessThanTrigger = null,
             priceMoreThanTrigger = 4000.0,
-            finalized = false
         ),
         NotificationDto(
             id = 4L,
             coinUuid = "HIVsRcGKkPFtW",
             title = "Tether USD < 1$",
             createdAtDate = "2024-09-15",
-            completedAtDate = "2024-09-25",
+            completedAtDate = null,
             expirationDate = null,
             priceLessThanTrigger = 1.0,
             priceMoreThanTrigger = null,
-            finalized = true
         ),
     )

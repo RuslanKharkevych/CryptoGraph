@@ -13,5 +13,4 @@ internal data class NotificationDto(
     var expirationDate: String? = null,
     var priceLessThanTrigger: Double? = null,
     var priceMoreThanTrigger: Double? = null,
-    var finalized: Boolean = false,
 )

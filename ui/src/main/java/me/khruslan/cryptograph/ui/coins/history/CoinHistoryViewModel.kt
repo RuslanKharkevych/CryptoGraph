@@ -96,7 +96,7 @@ internal class CoinHistoryViewModel(
         viewModelScope.launch {
             notificationsRepository.getNotifications(args.coinId).collect { notifications ->
                 _coinHistoryState.unreadNotificationsCount = notifications.count { notification ->
-                    notification.unread
+                    !notification.isPending
                 }
             }
         }

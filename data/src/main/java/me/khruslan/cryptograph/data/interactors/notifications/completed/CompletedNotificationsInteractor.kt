@@ -8,7 +8,6 @@ import me.khruslan.cryptograph.data.coins.Coin
 import me.khruslan.cryptograph.data.coins.CoinsRepository
 import me.khruslan.cryptograph.data.common.DataException
 import me.khruslan.cryptograph.data.notifications.Notification
-import me.khruslan.cryptograph.data.notifications.NotificationStatus
 import me.khruslan.cryptograph.data.notifications.NotificationTrigger
 import me.khruslan.cryptograph.data.notifications.NotificationsRepository
 import java.time.LocalDate
@@ -82,7 +81,7 @@ internal class CompletedNotificationsInteractorImpl(
 
     private suspend fun loadPendingNotifications(): List<Notification> {
         val notifications = notificationsRepository.getNotifications().takeSingle()
-        return notifications.filter { it.status == NotificationStatus.Pending }
+        return notifications.filter { it.isPending }
     }
 
     private suspend fun loadCoins(): List<Coin> {

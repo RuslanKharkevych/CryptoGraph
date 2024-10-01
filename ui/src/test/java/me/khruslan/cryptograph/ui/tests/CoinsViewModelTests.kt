@@ -113,7 +113,8 @@ internal class CoinsViewModelTests {
 
     @Test
     fun `Load unread notifications`() {
-        val expectedUnreadNotificationsCount = fakeNotificationsRepository.unreadNotificationsCount
+        val expectedUnreadNotificationsCount =
+            fakeNotificationsRepository.getUnreadNotificationsCount()
         val actualUnreadNotificationsCount = viewModel.coinsState.unreadNotificationsCount
         assertThat(actualUnreadNotificationsCount).isEqualTo(expectedUnreadNotificationsCount)
     }
