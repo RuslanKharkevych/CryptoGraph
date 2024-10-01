@@ -4,13 +4,13 @@ import me.khruslan.cryptograph.data.interactors.notifications.completed.Complete
 import me.khruslan.cryptograph.data.notifications.Notification
 
 internal class FakeCompletedNotificationsInteractor : CompletedNotificationsInteractor {
-    var notificationsUpdated = false
+    var notificationsRefreshed = false
 
     override suspend fun getCompletedNotifications(): List<Notification> {
         throw UnsupportedOperationException()
     }
 
     override suspend fun tryRefreshCompletedNotifications() {
-        notificationsUpdated = true
+        notificationsRefreshed = true
     }
 }

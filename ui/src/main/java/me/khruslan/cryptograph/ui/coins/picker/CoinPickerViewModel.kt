@@ -11,12 +11,14 @@ import kotlinx.coroutines.launch
 import me.khruslan.cryptograph.data.coins.Coin
 import me.khruslan.cryptograph.data.coins.CoinsRepository
 import me.khruslan.cryptograph.data.common.DataException
+import me.khruslan.cryptograph.data.interactors.notifications.completed.CompletedNotificationsInteractor
 import me.khruslan.cryptograph.ui.util.UiState
 import me.khruslan.cryptograph.ui.util.displayMessageRes
 
 internal class CoinPickerViewModel(
     savedStateHandle: SavedStateHandle,
-    private val coinsRepository: CoinsRepository
+    private val coinsRepository: CoinsRepository,
+    private val completedNotificationsInteractor: CompletedNotificationsInteractor,
 ) : ViewModel() {
 
     private val args = CoinPickerArgs.fromSavedStateHandle(savedStateHandle)
@@ -38,10 +40,17 @@ internal class CoinPickerViewModel(
             try {
                 coinsRepository.getCoins().collect { coins ->
                     _coinsState.listState = UiState.Data(coins)
+                    refreshNotifications()
                 }
             } catch (e: DataException) {
                 _coinsState.listState = UiState.Error(e.displayMessageRes)
             }
+        }
+    }
+
+    private fun refreshNotifications() {
+        viewModelScope.launch {
+            completedNotificationsInteractor.tryRefreshCompletedNotifications()
         }
     }
 }

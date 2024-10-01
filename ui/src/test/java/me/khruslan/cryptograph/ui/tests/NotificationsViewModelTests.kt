@@ -5,6 +5,7 @@ import com.google.common.truth.Truth.assertThat
 import me.khruslan.cryptograph.data.fixtures.STUB_COIN_NOTIFICATIONS
 import me.khruslan.cryptograph.ui.R
 import me.khruslan.cryptograph.ui.fakes.FakeCoinNotificationsInteractor
+import me.khruslan.cryptograph.ui.fakes.FakeCompletedNotificationsInteractor
 import me.khruslan.cryptograph.ui.notifications.main.NotificationsViewModel
 import me.khruslan.cryptograph.ui.rules.MainDispatcherRule
 import me.khruslan.cryptograph.ui.util.UiState
@@ -18,13 +19,20 @@ internal class NotificationsViewModelTests {
     val mainDispatcherRule = MainDispatcherRule()
 
     private lateinit var fakeCoinNotificationsInteractor: FakeCoinNotificationsInteractor
+    private lateinit var fakeCompletedNotificationsInteractor: FakeCompletedNotificationsInteractor
     private lateinit var viewModel: NotificationsViewModel
 
     @Before
     fun setUp() {
         val savedStateHandle = SavedStateHandle()
         fakeCoinNotificationsInteractor = FakeCoinNotificationsInteractor()
-        viewModel = NotificationsViewModel(savedStateHandle, fakeCoinNotificationsInteractor)
+        fakeCoinNotificationsInteractor = FakeCoinNotificationsInteractor()
+
+        viewModel = NotificationsViewModel(
+            savedStateHandle = savedStateHandle,
+            coinNotificationsInteractor = fakeCoinNotificationsInteractor,
+            completedNotificationsInteractor = fakeCompletedNotificationsInteractor
+        )
     }
 
     @Test
@@ -44,5 +52,11 @@ internal class NotificationsViewModelTests {
         val expectedState = UiState.Error(R.string.network_error_msg)
         val actualState = viewModel.notificationsState.listState
         assertThat(actualState).isEqualTo(expectedState)
+    }
+
+    @Test
+    fun `Refresh notifications`() {
+        val notificationsRefreshed = fakeCompletedNotificationsInteractor.notificationsRefreshed
+        assertThat(notificationsRefreshed).isTrue()
     }
 }

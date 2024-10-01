@@ -20,19 +20,19 @@ internal class CoinsViewModelTests {
 
     private lateinit var fakeCoinsRepository: FakeCoinsRepository
     private lateinit var fakeNotificationsRepository: FakeNotificationsRepository
-    private lateinit var fakeUpdateNotificationsInteractor: FakeCompletedNotificationsInteractor
+    private lateinit var fakeCompletedNotificationsInteractor: FakeCompletedNotificationsInteractor
     private lateinit var viewModel: CoinsViewModel
 
     @Before
     fun setUp() {
         fakeCoinsRepository = FakeCoinsRepository()
         fakeNotificationsRepository = FakeNotificationsRepository()
-        fakeUpdateNotificationsInteractor = FakeCompletedNotificationsInteractor()
+        fakeCompletedNotificationsInteractor = FakeCompletedNotificationsInteractor()
 
         viewModel = CoinsViewModel(
             coinsRepository = fakeCoinsRepository,
             notificationsRepository = fakeNotificationsRepository,
-            completedNotificationsInteractor = fakeUpdateNotificationsInteractor
+            completedNotificationsInteractor = fakeCompletedNotificationsInteractor
         )
     }
 
@@ -119,8 +119,8 @@ internal class CoinsViewModelTests {
     }
 
     @Test
-    fun `Update notifications`() {
-        val notificationsUpdated = fakeUpdateNotificationsInteractor.notificationsUpdated
-        assertThat(notificationsUpdated).isTrue()
+    fun `Refresh notifications`() {
+        val notificationsRefreshed = fakeCompletedNotificationsInteractor.notificationsRefreshed
+        assertThat(notificationsRefreshed).isTrue()
     }
 }

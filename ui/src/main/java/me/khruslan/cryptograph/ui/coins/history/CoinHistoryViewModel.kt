@@ -12,6 +12,7 @@ import kotlinx.coroutines.launch
 import me.khruslan.cryptograph.data.coins.CoinPrice
 import me.khruslan.cryptograph.data.coins.CoinsRepository
 import me.khruslan.cryptograph.data.common.DataException
+import me.khruslan.cryptograph.data.notifications.NotificationsRepository
 import me.khruslan.cryptograph.data.preferences.ChartPeriod
 import me.khruslan.cryptograph.data.preferences.ChartStyle
 import me.khruslan.cryptograph.data.preferences.PreferencesRepository
@@ -19,11 +20,11 @@ import me.khruslan.cryptograph.ui.R
 import me.khruslan.cryptograph.ui.util.UiState
 import me.khruslan.cryptograph.ui.util.displayMessageRes
 
-// TODO: Integrate unread notifications count
 internal class CoinHistoryViewModel(
     savedStateHandle: SavedStateHandle,
     private val coinsRepository: CoinsRepository,
     private val preferencesRepository: PreferencesRepository,
+    private val notificationsRepository: NotificationsRepository,
 ) : ViewModel() {
 
     private val args = CoinHistoryArgs.fromSavedStateHandle(savedStateHandle)
@@ -33,6 +34,7 @@ internal class CoinHistoryViewModel(
 
     init {
         loadData()
+        loadUnreadNotifications()
     }
 
     fun pinCoin() {
@@ -89,6 +91,16 @@ internal class CoinHistoryViewModel(
             _coinHistoryState.chartState = UiState.Error(e.displayMessageRes)
         }
     }
+
+    private fun loadUnreadNotifications() {
+        viewModelScope.launch {
+            notificationsRepository.getNotifications(args.coinId).collect { notifications ->
+                _coinHistoryState.unreadNotificationsCount = notifications.count { notification ->
+                    notification.unread
+                }
+            }
+        }
+    }
 }
 
 @Stable
@@ -100,7 +112,7 @@ internal interface CoinHistoryState {
     val defaultChartPeriod: ChartPeriod
     val isPinned: Boolean
     val warningMessageRes: Int?
-    val notificationBadgeCount: Int
+    val unreadNotificationsCount: Int
 }
 
 internal class MutableCoinHistoryState(args: CoinHistoryArgs) : CoinHistoryState {
@@ -111,5 +123,5 @@ internal class MutableCoinHistoryState(args: CoinHistoryArgs) : CoinHistoryState
     override lateinit var defaultChartStyle: ChartStyle
     override var isPinned: Boolean by mutableStateOf(args.isPinned)
     override var warningMessageRes: Int? by mutableStateOf(null)
-    override var notificationBadgeCount: Int by mutableIntStateOf(0)
+    override var unreadNotificationsCount: Int by mutableIntStateOf(0)
 }

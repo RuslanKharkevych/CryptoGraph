@@ -8,6 +8,7 @@ import me.khruslan.cryptograph.ui.R
 import me.khruslan.cryptograph.ui.coins.history.CoinHistoryArgKeys
 import me.khruslan.cryptograph.ui.coins.history.CoinHistoryViewModel
 import me.khruslan.cryptograph.ui.fakes.FakeCoinsRepository
+import me.khruslan.cryptograph.ui.fakes.FakeNotificationsRepository
 import me.khruslan.cryptograph.ui.fakes.FakePreferencesRepository
 import me.khruslan.cryptograph.ui.rules.MainDispatcherRule
 import me.khruslan.cryptograph.ui.util.UiState
@@ -17,7 +18,7 @@ import org.junit.Test
 
 private val COIN_HISTORY_ARGS = mapOf(
     CoinHistoryArgKeys.COIN_ID_ARG to "Qwsogvtv82FCd",
-    CoinHistoryArgKeys.COIN_NAME_ARG  to "Bitcoin",
+    CoinHistoryArgKeys.COIN_NAME_ARG to "Bitcoin",
     CoinHistoryArgKeys.COLOR_HEX_ARG to "#f7931A",
     CoinHistoryArgKeys.IS_PINNED_ARG to false
 )
@@ -29,6 +30,7 @@ internal class CoinHistoryViewModelTests {
 
     private lateinit var fakeCoinsRepository: FakeCoinsRepository
     private lateinit var fakePreferencesRepository: FakePreferencesRepository
+    private lateinit var fakeNotificationsRepository: FakeNotificationsRepository
     private lateinit var viewModel: CoinHistoryViewModel
 
     @Before
@@ -36,11 +38,13 @@ internal class CoinHistoryViewModelTests {
         val savedStateHandle = SavedStateHandle(COIN_HISTORY_ARGS)
         fakeCoinsRepository = FakeCoinsRepository()
         fakePreferencesRepository = FakePreferencesRepository()
+        fakeNotificationsRepository = FakeNotificationsRepository()
 
         viewModel = CoinHistoryViewModel(
             savedStateHandle = savedStateHandle,
             coinsRepository = fakeCoinsRepository,
-            preferencesRepository = fakePreferencesRepository
+            preferencesRepository = fakePreferencesRepository,
+            notificationsRepository = fakeNotificationsRepository
         )
     }
 
@@ -117,5 +121,12 @@ internal class CoinHistoryViewModelTests {
 
         val warningMessageRes = viewModel.coinHistoryState.warningMessageRes
         assertThat(warningMessageRes).isNull()
+    }
+
+    @Test
+    fun `Load unread notifications`() {
+        val expectedUnreadNotificationsCount = fakeNotificationsRepository.unreadNotificationsCount
+        val actualUnreadNotificationsCount = viewModel.coinHistoryState.unreadNotificationsCount
+        assertThat(actualUnreadNotificationsCount).isEqualTo(expectedUnreadNotificationsCount)
     }
 }

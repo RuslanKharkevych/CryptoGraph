@@ -25,7 +25,7 @@ internal class NotificationsMapper(
         return withContext(dispatcher) {
             notifications.mapNotNull { notificationDto ->
                 mapNotificationOrNull(notificationDto)
-            }.sortedByDescending { it.id }
+            }.sortedByDescending { it.id } // TODO: Sort by status & unread flag
         }
     }
 

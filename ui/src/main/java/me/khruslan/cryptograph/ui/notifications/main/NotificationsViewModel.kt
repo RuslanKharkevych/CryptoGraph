@@ -11,12 +11,14 @@ import kotlinx.coroutines.launch
 import me.khruslan.cryptograph.data.common.DataException
 import me.khruslan.cryptograph.data.interactors.notifications.coin.CoinNotification
 import me.khruslan.cryptograph.data.interactors.notifications.coin.CoinNotificationsInteractor
+import me.khruslan.cryptograph.data.interactors.notifications.completed.CompletedNotificationsInteractor
 import me.khruslan.cryptograph.ui.util.UiState
 import me.khruslan.cryptograph.ui.util.displayMessageRes
 
 internal class NotificationsViewModel(
     savedStateHandle: SavedStateHandle,
     private val coinNotificationsInteractor: CoinNotificationsInteractor,
+    private val completedNotificationsInteractor: CompletedNotificationsInteractor,
 ) : ViewModel() {
 
     private val args = NotificationsArgs.fromSavedStateHandle(savedStateHandle)
@@ -40,10 +42,17 @@ internal class NotificationsViewModel(
                     .getCoinNotifications(args.coinId)
                     .collect { notifications ->
                         _notificationsState.listState = UiState.Data(notifications)
+                        refreshNotifications()
                     }
             } catch (e: DataException) {
                 _notificationsState.listState = UiState.Error(e.displayMessageRes)
             }
+        }
+    }
+
+    private fun refreshNotifications() {
+        viewModelScope.launch {
+            completedNotificationsInteractor.tryRefreshCompletedNotifications()
         }
     }
 }

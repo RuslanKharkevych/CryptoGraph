@@ -48,8 +48,7 @@ internal class CompletedNotificationsInteractorImpl(
 
     override suspend fun tryRefreshCompletedNotifications() {
         try {
-            val completedNotifications = getCompletedNotifications()
-            Logger.info(LOG_TAG, "Completed ${completedNotifications.count()} notifications")
+            getCompletedNotifications()
         } catch (_: DataException) {
             Logger.info(LOG_TAG, "Failed to refresh completed notifications")
         }
@@ -63,8 +62,8 @@ internal class CompletedNotificationsInteractorImpl(
         }
 
         return when (notification.trigger) {
-            is NotificationTrigger.PriceLessThan -> notificationPrice < coinPrice
-            is NotificationTrigger.PriceMoreThan -> notificationPrice > coinPrice
+            is NotificationTrigger.PriceLessThan -> coinPrice < notificationPrice
+            is NotificationTrigger.PriceMoreThan -> coinPrice > notificationPrice
         }
     }
 

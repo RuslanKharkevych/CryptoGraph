@@ -16,7 +16,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.outlined.Notifications
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FilterChipDefaults
@@ -69,6 +68,7 @@ import me.khruslan.cryptograph.data.preferences.ChartStyle
 import me.khruslan.cryptograph.ui.R
 import me.khruslan.cryptograph.ui.coins.history.chart.PriceMarkerComponent
 import me.khruslan.cryptograph.ui.coins.history.chart.PriceMarkerLabelFormatter
+import me.khruslan.cryptograph.ui.coins.shared.NotificationsAction
 import me.khruslan.cryptograph.ui.coins.shared.PinCoinButton
 import me.khruslan.cryptograph.ui.core.CryptoGraphTheme
 import me.khruslan.cryptograph.ui.util.ChoiceItems
@@ -104,6 +104,7 @@ internal fun CoinHistoryScreen(
             TopBar(
                 title = coinHistoryState.coinName,
                 isPinned = coinHistoryState.isPinned,
+                unreadNotificationsCount = coinHistoryState.unreadNotificationsCount,
                 onBackActionClick = onBackActionClick,
                 onNotificationsActionClick = onNotificationsActionClick,
                 onPinActionClick = onPinActionClick,
@@ -145,6 +146,7 @@ internal fun CoinHistoryScreen(
 private fun TopBar(
     title: String,
     isPinned: Boolean,
+    unreadNotificationsCount: Int,
     onBackActionClick: () -> Unit,
     onNotificationsActionClick: () -> Unit,
     onPinActionClick: () -> Unit,
@@ -169,12 +171,10 @@ private fun TopBar(
             }
         },
         actions = {
-            IconButton(onClick = onNotificationsActionClick) {
-                Icon(
-                    imageVector = Icons.Outlined.Notifications,
-                    contentDescription = stringResource(R.string.notifications_action_desc)
-                )
-            }
+            NotificationsAction(
+                unreadNotificationsCount = unreadNotificationsCount,
+                onClick = onNotificationsActionClick
+            )
             PinCoinButton(
                 isPinned = isPinned,
                 onPin = onPinActionClick,

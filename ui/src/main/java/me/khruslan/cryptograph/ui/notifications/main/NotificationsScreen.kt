@@ -17,6 +17,7 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material3.Badge
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -259,49 +260,56 @@ private fun NotificationCard(
     notification: Notification,
     onClick: () -> Unit,
 ) {
-    Card(
-        modifier = modifier,
-        colors = CardDefaults.cardColors().copy(
-            containerColor = coin.colorHex.toColor().copy(alpha = 0.2f)
-        ),
-        onClick = onClick
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            verticalAlignment = Alignment.CenterVertically
+    Row(verticalAlignment = Alignment.CenterVertically) {
+        AnimatedVisibility(
+            modifier = Modifier.padding(start = 16.dp),
+            visible = notification.unread,
+            content = { Badge() }
+        )
+        Card(
+            modifier = modifier,
+            colors = CardDefaults.cardColors().copy(
+                containerColor = coin.colorHex.toColor().copy(alpha = 0.2f)
+            ),
+            onClick = onClick
         ) {
-            Column(
-                modifier = Modifier.weight(1f),
-                verticalArrangement = Arrangement.spacedBy(8.dp)
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(
-                    modifier = Modifier.basicMarquee(),
-                    text = notification.title,
-                    style = MaterialTheme.typography.bodyLarge,
-                    fontWeight = FontWeight.Bold,
-                    maxLines = 1
-                )
-                Text(
-                    modifier = Modifier.basicMarquee(),
-                    text = notification.trigger.label,
-                    style = MaterialTheme.typography.labelLarge,
-                    maxLines = 1
-                )
-                Text(
-                    modifier = Modifier.basicMarquee(),
-                    text = notification.dateLabel,
-                    style = MaterialTheme.typography.labelMedium,
-                    maxLines = 1
+                Column(
+                    modifier = Modifier.weight(1f),
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    Text(
+                        modifier = Modifier.basicMarquee(),
+                        text = notification.title,
+                        style = MaterialTheme.typography.bodyLarge,
+                        fontWeight = FontWeight.Bold,
+                        maxLines = 1
+                    )
+                    Text(
+                        modifier = Modifier.basicMarquee(),
+                        text = notification.trigger.label,
+                        style = MaterialTheme.typography.labelLarge,
+                        maxLines = 1
+                    )
+                    Text(
+                        modifier = Modifier.basicMarquee(),
+                        text = notification.dateLabel,
+                        style = MaterialTheme.typography.labelMedium,
+                        maxLines = 1
+                    )
+                }
+                AsyncImage(
+                    modifier = Modifier.size(24.dp),
+                    model = coin.iconUrl,
+                    contentDescription = stringResource(R.string.coin_icon_desc, coin.name),
+                    placeholder = previewPlaceholder(Icons.Default.CurrencyBitcoin)
                 )
             }
-            AsyncImage(
-                modifier = Modifier.size(24.dp),
-                model = coin.iconUrl,
-                contentDescription = stringResource(R.string.coin_icon_desc, coin.name),
-                placeholder = previewPlaceholder(Icons.Default.CurrencyBitcoin)
-            )
         }
     }
 }
