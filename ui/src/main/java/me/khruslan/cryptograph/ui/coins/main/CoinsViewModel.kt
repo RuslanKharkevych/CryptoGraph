@@ -8,22 +8,19 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
-import me.khruslan.cryptograph.base.Logger
 import me.khruslan.cryptograph.data.coins.Coin
 import me.khruslan.cryptograph.data.coins.CoinsRepository
 import me.khruslan.cryptograph.data.common.DataException
-import me.khruslan.cryptograph.data.interactors.sync.UpdateNotificationsInteractor
+import me.khruslan.cryptograph.data.interactors.notifications.completed.CompletedNotificationsInteractor
 import me.khruslan.cryptograph.data.notifications.NotificationsRepository
 import me.khruslan.cryptograph.ui.R
 import me.khruslan.cryptograph.ui.util.UiState
 import me.khruslan.cryptograph.ui.util.displayMessageRes
 
-private const val LOG_TAG = "CoinsViewModel"
-
 internal class CoinsViewModel(
     private val coinsRepository: CoinsRepository,
     private val notificationsRepository: NotificationsRepository,
-    private val updateNotificationsInteractor: UpdateNotificationsInteractor,
+    private val completedNotificationsInteractor: CompletedNotificationsInteractor,
 ) : ViewModel() {
 
     private val _coinsState = MutableCoinsState()
@@ -68,7 +65,7 @@ internal class CoinsViewModel(
             try {
                 coinsRepository.getCoins().collect { coins ->
                     _coinsState.listState = UiState.Data(coins)
-                    updateNotifications()
+                    refreshNotifications()
                 }
             } catch (e: DataException) {
                 _coinsState.listState = UiState.Error(e.displayMessageRes)
@@ -86,13 +83,9 @@ internal class CoinsViewModel(
         }
     }
 
-    private fun updateNotifications() {
+    private fun refreshNotifications() {
         viewModelScope.launch {
-            try {
-                updateNotificationsInteractor.updateNotifications()
-            } catch (_: DataException) {
-                Logger.info(LOG_TAG, "Failed to update notifications")
-            }
+            completedNotificationsInteractor.tryRefreshCompletedNotifications()
         }
     }
 }

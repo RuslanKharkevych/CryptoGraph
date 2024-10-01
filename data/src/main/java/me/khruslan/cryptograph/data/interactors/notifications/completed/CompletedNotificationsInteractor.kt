@@ -1,4 +1,4 @@
-package me.khruslan.cryptograph.data.interactors.sync
+package me.khruslan.cryptograph.data.interactors.notifications.completed
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.single
@@ -15,34 +15,44 @@ import java.time.LocalDate
 
 private const val LOG_TAG = "UpdateNotificationsInteractor"
 
-interface UpdateNotificationsInteractor {
-    suspend fun updateNotifications()
+interface CompletedNotificationsInteractor {
+    suspend fun getCompletedNotifications(): List<Notification>
+    suspend fun tryRefreshCompletedNotifications()
 }
 
 // TODO: Improve performance with bulk update instead of a loop
-internal class UpdateNotificationsInteractorImpl(
+internal class CompletedNotificationsInteractorImpl(
     private val notificationsRepository: NotificationsRepository,
     private val coinsRepository: CoinsRepository,
-) : UpdateNotificationsInteractor {
+) : CompletedNotificationsInteractor {
 
-    override suspend fun updateNotifications() {
-        val pendingNotifications = loadPendingNotifications()
-        if (pendingNotifications.isEmpty()) {
+    override suspend fun getCompletedNotifications(): List<Notification> {
+        val pendingNotifications = loadPendingNotifications().ifEmpty {
             Logger.info(LOG_TAG, "No pending notifications found")
-            return
+            return emptyList()
         }
 
         val coins = loadCoins()
-        var updatedNotificationsCount = 0
+        val completedNotifications = mutableListOf<Notification>()
 
         pendingNotifications.forEach { notification ->
             val coin = coins.findCoin(notification) ?: return@forEach
             if (isNotificationCompleted(notification, coin)) {
-                completeNotification(notification) { updatedNotificationsCount++ }
+                completeNotification(notification) { completedNotifications += it }
             }
         }
 
-        Logger.info(LOG_TAG, "Updated $updatedNotificationsCount notifications")
+        Logger.info(LOG_TAG, "Completed ${completedNotifications.count()} notifications")
+        return completedNotifications
+    }
+
+    override suspend fun tryRefreshCompletedNotifications() {
+        try {
+            val completedNotifications = getCompletedNotifications()
+            Logger.info(LOG_TAG, "Completed ${completedNotifications.count()} notifications")
+        } catch (_: DataException) {
+            Logger.info(LOG_TAG, "Failed to refresh completed notifications")
+        }
     }
 
     private fun isNotificationCompleted(notification: Notification, coin: Coin): Boolean {
@@ -58,11 +68,14 @@ internal class UpdateNotificationsInteractorImpl(
         }
     }
 
-    private suspend fun completeNotification(notification: Notification, onSuccess: () -> Unit) {
+    private suspend fun completeNotification(
+        notification: Notification,
+        onSuccess: (notification: Notification) -> Unit,
+    ) {
         val completedNotification = notification.copy(completedAt = LocalDate.now())
         try {
             notificationsRepository.addOrUpdateNotification(completedNotification)
-            onSuccess()
+            onSuccess(completedNotification)
         } catch (_: DataException) {
             Logger.info(LOG_TAG, "Failed to complete $notification")
         }

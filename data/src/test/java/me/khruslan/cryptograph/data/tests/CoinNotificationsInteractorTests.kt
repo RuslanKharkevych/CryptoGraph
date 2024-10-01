@@ -8,9 +8,9 @@ import kotlinx.coroutines.test.runTest
 import me.khruslan.cryptograph.data.fakes.FakeCoinsRepository
 import me.khruslan.cryptograph.data.fakes.FakeNotificationsRepository
 import me.khruslan.cryptograph.data.fixtures.STUB_COIN_NOTIFICATIONS
-import me.khruslan.cryptograph.data.interactors.combine.CoinNotificationsInteractor
-import me.khruslan.cryptograph.data.interactors.combine.CoinNotificationsInteractorImpl
-import me.khruslan.cryptograph.data.interactors.combine.CoinNotificationsMapper
+import me.khruslan.cryptograph.data.interactors.notifications.coin.CoinNotificationsInteractor
+import me.khruslan.cryptograph.data.interactors.notifications.coin.CoinNotificationsInteractorImpl
+import me.khruslan.cryptograph.data.interactors.notifications.coin.CoinNotificationsMapper
 import org.junit.Before
 import org.junit.Test
 

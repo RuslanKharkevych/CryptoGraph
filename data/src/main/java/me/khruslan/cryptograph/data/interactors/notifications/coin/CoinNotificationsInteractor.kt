@@ -1,4 +1,4 @@
-package me.khruslan.cryptograph.data.interactors.combine
+package me.khruslan.cryptograph.data.interactors.notifications.coin
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine

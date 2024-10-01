@@ -6,7 +6,7 @@ import me.khruslan.cryptograph.ui.R
 import me.khruslan.cryptograph.ui.coins.main.CoinsViewModel
 import me.khruslan.cryptograph.ui.fakes.FakeCoinsRepository
 import me.khruslan.cryptograph.ui.fakes.FakeNotificationsRepository
-import me.khruslan.cryptograph.ui.fakes.FakeUpdateNotificationsInteractor
+import me.khruslan.cryptograph.ui.fakes.FakeCompletedNotificationsInteractor
 import me.khruslan.cryptograph.ui.rules.MainDispatcherRule
 import me.khruslan.cryptograph.ui.util.UiState
 import org.junit.Before
@@ -20,19 +20,19 @@ internal class CoinsViewModelTests {
 
     private lateinit var fakeCoinsRepository: FakeCoinsRepository
     private lateinit var fakeNotificationsRepository: FakeNotificationsRepository
-    private lateinit var fakeUpdateNotificationsInteractor: FakeUpdateNotificationsInteractor
+    private lateinit var fakeUpdateNotificationsInteractor: FakeCompletedNotificationsInteractor
     private lateinit var viewModel: CoinsViewModel
 
     @Before
     fun setUp() {
         fakeCoinsRepository = FakeCoinsRepository()
         fakeNotificationsRepository = FakeNotificationsRepository()
-        fakeUpdateNotificationsInteractor = FakeUpdateNotificationsInteractor()
+        fakeUpdateNotificationsInteractor = FakeCompletedNotificationsInteractor()
 
         viewModel = CoinsViewModel(
             coinsRepository = fakeCoinsRepository,
             notificationsRepository = fakeNotificationsRepository,
-            updateNotificationsInteractor = fakeUpdateNotificationsInteractor
+            completedNotificationsInteractor = fakeUpdateNotificationsInteractor
         )
     }
 

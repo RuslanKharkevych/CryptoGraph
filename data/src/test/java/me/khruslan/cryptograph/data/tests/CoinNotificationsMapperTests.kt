@@ -7,7 +7,7 @@ import kotlinx.coroutines.test.runTest
 import me.khruslan.cryptograph.data.fixtures.STUB_COINS
 import me.khruslan.cryptograph.data.fixtures.STUB_COIN_NOTIFICATIONS
 import me.khruslan.cryptograph.data.fixtures.STUB_NOTIFICATIONS
-import me.khruslan.cryptograph.data.interactors.combine.CoinNotificationsMapper
+import me.khruslan.cryptograph.data.interactors.notifications.coin.CoinNotificationsMapper
 import org.junit.Before
 import org.junit.Test
 

@@ -5,8 +5,8 @@ import kotlinx.coroutines.flow.flowOf
 import me.khruslan.cryptograph.data.common.DataException
 import me.khruslan.cryptograph.data.common.ErrorType
 import me.khruslan.cryptograph.data.fixtures.STUB_COIN_NOTIFICATIONS
-import me.khruslan.cryptograph.data.interactors.combine.CoinNotification
-import me.khruslan.cryptograph.data.interactors.combine.CoinNotificationsInteractor
+import me.khruslan.cryptograph.data.interactors.notifications.coin.CoinNotification
+import me.khruslan.cryptograph.data.interactors.notifications.coin.CoinNotificationsInteractor
 
 class FakeCoinNotificationsInteractor : CoinNotificationsInteractor {
     var isNetworkReachable = true
