@@ -88,6 +88,11 @@
     <string name="notification_settings_error_msg">Failed to open notification settings. Please try again</string>
     <!-- endregion Notification Details -->
 
+    <!-- region Notification Report -->
+    <string name="notification_report_completed_top_bar_title">Notification completed</string>
+    <string name="notification_report_expired_top_bar_title">Notification expired</string>
+    <!-- endregion Notification Report -->
+
     <!-- region Preferences -->
     <string name="preferences_top_bar_title">Preferences</string>
     <string name="theme_preference_title">Theme</string>

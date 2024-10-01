@@ -76,6 +76,7 @@ private typealias NotificationDetailsCallback = (
 
 internal fun NavGraphBuilder.notificationsScreen(
     onNotificationDetails: NotificationDetailsCallback,
+    onNotificationReport: (notification: Notification, coinInfo: CoinInfo) -> Unit,
     onCoinSelection: () -> Unit,
     onCloseActionClick: () -> Unit,
 ) {
@@ -111,8 +112,11 @@ internal fun NavGraphBuilder.notificationsScreen(
             },
             onNotificationClick = navInterceptor { (coin, notification) ->
                 val coinInfo = CoinInfo.fromCoin(coin)
-                // TODO: Navigate to NotificationReport if status is not Pending
-                onNotificationDetails(notification, coinInfo, !args.coinSelected)
+                if (notification.isPending) {
+                    onNotificationDetails(notification, coinInfo, !args.coinSelected)
+                } else {
+                    onNotificationReport(notification, coinInfo)
+                }
             },
             onCloseActionClick = navInterceptor(onCloseActionClick),
         )
