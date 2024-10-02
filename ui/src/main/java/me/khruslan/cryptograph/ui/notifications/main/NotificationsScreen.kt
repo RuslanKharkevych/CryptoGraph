@@ -50,20 +50,20 @@ import me.khruslan.cryptograph.data.coins.Coin
 import me.khruslan.cryptograph.data.fixtures.PREVIEW_COIN_NOTIFICATIONS
 import me.khruslan.cryptograph.data.interactors.notifications.coin.CoinNotification
 import me.khruslan.cryptograph.data.notifications.Notification
-import me.khruslan.cryptograph.data.notifications.NotificationTrigger
 import me.khruslan.cryptograph.ui.R
 import me.khruslan.cryptograph.ui.core.CryptoGraphTheme
 import me.khruslan.cryptograph.ui.notifications.shared.NotificationPermissionState
 import me.khruslan.cryptograph.ui.notifications.shared.PermissionStatus
+import me.khruslan.cryptograph.ui.notifications.shared.description
 import me.khruslan.cryptograph.ui.notifications.shared.rememberNotificationPermissionState
 import me.khruslan.cryptograph.ui.notifications.shared.shouldShowRationale
 import me.khruslan.cryptograph.ui.util.ArrowDown
 import me.khruslan.cryptograph.ui.util.CurrencyBitcoin
-import me.khruslan.cryptograph.ui.util.PreviewScreenSizesLightDark
 import me.khruslan.cryptograph.ui.util.UiState
 import me.khruslan.cryptograph.ui.util.components.FullScreenError
 import me.khruslan.cryptograph.ui.util.components.FullScreenLoader
 import me.khruslan.cryptograph.ui.util.getCurrentLocale
+import me.khruslan.cryptograph.ui.util.preview.PreviewScreenSizesLightDark
 import me.khruslan.cryptograph.ui.util.previewPlaceholder
 import me.khruslan.cryptograph.ui.util.state.rememberMessageState
 import me.khruslan.cryptograph.ui.util.toColor
@@ -293,7 +293,7 @@ private fun NotificationCard(
                     )
                     Text(
                         modifier = Modifier.basicMarquee(),
-                        text = notification.trigger.label,
+                        text = notification.trigger.description,
                         style = MaterialTheme.typography.labelLarge,
                         maxLines = 1
                     )
@@ -378,21 +378,6 @@ private fun isTopBarShadowAlwaysVisible(
     if (permissionStatus is PermissionStatus.Granted) return false
     return listState is UiState.Data && listState.data.isNotEmpty()
 }
-
-private val NotificationTrigger.label: String
-    @Composable
-    get() {
-        val resId = when (this) {
-            is NotificationTrigger.PriceLessThan ->
-                R.string.notification_trigger_price_less_than_desc
-
-            is NotificationTrigger.PriceMoreThan ->
-                R.string.notification_trigger_price_more_than_desc
-        }
-        val priceString = targetPrice.toBigDecimal().toPlainString()
-
-        return stringResource(resId, priceString)
-    }
 
 private val Notification.dateLabel: String
     @Composable

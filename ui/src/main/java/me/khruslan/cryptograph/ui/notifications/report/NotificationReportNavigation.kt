@@ -83,6 +83,12 @@ internal fun NavGraphBuilder.notificationReportDialog(
         NotificationReportDialog(
             notificationReportState = viewModel.notificationReportState,
             onRetryClick = viewModel::reloadNotification,
+            onDeleteButtonClick = {
+                // TODO: Delete notification and dismiss dialog
+            },
+            onRestartButtonClick = {
+                // TODO: Navigate to notification details
+            },
             onCloseActionClick = navInterceptor(onCloseActionClick)
         )
     }
@@ -90,7 +96,7 @@ internal fun NavGraphBuilder.notificationReportDialog(
 
 internal fun NavController.showNotificationReport(
     notification: Notification,
-    coinInfo: CoinInfo,
+    coinInfo: CoinInfo, // TODO: Update to pass only coin name
 ) {
     val route = route(NOTIFICATION_REPORT_ROUTE) {
         argument(NOTIFICATION_ID_ARG, notification.id)

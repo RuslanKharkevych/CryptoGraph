@@ -91,6 +91,17 @@
     <!-- region Notification Report -->
     <string name="notification_report_completed_top_bar_title">Notification completed</string>
     <string name="notification_report_expired_top_bar_title">Notification expired</string>
+    <string name="notification_title_label">Title</string>
+    <string name="coin_name_label">Coin</string>
+    <string name="notification_trigger_label">Trigger</string>
+    <string name="notification_status_label">Status</string>
+    <string name="notification_status_completed">Completed</string>
+    <string name="notification_status_expired">Expired</string>
+    <string name="created_at_label">Created at</string>
+    <string name="completed_at_label">Completed at</string>
+    <string name="expired_at_label">Expired at</string>
+    <string name="delete_btn">Delete</string>
+    <string name="restart_btn">Restart</string>
     <!-- endregion Notification Report -->
 
     <!-- region Preferences -->

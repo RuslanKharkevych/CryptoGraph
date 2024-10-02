@@ -72,7 +72,7 @@ import me.khruslan.cryptograph.ui.coins.shared.NotificationsAction
 import me.khruslan.cryptograph.ui.coins.shared.PinCoinButton
 import me.khruslan.cryptograph.ui.core.CryptoGraphTheme
 import me.khruslan.cryptograph.ui.util.ChoiceItems
-import me.khruslan.cryptograph.ui.util.PreviewScreenSizesLightDark
+import me.khruslan.cryptograph.ui.util.preview.PreviewScreenSizesLightDark
 import me.khruslan.cryptograph.ui.util.UiState
 import me.khruslan.cryptograph.ui.util.components.FullScreenError
 import me.khruslan.cryptograph.ui.util.components.FullScreenLoader

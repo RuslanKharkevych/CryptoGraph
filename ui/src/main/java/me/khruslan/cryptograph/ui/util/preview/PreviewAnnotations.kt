@@ -1,4 +1,4 @@
-package me.khruslan.cryptograph.ui.util
+package me.khruslan.cryptograph.ui.util.preview
 
 import android.content.res.Configuration
 import androidx.compose.ui.tooling.preview.Devices

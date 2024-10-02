@@ -20,7 +20,7 @@ import coil.compose.AsyncImage
 import me.khruslan.cryptograph.ui.R
 import me.khruslan.cryptograph.ui.core.CryptoGraphTheme
 import me.khruslan.cryptograph.ui.util.CurrencyBitcoin
-import me.khruslan.cryptograph.ui.util.PreviewLightDarkWithBackground
+import me.khruslan.cryptograph.ui.util.preview.PreviewLightDarkWithBackground
 import me.khruslan.cryptograph.ui.util.previewPlaceholder
 
 @Composable

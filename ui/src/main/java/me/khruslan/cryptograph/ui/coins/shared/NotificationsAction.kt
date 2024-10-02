@@ -15,7 +15,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import me.khruslan.cryptograph.ui.R
 import me.khruslan.cryptograph.ui.core.CryptoGraphTheme
-import me.khruslan.cryptograph.ui.util.PreviewLightDarkWithBackground
+import me.khruslan.cryptograph.ui.util.preview.PreviewLightDarkWithBackground
 
 @Composable
 internal fun NotificationsAction(unreadNotificationsCount: Int, onClick: () -> Unit) {

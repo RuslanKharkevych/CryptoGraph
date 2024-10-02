@@ -2,10 +2,7 @@ package me.khruslan.cryptograph.ui.coins.picker
 
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.core.animateDpAsState
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -21,7 +18,6 @@ import androidx.compose.material3.ListItem
 import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
@@ -29,11 +25,9 @@ import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -43,10 +37,11 @@ import me.khruslan.cryptograph.data.fixtures.PREVIEW_COINS
 import me.khruslan.cryptograph.ui.R
 import me.khruslan.cryptograph.ui.coins.shared.CoinTitleAndIcon
 import me.khruslan.cryptograph.ui.core.CryptoGraphTheme
-import me.khruslan.cryptograph.ui.util.PreviewScreenSizesLightDark
 import me.khruslan.cryptograph.ui.util.UiState
 import me.khruslan.cryptograph.ui.util.components.FullScreenError
 import me.khruslan.cryptograph.ui.util.components.FullScreenLoader
+import me.khruslan.cryptograph.ui.util.preview.DimOverlay
+import me.khruslan.cryptograph.ui.util.preview.PreviewScreenSizesLightDark
 import me.khruslan.cryptograph.ui.util.toColor
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -189,19 +184,6 @@ private fun CoinPickerDialogPreview() {
 
         MutableCoinsState(args).apply {
             listState = UiState.Data(PREVIEW_COINS)
-        }
-    }
-
-    @Composable
-    fun DimOverlay(content: @Composable BoxScope.() -> Unit) {
-        Surface {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(Color.Black.copy(alpha = 0.32f)),
-                contentAlignment = Alignment.Center,
-                content = content
-            )
         }
     }
 

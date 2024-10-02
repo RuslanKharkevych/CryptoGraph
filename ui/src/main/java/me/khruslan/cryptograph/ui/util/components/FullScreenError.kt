@@ -28,7 +28,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import me.khruslan.cryptograph.ui.core.CryptoGraphTheme
 import me.khruslan.cryptograph.ui.R
-import me.khruslan.cryptograph.ui.util.PreviewLightDarkWithBackground
+import me.khruslan.cryptograph.ui.util.preview.PreviewLightDarkWithBackground
 
 @Composable
 internal fun FullScreenError(message: String, onRetryClick: () -> Unit) {

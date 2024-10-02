@@ -77,7 +77,7 @@ import me.khruslan.cryptograph.ui.notifications.details.date.ExpirationDatePicke
 import me.khruslan.cryptograph.ui.notifications.shared.deniedOrNeverAsked
 import me.khruslan.cryptograph.ui.notifications.shared.rememberNotificationPermissionState
 import me.khruslan.cryptograph.ui.util.CurrencyBitcoin
-import me.khruslan.cryptograph.ui.util.PreviewScreenSizesLightDark
+import me.khruslan.cryptograph.ui.util.preview.PreviewScreenSizesLightDark
 import me.khruslan.cryptograph.ui.util.UiState
 import me.khruslan.cryptograph.ui.util.components.FullScreenError
 import me.khruslan.cryptograph.ui.util.components.FullScreenLoader

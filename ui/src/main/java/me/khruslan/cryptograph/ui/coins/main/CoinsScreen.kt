@@ -62,7 +62,7 @@ import me.khruslan.cryptograph.ui.core.CryptoGraphTheme
 import me.khruslan.cryptograph.ui.core.DarkGreen
 import me.khruslan.cryptograph.ui.core.DarkRed
 import me.khruslan.cryptograph.ui.core.DarkYellow
-import me.khruslan.cryptograph.ui.util.PreviewScreenSizesLightDark
+import me.khruslan.cryptograph.ui.util.preview.PreviewScreenSizesLightDark
 import me.khruslan.cryptograph.ui.util.TrendingDown
 import me.khruslan.cryptograph.ui.util.TrendingFlat
 import me.khruslan.cryptograph.ui.util.TrendingUp
