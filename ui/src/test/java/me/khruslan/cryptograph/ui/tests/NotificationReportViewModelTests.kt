@@ -20,7 +20,8 @@ private val NOTIFICATION_REPORT_ARGS = mapOf(
     NotificationReportArgKeys.NOTIFICATION_STATUS_ARG to NotificationStatus.Completed,
     NotificationReportArgKeys.COIN_ID_ARG to "Qwsogvtv82FCd",
     NotificationReportArgKeys.COIN_NAME_ARG to "Bitcoin",
-    NotificationReportArgKeys.COIN_PRICE_ARG to "$63374.15"
+    NotificationReportArgKeys.COIN_PRICE_ARG to "$63374.15",
+    NotificationReportArgKeys.COIN_EDITABLE_ARG to false
 )
 
 internal class NotificationReportViewModelTests {

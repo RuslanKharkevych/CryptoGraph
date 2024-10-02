@@ -153,7 +153,7 @@ internal class NotificationDetailsFormStateImpl(
             id = notificationId ?: 0L,
             coinId = coinInfo.id,
             title = notificationTitle,
-            createdAt = createdAt ?: LocalDate.now(clock),
+            createdAt = createdAt ?: LocalDate.now(clock), // TODO: Reset on restart
             completedAt = null,
             expirationDate = expirationDate, // TODO: Validate expiration date is not in the past
             trigger = buildTrigger(triggerType, triggerPrice.toDouble()),

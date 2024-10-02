@@ -74,7 +74,7 @@ internal fun NotificationReportDialog(
     notificationReportState: NotificationReportState,
     onRetryClick: () -> Unit,
     onDeleteButtonClick: () -> Unit,
-    onRestartButtonClick: () -> Unit,
+    onRestartButtonClick: (notification: Notification) -> Unit,
     onCloseActionClick: () -> Unit,
 ) {
     val topBarScrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
@@ -164,7 +164,7 @@ private fun NotificationReport(
     notification: Notification,
     coinInfo: CoinInfo,
     onDeleteButtonClick: () -> Unit,
-    onRestartButtonClick: () -> Unit,
+    onRestartButtonClick: (notification: Notification) -> Unit,
 ) {
     val reportItems = rememberNotificationReportItems(notification, coinInfo)
 
@@ -200,7 +200,7 @@ private fun NotificationReport(
             ) {
                 NotificationReportButtons(
                     onDeleteButtonClick = onDeleteButtonClick,
-                    onRestartButtonClick = onRestartButtonClick
+                    onRestartButtonClick = { onRestartButtonClick(notification) }
                 )
             }
         }
@@ -393,7 +393,8 @@ private fun NotificationReportDialogPreview() {
             coinId = coin.id,
             coinName = coin.name,
             coinPrice = coin.price,
-            coinIconUrl = coin.iconUrl
+            coinIconUrl = coin.iconUrl,
+            coinEditable = false,
         )
 
         MutableNotificationReportState(args).apply {

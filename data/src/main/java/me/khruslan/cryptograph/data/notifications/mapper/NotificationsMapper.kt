@@ -118,6 +118,8 @@ internal class NotificationsMapper(
     }
 
     private fun notificationsComparator(): Comparator<Notification> {
-        return compareBy<Notification> { it.status.sortOrder }.thenByDescending { it.id }
+        return compareBy<Notification> { it.status.sortOrder }
+            .thenByDescending { it.createdAt }
+            .thenByDescending { it.id }
     }
 }

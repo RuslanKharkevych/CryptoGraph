@@ -2,7 +2,9 @@ package me.khruslan.cryptograph.ui.notifications.report
 
 import androidx.annotation.VisibleForTesting
 import androidx.compose.ui.window.DialogProperties
+import androidx.core.os.BundleCompat
 import androidx.lifecycle.SavedStateHandle
+import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavType
@@ -12,6 +14,8 @@ import me.khruslan.cryptograph.data.notifications.Notification
 import me.khruslan.cryptograph.data.notifications.NotificationStatus
 import me.khruslan.cryptograph.ui.coins.shared.CoinInfo
 import me.khruslan.cryptograph.ui.coins.shared.CoinInfoArgs
+import me.khruslan.cryptograph.ui.notifications.details.NotificationDetailsCallback
+import me.khruslan.cryptograph.ui.notifications.report.NotificationReportArgKeys.COIN_EDITABLE_ARG
 import me.khruslan.cryptograph.ui.notifications.report.NotificationReportArgKeys.COIN_ICON_URL_ARG
 import me.khruslan.cryptograph.ui.notifications.report.NotificationReportArgKeys.COIN_ID_ARG
 import me.khruslan.cryptograph.ui.notifications.report.NotificationReportArgKeys.COIN_NAME_ARG
@@ -32,6 +36,7 @@ internal object NotificationReportArgKeys {
     const val COIN_NAME_ARG = "coin-name"
     const val COIN_PRICE_ARG = "coin-price"
     const val COIN_ICON_URL_ARG = "coin-icon-url"
+    const val COIN_EDITABLE_ARG = "coin-editable"
 }
 
 internal data class NotificationReportArgs(
@@ -41,6 +46,7 @@ internal data class NotificationReportArgs(
     override val coinName: String,
     override val coinPrice: String?,
     override val coinIconUrl: String?,
+    val coinEditable: Boolean,
 ) : CoinInfoArgs {
     companion object {
         fun fromSavedStateHandle(savedStateHandle: SavedStateHandle): NotificationReportArgs {
@@ -50,14 +56,35 @@ internal data class NotificationReportArgs(
                 coinId = checkNotNull(savedStateHandle[COIN_ID_ARG]),
                 coinName = checkNotNull(savedStateHandle[COIN_NAME_ARG]),
                 coinPrice = savedStateHandle[COIN_PRICE_ARG],
-                coinIconUrl = savedStateHandle[COIN_ICON_URL_ARG]
+                coinIconUrl = savedStateHandle[COIN_ICON_URL_ARG],
+                coinEditable = checkNotNull(savedStateHandle[COIN_EDITABLE_ARG])
+            )
+        }
+
+        fun fromNavBackStackEntry(navBackStackEntry: NavBackStackEntry): NotificationReportArgs {
+            val bundle = checkNotNull(navBackStackEntry.arguments)
+            return NotificationReportArgs(
+                notificationId = checkNotNull(bundle.getLong(NOTIFICATION_ID_ARG)),
+                notificationStatus = checkNotNull(
+                    BundleCompat.getSerializable(
+                        bundle,
+                        NOTIFICATION_STATUS_ARG,
+                        NotificationStatus::class.java
+                    )
+                ),
+                coinId = checkNotNull(bundle.getString(COIN_ID_ARG)),
+                coinName = checkNotNull(bundle.getString(COIN_NAME_ARG)),
+                coinPrice = bundle.getString(COIN_PRICE_ARG),
+                coinIconUrl = bundle.getString(COIN_ICON_URL_ARG),
+                coinEditable = checkNotNull(bundle.getBoolean(COIN_EDITABLE_ARG))
             )
         }
     }
 }
 
 internal fun NavGraphBuilder.notificationReportDialog(
-    onCloseActionClick: () -> Unit
+    onNotificationDetails: NotificationDetailsCallback,
+    onCloseActionClick: () -> Unit,
 ) {
     val arguments = listOf(
         navArgument(NOTIFICATION_ID_ARG) { type = NavType.LongType },
@@ -67,7 +94,8 @@ internal fun NavGraphBuilder.notificationReportDialog(
         navArgument(COIN_ID_ARG) { type = NavType.StringType },
         navArgument(COIN_NAME_ARG) { type = NavType.StringType },
         navArgument(COIN_PRICE_ARG) { type = NavType.StringType; nullable = true },
-        navArgument(COIN_ICON_URL_ARG) { type = NavType.StringType; nullable = true }
+        navArgument(COIN_ICON_URL_ARG) { type = NavType.StringType; nullable = true },
+        navArgument(COIN_EDITABLE_ARG) { type = NavType.BoolType }
     )
 
     dialog(
@@ -79,6 +107,7 @@ internal fun NavGraphBuilder.notificationReportDialog(
     ) { navBackStackEntry ->
         val viewModel: NotificationReportViewModel = koinViewModel()
         val navInterceptor = rememberNavInterceptor(navBackStackEntry)
+        val args = NotificationReportArgs.fromNavBackStackEntry(navBackStackEntry)
 
         NotificationReportDialog(
             notificationReportState = viewModel.notificationReportState,
@@ -86,17 +115,25 @@ internal fun NavGraphBuilder.notificationReportDialog(
             onDeleteButtonClick = {
                 // TODO: Delete notification and dismiss dialog
             },
-            onRestartButtonClick = {
-                // TODO: Navigate to notification details
+            onRestartButtonClick = navInterceptor { notification ->
+                val coinInfo = CoinInfo.fromArgs(args)
+                onNotificationDetails(notification, coinInfo, args.coinEditable)
             },
             onCloseActionClick = navInterceptor(onCloseActionClick)
         )
     }
 }
 
+internal typealias NotificationReportCallback = (
+    notification: Notification,
+    coinInfo: CoinInfo,
+    coinEditable: Boolean,
+) -> Unit
+
 internal fun NavController.showNotificationReport(
     notification: Notification,
-    coinInfo: CoinInfo, // TODO: Update to pass only coin name
+    coinInfo: CoinInfo,
+    coinEditable: Boolean,
 ) {
     val route = route(NOTIFICATION_REPORT_ROUTE) {
         argument(NOTIFICATION_ID_ARG, notification.id)
@@ -105,6 +142,7 @@ internal fun NavController.showNotificationReport(
         argument(COIN_NAME_ARG, coinInfo.name)
         argument(COIN_PRICE_ARG, coinInfo.price)
         argument(COIN_ICON_URL_ARG, coinInfo.iconUrl)
+        argument(COIN_EDITABLE_ARG, coinEditable)
     }
 
     navigate(route)

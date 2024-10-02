@@ -6,14 +6,15 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
-import me.khruslan.cryptograph.data.notifications.Notification
 import me.khruslan.cryptograph.ui.coins.shared.CoinInfo
 import me.khruslan.cryptograph.ui.coins.shared.CoinInfoArgs
 import me.khruslan.cryptograph.ui.coins.shared.CoinInfoNavResultEffect
+import me.khruslan.cryptograph.ui.notifications.details.NotificationDetailsCallback
 import me.khruslan.cryptograph.ui.notifications.main.NotificationsArgKeys.COIN_ICON_URL_ARG
 import me.khruslan.cryptograph.ui.notifications.main.NotificationsArgKeys.COIN_ID_ARG
 import me.khruslan.cryptograph.ui.notifications.main.NotificationsArgKeys.COIN_NAME_ARG
 import me.khruslan.cryptograph.ui.notifications.main.NotificationsArgKeys.COIN_PRICE_ARG
+import me.khruslan.cryptograph.ui.notifications.report.NotificationReportCallback
 import me.khruslan.cryptograph.ui.util.navigation.modal
 import me.khruslan.cryptograph.ui.util.navigation.rememberNavInterceptor
 import me.khruslan.cryptograph.ui.util.navigation.route
@@ -68,15 +69,9 @@ internal data class NotificationsArgs(
     }
 }
 
-private typealias NotificationDetailsCallback = (
-    notification: Notification?,
-    coinInfo: CoinInfo,
-    coinEditable: Boolean,
-) -> Unit
-
 internal fun NavGraphBuilder.notificationsScreen(
     onNotificationDetails: NotificationDetailsCallback,
-    onNotificationReport: (notification: Notification, coinInfo: CoinInfo) -> Unit,
+    onNotificationReport: NotificationReportCallback,
     onCoinSelection: () -> Unit,
     onCloseActionClick: () -> Unit,
 ) {
@@ -112,10 +107,12 @@ internal fun NavGraphBuilder.notificationsScreen(
             },
             onNotificationClick = navInterceptor { (coin, notification) ->
                 val coinInfo = CoinInfo.fromCoin(coin)
+                val coinEditable = !args.coinSelected
+
                 if (notification.isPending) {
-                    onNotificationDetails(notification, coinInfo, !args.coinSelected)
+                    onNotificationDetails(notification, coinInfo, coinEditable)
                 } else {
-                    onNotificationReport(notification, coinInfo)
+                    onNotificationReport(notification, coinInfo, coinEditable)
                 }
             },
             onCloseActionClick = navInterceptor(onCloseActionClick),

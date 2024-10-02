@@ -96,6 +96,12 @@ internal fun NavGraphBuilder.notificationDetailsScreen(
     }
 }
 
+internal typealias NotificationDetailsCallback = (
+    notification: Notification?,
+    coinInfo: CoinInfo,
+    coinEditable: Boolean,
+) -> Unit
+
 internal fun NavController.navigateToNotificationDetails(
     notification: Notification?,
     coinInfo: CoinInfo,
