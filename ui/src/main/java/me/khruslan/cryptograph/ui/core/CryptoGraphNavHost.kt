@@ -63,7 +63,7 @@ internal fun CryptoGraphNavHost() {
 
         notificationReportDialog(
             onNotificationDetails = navController::navigateToNotificationDetails,
-            onCloseActionClick = navController::popBackStack
+            onDismiss = navController::popBackStack
         )
 
         preferencesScreen(

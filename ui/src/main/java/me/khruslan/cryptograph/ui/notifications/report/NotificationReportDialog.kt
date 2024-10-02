@@ -30,11 +30,14 @@ import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -74,10 +77,26 @@ internal fun NotificationReportDialog(
     notificationReportState: NotificationReportState,
     onRetryClick: () -> Unit,
     onDeleteButtonClick: () -> Unit,
+    onWarningShown: () -> Unit,
     onRestartButtonClick: (notification: Notification) -> Unit,
-    onCloseActionClick: () -> Unit,
+    onDismiss: () -> Unit,
 ) {
+    val snackbarHostState = remember { SnackbarHostState() }
     val topBarScrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
+
+    if (notificationReportState.notificationDeleted) {
+        LaunchedEffect(Unit) {
+            onDismiss()
+        }
+    }
+
+    notificationReportState.warningMessageRes?.let { resId ->
+        val snackbarMessage = stringResource(resId)
+        LaunchedEffect(snackbarMessage) {
+            snackbarHostState.showSnackbar(snackbarMessage)
+            onWarningShown()
+        }
+    }
 
     Scaffold(
         modifier = Modifier
@@ -90,7 +109,13 @@ internal fun NotificationReportDialog(
             TopBar(
                 scrollBehavior = topBarScrollBehavior,
                 title = getTopBarTitle(notificationReportState.notificationStatus),
-                onCloseActionClick = onCloseActionClick
+                onCloseActionClick = onDismiss
+            )
+        },
+        snackbarHost = {
+            SnackbarHost(
+                modifier = Modifier.padding(bottom = 64.dp),
+                hostState = snackbarHostState
             )
         }
     ) { contentPadding ->
@@ -108,7 +133,11 @@ internal fun NotificationReportDialog(
                     notification = state.data,
                     coinInfo = notificationReportState.coinInfo,
                     onDeleteButtonClick = onDeleteButtonClick,
-                    onRestartButtonClick = onRestartButtonClick
+                    onRestartButtonClick = { notification ->
+                        if (!notificationReportState.notificationDeleting) {
+                            onRestartButtonClick(notification)
+                        }
+                    }
                 )
 
                 is UiState.Error -> FullScreenError(
@@ -408,8 +437,9 @@ private fun NotificationReportDialogPreview() {
                 notificationReportState = notificationReportState,
                 onRetryClick = {},
                 onDeleteButtonClick = {},
+                onWarningShown = {},
                 onRestartButtonClick = {},
-                onCloseActionClick = {}
+                onDismiss = {}
             )
         }
     }

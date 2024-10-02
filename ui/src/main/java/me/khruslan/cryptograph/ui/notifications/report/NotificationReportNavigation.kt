@@ -84,7 +84,7 @@ internal data class NotificationReportArgs(
 
 internal fun NavGraphBuilder.notificationReportDialog(
     onNotificationDetails: NotificationDetailsCallback,
-    onCloseActionClick: () -> Unit,
+    onDismiss: () -> Unit,
 ) {
     val arguments = listOf(
         navArgument(NOTIFICATION_ID_ARG) { type = NavType.LongType },
@@ -112,14 +112,13 @@ internal fun NavGraphBuilder.notificationReportDialog(
         NotificationReportDialog(
             notificationReportState = viewModel.notificationReportState,
             onRetryClick = viewModel::reloadNotification,
-            onDeleteButtonClick = {
-                // TODO: Delete notification and dismiss dialog
-            },
+            onDeleteButtonClick = viewModel::deleteNotification,
+            onWarningShown = viewModel::warningShown,
             onRestartButtonClick = navInterceptor { notification ->
                 val coinInfo = CoinInfo.fromArgs(args)
                 onNotificationDetails(notification, coinInfo, args.coinEditable)
             },
-            onCloseActionClick = navInterceptor(onCloseActionClick)
+            onDismiss = navInterceptor(onDismiss)
         )
     }
 }

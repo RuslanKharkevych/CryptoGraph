@@ -12,6 +12,7 @@ import me.khruslan.cryptograph.data.common.DataException
 import me.khruslan.cryptograph.data.notifications.Notification
 import me.khruslan.cryptograph.data.notifications.NotificationStatus
 import me.khruslan.cryptograph.data.notifications.NotificationsRepository
+import me.khruslan.cryptograph.ui.R
 import me.khruslan.cryptograph.ui.coins.shared.CoinInfo
 import me.khruslan.cryptograph.ui.util.UiState
 import me.khruslan.cryptograph.ui.util.displayMessageRes
@@ -26,6 +27,8 @@ internal class NotificationReportViewModel(
     private val _notificationReportState = MutableNotificationReportState(args)
     val notificationReportState: NotificationReportState = _notificationReportState
 
+    private var notificationDeleting = false
+
     init {
         loadNotification()
     }
@@ -33,6 +36,26 @@ internal class NotificationReportViewModel(
     fun reloadNotification() {
         _notificationReportState.notificationState = UiState.Loading
         loadNotification()
+    }
+
+    fun deleteNotification() {
+        if (notificationDeleting) return
+        notificationDeleting = true
+
+        viewModelScope.launch {
+            try {
+                notificationsRepository.deleteNotification(args.notificationId)
+                _notificationReportState.notificationDeleted = true
+            } catch (_: DataException) {
+                _notificationReportState.warningMessageRes =
+                    R.string.delete_notification_warning_msg
+                notificationDeleting = false
+            }
+        }
+    }
+
+    fun warningShown() {
+        _notificationReportState.warningMessageRes = null
     }
 
     private fun loadNotification() {
@@ -52,6 +75,9 @@ internal interface NotificationReportState {
     val coinInfo: CoinInfo
     val notificationStatus: NotificationStatus
     val notificationState: UiState<Notification>
+    val notificationDeleting: Boolean
+    val notificationDeleted: Boolean
+    val warningMessageRes: Int?
 }
 
 internal class MutableNotificationReportState(
@@ -59,6 +85,8 @@ internal class MutableNotificationReportState(
 ) : NotificationReportState {
     override val coinInfo = CoinInfo.fromArgs(args)
     override val notificationStatus = args.notificationStatus
-    override var notificationState: UiState<Notification> by mutableStateOf(UiState.Loading)
-
+    override var notificationState by mutableStateOf<UiState<Notification>>(UiState.Loading)
+    override var notificationDeleting by mutableStateOf(false)
+    override var notificationDeleted by mutableStateOf(false)
+    override var warningMessageRes by mutableStateOf<Int?>(null)
 }

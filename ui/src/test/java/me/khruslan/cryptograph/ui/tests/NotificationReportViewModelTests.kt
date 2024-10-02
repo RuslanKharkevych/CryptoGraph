@@ -57,4 +57,40 @@ internal class NotificationReportViewModelTests {
         val actualNotificationState = viewModel.notificationReportState.notificationState
         assertThat(actualNotificationState).isEqualTo(expectedNotificationState)
     }
+
+    @Test
+    fun `Delete notification - success`() = runTest {
+        viewModel.deleteNotification()
+        val notificationDeleted = viewModel.notificationReportState.notificationDeleted
+
+        assertThat(notificationDeleted).isTrue()
+    }
+
+    @Test
+    fun `Delete notification - failure`() = runTest {
+        fakeNotificationsRepository.isDatabaseCorrupted = true
+        viewModel.deleteNotification()
+
+        val expectedWarningMessageRes = R.string.delete_notification_warning_msg
+        val actualWarningMessageRes = viewModel.notificationReportState.warningMessageRes
+        assertThat(actualWarningMessageRes).isEqualTo(expectedWarningMessageRes)
+    }
+
+    @Test
+    fun `Delete notification - deleting`() = runTest {
+        viewModel.deleteNotification()
+        viewModel.deleteNotification()
+
+        assertThat(fakeNotificationsRepository.notificationsDeleted).isEqualTo(1)
+    }
+
+    @Test
+    fun `Warning shown`() {
+        fakeNotificationsRepository.isDatabaseCorrupted = true
+        viewModel.deleteNotification()
+        viewModel.warningShown()
+        val warningMessageRes = viewModel.notificationReportState.warningMessageRes
+
+        assertThat(warningMessageRes).isNull()
+    }
 }

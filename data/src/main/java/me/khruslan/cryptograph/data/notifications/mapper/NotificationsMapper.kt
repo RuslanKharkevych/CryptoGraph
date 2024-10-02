@@ -117,6 +117,7 @@ internal class NotificationsMapper(
         return LocalDate.now(clock).isAfter(expirationDate)
     }
 
+    // TODO: Sort by created at timestamp instead of ID
     private fun notificationsComparator(): Comparator<Notification> {
         return compareBy<Notification> { it.status.sortOrder }
             .thenByDescending { it.createdAt }
