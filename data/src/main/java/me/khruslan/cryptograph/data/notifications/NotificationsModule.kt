@@ -19,7 +19,7 @@ internal val notificationsModule = module {
             ),
             mapper = NotificationsMapper(
                 dispatcher = Dispatchers.Default,
-                clock = Clock.systemUTC(),
+                clock = Clock.systemDefaultZone(),
             )
         )
     }

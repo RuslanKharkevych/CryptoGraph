@@ -9,6 +9,7 @@ import me.khruslan.cryptograph.data.notifications.Notification
 import me.khruslan.cryptograph.ui.coins.shared.CoinInfo
 import me.khruslan.cryptograph.ui.notifications.details.NotificationDetailsFormState
 import me.khruslan.cryptograph.ui.notifications.details.NotificationDetailsFormStateImpl
+import me.khruslan.cryptograph.ui.notifications.details.NotificationExpirationDateState
 import me.khruslan.cryptograph.ui.notifications.details.NotificationTitleState
 import me.khruslan.cryptograph.ui.notifications.details.NotificationTriggerPriceState
 import me.khruslan.cryptograph.ui.notifications.details.NotificationTriggerType
@@ -95,6 +96,17 @@ internal class NotificationDetailsFormStateTests {
 
         val expectedState = NotificationTriggerPriceState.Empty
         val actualState = formState.triggerPriceState
+        assertThat(actualState).isEqualTo(expectedState)
+    }
+
+    @Test
+    fun `Build notification - expiration date invalid`() {
+        initFormState()
+        formState.updateExpirationDate(LocalDate.now(CLOCK).minusDays(1))
+        formState.buildNotification(onSuccess = { fail() })
+
+        val expectedState = NotificationExpirationDateState.DateInThePast
+        val actualState = formState.expirationDateState
         assertThat(actualState).isEqualTo(expectedState)
     }
 
@@ -285,6 +297,26 @@ internal class NotificationDetailsFormStateTests {
 
         val expectedState = NotificationTriggerPriceState.PriceTooSmall
         val actualState = formState.triggerPriceState
+        assertThat(actualState).isEqualTo(expectedState)
+    }
+
+    @Test
+    fun `Update expiration date - valid`() {
+        initFormState()
+        formState.updateExpirationDate(LocalDate.now().plusDays(1))
+
+        val expectedState = NotificationExpirationDateState.Default
+        val actualState = formState.expirationDateState
+        assertThat(actualState).isEqualTo(expectedState)
+    }
+
+    @Test
+    fun `Update expiration date - date in the past`() {
+        initFormState()
+        formState.updateExpirationDate(LocalDate.now().minusDays(1))
+
+        val expectedState = NotificationExpirationDateState.Default
+        val actualState = formState.expirationDateState
         assertThat(actualState).isEqualTo(expectedState)
     }
 

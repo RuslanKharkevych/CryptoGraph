@@ -1,8 +1,11 @@
 package me.khruslan.cryptograph.ui.notifications.details
 
 import androidx.activity.compose.BackHandler
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -77,11 +80,11 @@ import me.khruslan.cryptograph.ui.notifications.details.date.ExpirationDatePicke
 import me.khruslan.cryptograph.ui.notifications.shared.deniedOrNeverAsked
 import me.khruslan.cryptograph.ui.notifications.shared.rememberNotificationPermissionState
 import me.khruslan.cryptograph.ui.util.CurrencyBitcoin
-import me.khruslan.cryptograph.ui.util.preview.PreviewScreenSizesLightDark
 import me.khruslan.cryptograph.ui.util.UiState
 import me.khruslan.cryptograph.ui.util.components.FullScreenError
 import me.khruslan.cryptograph.ui.util.components.FullScreenLoader
 import me.khruslan.cryptograph.ui.util.getCurrentLocale
+import me.khruslan.cryptograph.ui.util.preview.PreviewScreenSizesLightDark
 import me.khruslan.cryptograph.ui.util.previewPlaceholder
 import me.khruslan.cryptograph.ui.util.state.rememberAlertState
 import java.time.LocalDate
@@ -316,7 +319,12 @@ private fun NotificationForm(
             )
             ExpirationDateField(
                 date = formatExpirationDate(formState.expirationDate),
-                onClick = formState::showExpirationDatePicker
+                state = formState.expirationDateState,
+                onClick = formState::showExpirationDatePicker,
+                onClear = {
+                    focusManager.clearFocus()
+                    formState.updateExpirationDate(null)
+                }
             )
             FormButtons(
                 onSaveClick = {
@@ -428,13 +436,42 @@ private fun TriggerField(
 }
 
 @Composable
-private fun ExpirationDateField(date: String, onClick: () -> Unit) {
+private fun ExpirationDateField(
+    date: String,
+    state: NotificationExpirationDateState,
+    onClick: () -> Unit,
+    onClear: () -> Unit
+) {
     FormField(
         value = TextFieldValue(date),
         label = stringResource(R.string.expiration_date_field_label),
-        supportingText = stringResource(R.string.expiration_date_field_desc),
+        supportingText = stringResource(
+            when (state) {
+                NotificationExpirationDateState.Default -> R.string.expiration_date_field_desc
+                NotificationExpirationDateState.DateInThePast ->
+                    R.string.expiration_date_field_in_the_past_error_label
+            }
+        ),
         readOnly = true,
-        onClick = onClick
+        isError = !state.isValid,
+        suffix = {
+            AnimatedVisibility(
+                visible = date.isNotEmpty(),
+                enter = fadeIn(),
+                exit = fadeOut()
+            ) {
+                Icon(
+                    modifier = Modifier.clickable(
+                        interactionSource = remember { MutableInteractionSource() },
+                        indication = ripple(bounded = false),
+                        onClick = onClear
+                    ),
+                    imageVector = Icons.Outlined.Delete,
+                    contentDescription = stringResource(R.string.clear_expiration_date_btn_desc)
+                )
+            }
+        },
+        onClick = onClick,
     )
 }
 

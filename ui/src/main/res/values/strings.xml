@@ -79,6 +79,8 @@
     <string name="notification_trigger_price_unknown_placeholder">unknown</string>
     <string name="expiration_date_field_label">Expiration date (optional)</string>
     <string name="expiration_date_field_desc">If not provided, notification will never expire</string>
+    <string name="expiration_date_field_in_the_past_error_label">Date can\'t be in the past</string>
+    <string name="clear_expiration_date_btn_desc">Clear expiration date</string>
     <string name="save_btn_label">Save</string>
     <string name="discard_btn_label">Discard</string>
     <string name="save_notification_warning_msg">Failed to save the notification. Please try again</string>

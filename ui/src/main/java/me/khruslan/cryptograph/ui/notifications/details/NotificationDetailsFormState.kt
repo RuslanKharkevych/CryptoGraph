@@ -26,6 +26,7 @@ internal interface NotificationDetailsFormState {
     val triggerPrice: TextFieldValue
     val triggerPriceState: NotificationTriggerPriceState
     val expirationDate: LocalDate?
+    val expirationDateState: NotificationExpirationDateState
     val expirationDatePickerVisible: Boolean
 
     fun updateNotificationTitle(title: TextFieldValue)
@@ -63,7 +64,7 @@ internal class NotificationDetailsFormStateImpl(
     ) : this(
         clock = clock,
         notificationId = notification?.id,
-        createdAt = notification?.createdAt,
+        createdAt = notification?.createdAt?.takeIf { notification.isPending },
         coinInfo = coinInfo,
         notificationTitle = notification.titleTextFieldValue,
         notificationTitleState = NotificationTitleState.Default,
@@ -82,6 +83,7 @@ internal class NotificationDetailsFormStateImpl(
     override var triggerPrice by mutableStateOf(triggerPrice)
     override var triggerPriceState by mutableStateOf(triggerPriceState)
     override var expirationDate by mutableStateOf(expirationDate)
+    override var expirationDateState by mutableStateOf(getExpirationDateState())
     override var expirationDatePickerVisible by mutableStateOf(expirationDatePickerVisible)
 
     private var triggerPriceFocused by mutableStateOf(false)
@@ -94,7 +96,7 @@ internal class NotificationDetailsFormStateImpl(
         notificationTitleState = if (isFocused) {
             NotificationTitleState.Default
         } else {
-            getNotificationTitleState(notificationTitle.text)
+            getNotificationTitleState()
         }
     }
 
@@ -123,12 +125,13 @@ internal class NotificationDetailsFormStateImpl(
         triggerPriceState = if (isFocused) {
             NotificationTriggerPriceState.Default
         } else {
-            getTriggerPriceState(triggerPrice.text)
+            getTriggerPriceState()
         }
     }
 
     override fun updateExpirationDate(date: LocalDate?) {
         expirationDate = date
+        expirationDateState = getExpirationDateState(date)
     }
 
     override fun showExpirationDatePicker() {
@@ -142,20 +145,29 @@ internal class NotificationDetailsFormStateImpl(
     override fun buildNotification(onSuccess: (notification: Notification) -> Unit) {
         val notificationTitle = notificationTitle.text
         val triggerPrice = triggerPrice.text
+        val triggerType = triggerType
+        val expirationDate = expirationDate
+
         val notificationTitleState = getNotificationTitleState(notificationTitle)
-        val triggerPriceState = getTriggerPriceState(triggerPrice)
+        val triggerPriceState = getTriggerPriceState(triggerPrice, triggerType)
+        val expirationDateState = getExpirationDateState(expirationDate)
 
         this.notificationTitleState = notificationTitleState
         this.triggerPriceState = triggerPriceState
-        if (!notificationTitleState.isValid || !triggerPriceState.isValid) return
+        this.expirationDateState = expirationDateState
+
+        if (!notificationTitleState.isValid
+            || !triggerPriceState.isValid
+            || !expirationDateState.isValid
+        ) return
 
         val notification = Notification(
             id = notificationId ?: 0L,
             coinId = coinInfo.id,
             title = notificationTitle,
-            createdAt = createdAt ?: LocalDate.now(clock), // TODO: Reset on restart
+            createdAt = createdAt ?: LocalDate.now(clock),
             completedAt = null,
-            expirationDate = expirationDate, // TODO: Validate expiration date is not in the past
+            expirationDate = expirationDate,
             trigger = buildTrigger(triggerType, triggerPrice.toDouble()),
             status = NotificationStatus.Pending,
         )
@@ -163,7 +175,9 @@ internal class NotificationDetailsFormStateImpl(
         onSuccess(notification)
     }
 
-    private fun getNotificationTitleState(titleText: String): NotificationTitleState {
+    private fun getNotificationTitleState(
+        titleText: String = notificationTitle.text
+    ): NotificationTitleState {
         return if (titleText.isBlank()) {
             NotificationTitleState.Blank
         } else {
@@ -171,7 +185,10 @@ internal class NotificationDetailsFormStateImpl(
         }
     }
 
-    private fun getTriggerPriceState(priceText: String): NotificationTriggerPriceState {
+    private fun getTriggerPriceState(
+        priceText: String = triggerPrice.text,
+        triggerType: NotificationTriggerType = this.triggerType
+    ): NotificationTriggerPriceState {
         if (priceText.isEmpty()) {
             return NotificationTriggerPriceState.Empty
         }
@@ -201,6 +218,16 @@ internal class NotificationDetailsFormStateImpl(
         }
     }
 
+    private fun getExpirationDateState(
+        expirationDate: LocalDate? = this.expirationDate
+    ): NotificationExpirationDateState {
+        return if (expirationDate?.isBefore(LocalDate.now(clock)) == true) {
+            NotificationExpirationDateState.DateInThePast
+        } else {
+            NotificationExpirationDateState.Default
+        }
+    }
+
     private fun buildTrigger(type: NotificationTriggerType, price: Double): NotificationTrigger {
         return when (type) {
             NotificationTriggerType.PriceLessThan -> NotificationTrigger.PriceLessThan(price)
@@ -225,6 +252,11 @@ internal enum class NotificationTriggerPriceState(val isValid: Boolean) {
     InvalidFormat(false),
     PriceTooBig(false),
     PriceTooSmall(false)
+}
+
+internal enum class NotificationExpirationDateState(val isValid: Boolean) {
+    Default(true),
+    DateInThePast(false)
 }
 
 @Composable

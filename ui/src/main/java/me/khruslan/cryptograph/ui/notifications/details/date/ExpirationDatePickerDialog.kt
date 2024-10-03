@@ -81,8 +81,13 @@ private fun rememberDatePickerState(
     initialDate: LocalDate?,
     initialDisplayMode: DisplayMode,
 ): DatePickerState {
+    val initialDateMillis = initialDate?.toEpochMillis()
+
     return rememberDatePickerState(
-        initialSelectedDateMillis = initialDate?.toEpochMillis(),
+        initialSelectedDateMillis = initialDateMillis,
+        initialDisplayedMonthMillis = initialDateMillis?.takeIf {
+            initialDate.month >= LocalDate.now().month
+        },
         initialDisplayMode = initialDisplayMode,
         selectableDates = object : SelectableDates {
             override fun isSelectableDate(utcTimeMillis: Long): Boolean {
