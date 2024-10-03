@@ -5,6 +5,7 @@ import me.khruslan.cryptograph.data.notifications.NotificationStatus
 import me.khruslan.cryptograph.data.notifications.NotificationTrigger
 import me.khruslan.cryptograph.data.notifications.local.NotificationDto
 import java.time.LocalDate
+import java.time.OffsetDateTime
 
 val PREVIEW_NOTIFICATIONS
     get() = STUB_NOTIFICATIONS + listOf(
@@ -12,7 +13,7 @@ val PREVIEW_NOTIFICATIONS
             id = 3L,
             coinId = "WcwrkfNI4FUAe",
             title = "BNB > 600$",
-            createdAt = LocalDate.parse("2024-09-15"),
+            createdAt = OffsetDateTime.parse("2024-09-15T17:23:41+09:00"),
             completedAt = null,
             expirationDate = LocalDate.parse("2025-11-10"),
             trigger = NotificationTrigger.PriceMoreThan(600.0),
@@ -22,7 +23,7 @@ val PREVIEW_NOTIFICATIONS
             id = 2L,
             coinId = "zNZHO_Sjf",
             title = "Solana > 200$",
-            createdAt = LocalDate.parse("2024-09-15"),
+            createdAt = OffsetDateTime.parse("2024-09-15T16:20:05+09:00"),
             completedAt = null,
             expirationDate = null,
             trigger = NotificationTrigger.PriceLessThan(200.0),
@@ -32,7 +33,7 @@ val PREVIEW_NOTIFICATIONS
             id = 1L,
             coinId = "aKzUVe4Hh_CON",
             title = "USDC < 0.99$",
-            createdAt = LocalDate.parse("2024-09-15"),
+            createdAt = OffsetDateTime.parse("2024-09-15T15:32:57+09:00"),
             completedAt = null,
             expirationDate = null,
             trigger = NotificationTrigger.PriceLessThan(0.99),
@@ -46,7 +47,7 @@ val STUB_NOTIFICATIONS
             id = 6L,
             coinId = "Qwsogvtv82FCd",
             title = "Bitcoin < 50000$",
-            createdAt = LocalDate.parse("2024-09-13"),
+            createdAt = OffsetDateTime.parse("2024-09-13T22:31:23+09:00"),
             completedAt = LocalDate.parse("2024-09-25"),
             expirationDate = null,
             trigger = NotificationTrigger.PriceLessThan(50000.0),
@@ -56,7 +57,7 @@ val STUB_NOTIFICATIONS
             id = 5L,
             coinId = "razxDUgYGNAdQ",
             title = "Ethereum > 4000$",
-            createdAt = LocalDate.parse("2024-09-13"),
+            createdAt = OffsetDateTime.parse("2024-09-13T22:29:40+09:00"),
             completedAt = null,
             expirationDate = LocalDate.parse("2024-09-20"),
             trigger = NotificationTrigger.PriceMoreThan(4000.0),
@@ -66,7 +67,7 @@ val STUB_NOTIFICATIONS
             id = 4L,
             coinId = "HIVsRcGKkPFtW",
             title = "Tether USD < 1$",
-            createdAt = LocalDate.parse("2024-09-15"),
+            createdAt = OffsetDateTime.parse("2024-09-15T21:30:28+09:00"),
             completedAt = null,
             expirationDate = null,
             trigger = NotificationTrigger.PriceLessThan(1.0),
@@ -80,7 +81,7 @@ internal val STUB_DTO_NOTIFICATIONS
             id = 6L,
             coinUuid = "Qwsogvtv82FCd",
             title = "Bitcoin < 50000$",
-            createdAtDate = "2024-09-13",
+            createdAtDateTime = "2024-09-13T22:31:23+09:00",
             completedAtDate = "2024-09-25",
             expirationDate = null,
             priceLessThanTrigger = 50000.0,
@@ -90,7 +91,7 @@ internal val STUB_DTO_NOTIFICATIONS
             id = 5L,
             coinUuid = "razxDUgYGNAdQ",
             title = "Ethereum > 4000$",
-            createdAtDate = "2024-09-13",
+            createdAtDateTime = "2024-09-13T22:29:40+09:00",
             completedAtDate = null,
             expirationDate = "2024-09-20",
             priceLessThanTrigger = null,
@@ -100,7 +101,7 @@ internal val STUB_DTO_NOTIFICATIONS
             id = 4L,
             coinUuid = "HIVsRcGKkPFtW",
             title = "Tether USD < 1$",
-            createdAtDate = "2024-09-15",
+            createdAtDateTime = "2024-09-15T21:30:28+09:00",
             completedAtDate = null,
             expirationDate = null,
             priceLessThanTrigger = 1.0,

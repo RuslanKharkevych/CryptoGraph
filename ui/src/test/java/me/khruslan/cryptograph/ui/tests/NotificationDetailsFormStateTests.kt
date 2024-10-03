@@ -18,6 +18,7 @@ import org.junit.Test
 import java.time.Clock
 import java.time.Instant
 import java.time.LocalDate
+import java.time.OffsetDateTime
 import java.time.ZoneId
 
 private val CLOCK: Clock = Clock.fixed(
@@ -70,7 +71,10 @@ internal class NotificationDetailsFormStateTests {
             updateTriggerPrice(TextFieldValue(notification.trigger.targetPrice.toString()))
             updateExpirationDate(notification.expirationDate)
 
-            val expectedNotification = notification.copy(id = 0L, createdAt = LocalDate.now(CLOCK))
+            val expectedNotification = notification.copy(
+                id = 0L,
+                createdAt = OffsetDateTime.now(CLOCK)
+            )
             var actualNotification: Notification? = null
             buildNotification { actualNotification = it }
             assertThat(actualNotification).isEqualTo(expectedNotification)

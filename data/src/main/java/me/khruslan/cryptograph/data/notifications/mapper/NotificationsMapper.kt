@@ -9,8 +9,9 @@ import me.khruslan.cryptograph.data.notifications.NotificationStatus
 import me.khruslan.cryptograph.data.notifications.NotificationTrigger
 import me.khruslan.cryptograph.data.notifications.local.NotificationDto
 import java.time.Clock
-import java.time.DateTimeException
 import java.time.LocalDate
+import java.time.OffsetDateTime
+import java.time.format.DateTimeParseException
 
 private const val LOG_TAG = "NotificationsMapper"
 
@@ -46,7 +47,7 @@ internal class NotificationsMapper(
                 id = notification.id,
                 coinUuid = notification.coinId,
                 title = notification.title,
-                createdAtDate = notification.createdAt.toString(),
+                createdAtDateTime = notification.createdAt.toString(),
                 completedAtDate = notification.completedAt?.toString(),
                 expirationDate = notification.expirationDate?.toString(),
                 priceLessThanTrigger = notification.trigger.targetPrice.takeIf {
@@ -64,7 +65,7 @@ internal class NotificationsMapper(
             id = notificationDto.id,
             coinId = notificationDto.coinUuid,
             title = notificationDto.title,
-            createdAt = mapDate(notificationDto.createdAtDate),
+            createdAt = mapDateTime(notificationDto.createdAtDateTime),
             completedAt = notificationDto.completedAtDate?.let(::mapDate),
             expirationDate = notificationDto.expirationDate?.let(::mapDate),
             trigger = mapTrigger(
@@ -87,8 +88,16 @@ internal class NotificationsMapper(
     private fun mapDate(dateString: String): LocalDate {
         return try {
             LocalDate.parse(dateString)
-        } catch (e: DateTimeException) {
+        } catch (e: DateTimeParseException) {
             throw IllegalArgumentException("Invalid date string: $dateString", e)
+        }
+    }
+
+    private fun mapDateTime(dateTimeString: String): OffsetDateTime {
+        return try {
+            OffsetDateTime.parse(dateTimeString)
+        } catch (e: DateTimeParseException) {
+            throw IllegalArgumentException("Invalid date time string: $dateTimeString", e)
         }
     }
 
@@ -117,10 +126,7 @@ internal class NotificationsMapper(
         return LocalDate.now(clock).isAfter(expirationDate)
     }
 
-    // TODO: Sort by created at timestamp instead of ID
     private fun notificationsComparator(): Comparator<Notification> {
-        return compareBy<Notification> { it.status.sortOrder }
-            .thenByDescending { it.createdAt }
-            .thenByDescending { it.id }
+        return compareBy<Notification> { it.status.sortOrder }.thenByDescending { it.createdAt }
     }
 }

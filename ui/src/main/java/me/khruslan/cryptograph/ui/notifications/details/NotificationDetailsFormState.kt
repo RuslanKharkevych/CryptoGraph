@@ -16,6 +16,7 @@ import me.khruslan.cryptograph.data.notifications.NotificationTrigger
 import me.khruslan.cryptograph.ui.coins.shared.CoinInfo
 import java.time.Clock
 import java.time.LocalDate
+import java.time.OffsetDateTime
 
 internal interface NotificationDetailsFormState {
     val coinInfo: CoinInfo
@@ -46,7 +47,7 @@ internal interface NotificationDetailsFormState {
 internal class NotificationDetailsFormStateImpl(
     private val clock: Clock,
     private val notificationId: Long?,
-    private val createdAt: LocalDate?,
+    private val createdAt: OffsetDateTime?,
     coinInfo: CoinInfo,
     notificationTitle: TextFieldValue,
     notificationTitleState: NotificationTitleState,
@@ -165,7 +166,7 @@ internal class NotificationDetailsFormStateImpl(
             id = notificationId ?: 0L,
             coinId = coinInfo.id,
             title = notificationTitle,
-            createdAt = createdAt ?: LocalDate.now(clock),
+            createdAt = createdAt ?: OffsetDateTime.now(clock),
             completedAt = null,
             expirationDate = expirationDate,
             trigger = buildTrigger(triggerType, triggerPrice.toDouble()),
@@ -288,7 +289,7 @@ internal fun rememberNotificationDetailsFormState(
 private fun notificationDetailsFormStateSaver(
     clock: Clock,
     notificationId: Long?,
-    createdAt: LocalDate?,
+    createdAt: OffsetDateTime?,
 ): Saver<NotificationDetailsFormStateImpl, Any> {
     val coinInfoKey = "coin_info"
     val notificationTitleKey = "notification_title"

@@ -8,7 +8,7 @@ internal data class NotificationDto(
     @Id var id: Long = 0,
     var coinUuid: String = "",
     var title: String = "",
-    var createdAtDate: String = "",
+    var createdAtDateTime: String = "",
     var completedAtDate: String? = null,
     var expirationDate: String? = null,
     var priceLessThanTrigger: Double? = null,
