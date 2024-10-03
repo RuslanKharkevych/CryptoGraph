@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.withContext
 import me.khruslan.cryptograph.base.Logger
-import me.khruslan.cryptograph.data.common.DatabaseException
+import me.khruslan.cryptograph.data.core.DatabaseException
 
 private const val LOG_TAG = "NotificationsLocalDataSource"
 

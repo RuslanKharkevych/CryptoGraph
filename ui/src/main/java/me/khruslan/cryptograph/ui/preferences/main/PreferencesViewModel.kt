@@ -7,7 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import me.khruslan.cryptograph.base.AppVersion
-import me.khruslan.cryptograph.data.common.DataException
+import me.khruslan.cryptograph.data.core.DataException
 import me.khruslan.cryptograph.data.preferences.ChartPeriod
 import me.khruslan.cryptograph.data.preferences.ChartStyle
 import me.khruslan.cryptograph.data.preferences.Preferences

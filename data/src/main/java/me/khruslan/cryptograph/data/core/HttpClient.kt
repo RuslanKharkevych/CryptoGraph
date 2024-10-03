@@ -1,4 +1,4 @@
-package me.khruslan.cryptograph.data.common
+package me.khruslan.cryptograph.data.core
 
 import android.content.Context
 import me.khruslan.cryptograph.base.Logger

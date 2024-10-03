@@ -1,8 +1,8 @@
 package me.khruslan.cryptograph.ui.tests
 
 import com.google.common.truth.Truth.assertThat
-import me.khruslan.cryptograph.data.common.DataException
-import me.khruslan.cryptograph.data.common.ErrorType
+import me.khruslan.cryptograph.data.core.DataException
+import me.khruslan.cryptograph.data.core.ErrorType
 import me.khruslan.cryptograph.ui.R
 import me.khruslan.cryptograph.ui.util.displayMessageRes
 import org.junit.Test

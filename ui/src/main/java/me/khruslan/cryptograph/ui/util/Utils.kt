@@ -9,8 +9,8 @@ import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.stringResource
 import androidx.core.graphics.toColorInt
-import me.khruslan.cryptograph.data.common.DataException
-import me.khruslan.cryptograph.data.common.ErrorType
+import me.khruslan.cryptograph.data.core.DataException
+import me.khruslan.cryptograph.data.core.ErrorType
 import me.khruslan.cryptograph.ui.R
 import java.util.Locale
 

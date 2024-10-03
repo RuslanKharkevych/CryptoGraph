@@ -8,7 +8,7 @@ import me.khruslan.cryptograph.data.coins.local.PinnedCoinDto
 import me.khruslan.cryptograph.data.coins.mapper.CoinsMapper
 import me.khruslan.cryptograph.data.coins.remote.CoinDto
 import me.khruslan.cryptograph.data.coins.remote.CoinPriceDto
-import me.khruslan.cryptograph.data.common.DataValidationException
+import me.khruslan.cryptograph.data.core.DataValidationException
 import me.khruslan.cryptograph.data.fixtures.STUB_COINS
 import me.khruslan.cryptograph.data.fixtures.STUB_COIN_HISTORY
 import me.khruslan.cryptograph.data.fixtures.STUB_DTO_COINS

@@ -8,7 +8,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
-import me.khruslan.cryptograph.data.common.DataException
+import me.khruslan.cryptograph.data.core.DataException
 import me.khruslan.cryptograph.data.notifications.Notification
 import me.khruslan.cryptograph.data.notifications.NotificationStatus
 import me.khruslan.cryptograph.data.notifications.NotificationsRepository

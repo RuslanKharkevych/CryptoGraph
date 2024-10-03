@@ -8,7 +8,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
-import me.khruslan.cryptograph.data.common.DataException
+import me.khruslan.cryptograph.data.core.DataException
 import me.khruslan.cryptograph.data.interactors.notifications.coin.CoinNotification
 import me.khruslan.cryptograph.data.interactors.notifications.coin.CoinNotificationsInteractor
 import me.khruslan.cryptograph.data.interactors.notifications.completed.CompletedNotificationsInteractor

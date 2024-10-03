@@ -9,7 +9,7 @@ import me.khruslan.cryptograph.data.coins.CoinPrice
 import me.khruslan.cryptograph.data.coins.local.PinnedCoinDto
 import me.khruslan.cryptograph.data.coins.remote.CoinDto
 import me.khruslan.cryptograph.data.coins.remote.CoinPriceDto
-import me.khruslan.cryptograph.data.common.DataValidationException
+import me.khruslan.cryptograph.data.core.DataValidationException
 import java.math.BigDecimal
 import java.math.RoundingMode
 import java.time.DateTimeException

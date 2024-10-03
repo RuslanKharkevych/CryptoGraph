@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.take
 import me.khruslan.cryptograph.base.Logger
 import me.khruslan.cryptograph.data.coins.Coin
 import me.khruslan.cryptograph.data.coins.CoinsRepository
-import me.khruslan.cryptograph.data.common.DataException
+import me.khruslan.cryptograph.data.core.DataException
 import me.khruslan.cryptograph.data.notifications.Notification
 import me.khruslan.cryptograph.data.notifications.NotificationTrigger
 import me.khruslan.cryptograph.data.notifications.NotificationsRepository

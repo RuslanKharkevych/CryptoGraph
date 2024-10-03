@@ -6,13 +6,11 @@ import kotlinx.coroutines.Dispatchers
 import me.khruslan.cryptograph.data.coins.local.CoinsLocalDataSourceImpl
 import me.khruslan.cryptograph.data.coins.mapper.CoinsMapper
 import me.khruslan.cryptograph.data.coins.remote.CoinsRemoteDataSourceImpl
-import me.khruslan.cryptograph.data.common.buildHttpClient
-import me.khruslan.cryptograph.data.common.objectBoxModule
+import me.khruslan.cryptograph.data.core.buildHttpClient
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
 
 internal val coinsModule = module {
-    includes(objectBoxModule)
     single<CoinsRepository> {
         CoinsRepositoryImpl(
             localDataSource = CoinsLocalDataSourceImpl(

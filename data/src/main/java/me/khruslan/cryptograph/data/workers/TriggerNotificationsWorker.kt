@@ -7,7 +7,7 @@ import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
 import me.khruslan.cryptograph.base.Logger
-import me.khruslan.cryptograph.data.common.DataException
+import me.khruslan.cryptograph.data.core.DataException
 import me.khruslan.cryptograph.data.interactors.notifications.completed.CompletedNotificationsInteractor
 import me.khruslan.cryptograph.data.notifications.Notification
 import java.util.concurrent.TimeUnit

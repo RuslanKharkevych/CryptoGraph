@@ -3,7 +3,7 @@ package me.khruslan.cryptograph.data.notifications.mapper
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import me.khruslan.cryptograph.base.Logger
-import me.khruslan.cryptograph.data.common.DataValidationException
+import me.khruslan.cryptograph.data.core.DataValidationException
 import me.khruslan.cryptograph.data.notifications.Notification
 import me.khruslan.cryptograph.data.notifications.NotificationStatus
 import me.khruslan.cryptograph.data.notifications.NotificationTrigger

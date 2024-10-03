@@ -5,9 +5,9 @@ import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
 import me.khruslan.cryptograph.base.Logger
 import me.khruslan.cryptograph.data.BuildConfig
-import me.khruslan.cryptograph.data.common.NetworkConnectionException
-import me.khruslan.cryptograph.data.common.ResponseDeserializationException
-import me.khruslan.cryptograph.data.common.UnsuccessfulResponseException
+import me.khruslan.cryptograph.data.core.NetworkConnectionException
+import me.khruslan.cryptograph.data.core.ResponseDeserializationException
+import me.khruslan.cryptograph.data.core.UnsuccessfulResponseException
 import okhttp3.CacheControl
 import okhttp3.HttpUrl
 import okhttp3.HttpUrl.Companion.toHttpUrl

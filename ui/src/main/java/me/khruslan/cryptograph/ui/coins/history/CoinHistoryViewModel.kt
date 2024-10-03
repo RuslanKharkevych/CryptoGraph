@@ -11,7 +11,7 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import me.khruslan.cryptograph.data.coins.CoinPrice
 import me.khruslan.cryptograph.data.coins.CoinsRepository
-import me.khruslan.cryptograph.data.common.DataException
+import me.khruslan.cryptograph.data.core.DataException
 import me.khruslan.cryptograph.data.notifications.NotificationsRepository
 import me.khruslan.cryptograph.data.preferences.ChartPeriod
 import me.khruslan.cryptograph.data.preferences.ChartStyle

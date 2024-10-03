@@ -6,9 +6,9 @@ import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
 import me.khruslan.cryptograph.data.coins.remote.CoinsRemoteDataSourceImpl
 import me.khruslan.cryptograph.data.coins.remote.CoinsRemoteDataSource
-import me.khruslan.cryptograph.data.common.NetworkConnectionException
-import me.khruslan.cryptograph.data.common.ResponseDeserializationException
-import me.khruslan.cryptograph.data.common.UnsuccessfulResponseException
+import me.khruslan.cryptograph.data.core.NetworkConnectionException
+import me.khruslan.cryptograph.data.core.ResponseDeserializationException
+import me.khruslan.cryptograph.data.core.UnsuccessfulResponseException
 import okhttp3.HttpUrl
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient

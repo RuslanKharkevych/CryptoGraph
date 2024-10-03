@@ -1,4 +1,4 @@
-package me.khruslan.cryptograph.data.common
+package me.khruslan.cryptograph.data.core
 
 abstract class DataException(
     val errorType: ErrorType,

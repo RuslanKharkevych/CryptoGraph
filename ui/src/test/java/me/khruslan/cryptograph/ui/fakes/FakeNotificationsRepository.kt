@@ -4,8 +4,8 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
-import me.khruslan.cryptograph.data.common.DataException
-import me.khruslan.cryptograph.data.common.ErrorType
+import me.khruslan.cryptograph.data.core.DataException
+import me.khruslan.cryptograph.data.core.ErrorType
 import me.khruslan.cryptograph.data.fixtures.STUB_NOTIFICATIONS
 import me.khruslan.cryptograph.data.notifications.Notification
 import me.khruslan.cryptograph.data.notifications.NotificationsRepository

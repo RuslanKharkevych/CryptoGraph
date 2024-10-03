@@ -5,8 +5,8 @@ import kotlinx.coroutines.flow.flowOf
 import me.khruslan.cryptograph.data.coins.Coin
 import me.khruslan.cryptograph.data.coins.CoinPrice
 import me.khruslan.cryptograph.data.coins.CoinsRepository
-import me.khruslan.cryptograph.data.common.DataException
-import me.khruslan.cryptograph.data.common.ErrorType
+import me.khruslan.cryptograph.data.core.DataException
+import me.khruslan.cryptograph.data.core.ErrorType
 import me.khruslan.cryptograph.data.fixtures.STUB_COINS
 
 internal class FakeCoinsRepository : CoinsRepository {

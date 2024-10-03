@@ -7,8 +7,8 @@ import kotlinx.coroutines.flow.update
 import me.khruslan.cryptograph.data.coins.Coin
 import me.khruslan.cryptograph.data.coins.CoinPrice
 import me.khruslan.cryptograph.data.coins.CoinsRepository
-import me.khruslan.cryptograph.data.common.DataException
-import me.khruslan.cryptograph.data.common.ErrorType
+import me.khruslan.cryptograph.data.core.DataException
+import me.khruslan.cryptograph.data.core.ErrorType
 import me.khruslan.cryptograph.data.fixtures.STUB_COINS
 import me.khruslan.cryptograph.data.fixtures.STUB_COIN_HISTORY
 
