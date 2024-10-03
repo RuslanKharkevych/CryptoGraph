@@ -3,7 +3,7 @@ package me.khruslan.cryptograph
 import android.app.Application
 import coil.ImageLoader
 import coil.ImageLoaderFactory
-import me.khruslan.cryptograph.data.workers.PostCompletedNotificationsWorker
+import me.khruslan.cryptograph.data.notifications.workers.PostCompletedNotificationsWorker
 import me.khruslan.cryptograph.data.dataModule
 import me.khruslan.cryptograph.ui.core.buildImageLoader
 import me.khruslan.cryptograph.ui.uiModule

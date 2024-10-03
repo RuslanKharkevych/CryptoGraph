@@ -1,4 +1,4 @@
-package me.khruslan.cryptograph.data.workers
+package me.khruslan.cryptograph.data.notifications.workers
 
 import android.content.Context
 import androidx.work.CoroutineWorker
@@ -8,9 +8,9 @@ import androidx.work.WorkManager
 import androidx.work.WorkerParameters
 import me.khruslan.cryptograph.base.Logger
 import me.khruslan.cryptograph.data.core.DataException
-import me.khruslan.cryptograph.data.interactors.notifications.completed.CompletedNotification
-import me.khruslan.cryptograph.data.interactors.notifications.completed.CompletedNotificationsInteractor
-import me.khruslan.cryptograph.data.managers.PushNotificationsManager
+import me.khruslan.cryptograph.data.notifications.interactors.completed.CompletedNotification
+import me.khruslan.cryptograph.data.notifications.interactors.completed.CompletedNotificationsInteractor
+import me.khruslan.cryptograph.data.notifications.managers.PushNotificationsManager
 import java.util.concurrent.TimeUnit
 
 private const val LOG_TAG = "PostCompletedNotificationsWorker"

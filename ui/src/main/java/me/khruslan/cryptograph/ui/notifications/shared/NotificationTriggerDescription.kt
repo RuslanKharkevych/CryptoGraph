@@ -2,7 +2,7 @@ package me.khruslan.cryptograph.ui.notifications.shared
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
-import me.khruslan.cryptograph.data.notifications.NotificationTrigger
+import me.khruslan.cryptograph.data.notifications.repository.NotificationTrigger
 import me.khruslan.cryptograph.ui.R
 
 internal val NotificationTrigger.description: String

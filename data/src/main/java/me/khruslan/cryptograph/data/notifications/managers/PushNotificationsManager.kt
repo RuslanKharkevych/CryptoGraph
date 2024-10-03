@@ -1,4 +1,4 @@
-package me.khruslan.cryptograph.data.managers
+package me.khruslan.cryptograph.data.notifications.managers
 
 import android.app.Notification
 import android.app.PendingIntent
@@ -10,8 +10,8 @@ import androidx.core.app.NotificationManagerCompat.IMPORTANCE_DEFAULT
 import me.khruslan.cryptograph.base.Logger
 import me.khruslan.cryptograph.base.LaunchOptions
 import me.khruslan.cryptograph.data.R
-import me.khruslan.cryptograph.data.interactors.notifications.completed.CompletedNotification
-import me.khruslan.cryptograph.data.notifications.NotificationTrigger
+import me.khruslan.cryptograph.data.notifications.interactors.completed.CompletedNotification
+import me.khruslan.cryptograph.data.notifications.repository.NotificationTrigger
 import kotlin.random.Random
 
 private const val LOG_TAG = "PushNotificationsManager"

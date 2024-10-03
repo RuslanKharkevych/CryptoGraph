@@ -9,9 +9,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import me.khruslan.cryptograph.data.core.DataException
-import me.khruslan.cryptograph.data.interactors.notifications.coin.CoinNotification
-import me.khruslan.cryptograph.data.interactors.notifications.coin.CoinNotificationsInteractor
-import me.khruslan.cryptograph.data.interactors.notifications.completed.CompletedNotificationsInteractor
+import me.khruslan.cryptograph.data.notifications.interactors.coin.CoinNotification
+import me.khruslan.cryptograph.data.notifications.interactors.coin.CoinNotificationsInteractor
+import me.khruslan.cryptograph.data.notifications.interactors.completed.CompletedNotificationsInteractor
 import me.khruslan.cryptograph.ui.util.UiState
 import me.khruslan.cryptograph.ui.util.displayMessageRes
 

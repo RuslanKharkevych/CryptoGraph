@@ -1,10 +1,10 @@
 package me.khruslan.cryptograph.data.fixtures
 
-import me.khruslan.cryptograph.data.interactors.notifications.coin.CoinNotification
-import me.khruslan.cryptograph.data.notifications.Notification
-import me.khruslan.cryptograph.data.notifications.NotificationStatus
-import me.khruslan.cryptograph.data.notifications.NotificationTrigger
-import me.khruslan.cryptograph.data.notifications.local.NotificationDto
+import me.khruslan.cryptograph.data.notifications.interactors.coin.CoinNotification
+import me.khruslan.cryptograph.data.notifications.repository.Notification
+import me.khruslan.cryptograph.data.notifications.repository.NotificationStatus
+import me.khruslan.cryptograph.data.notifications.repository.NotificationTrigger
+import me.khruslan.cryptograph.data.notifications.repository.local.NotificationDto
 import java.time.LocalDate
 import java.time.OffsetDateTime
 

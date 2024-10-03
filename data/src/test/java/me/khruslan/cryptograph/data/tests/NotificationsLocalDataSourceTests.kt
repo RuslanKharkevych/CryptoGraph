@@ -6,8 +6,8 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
 import me.khruslan.cryptograph.data.fixtures.STUB_DTO_NOTIFICATIONS
-import me.khruslan.cryptograph.data.notifications.local.NotificationsLocalDataSource
-import me.khruslan.cryptograph.data.notifications.local.NotificationsLocalDataSourceImpl
+import me.khruslan.cryptograph.data.notifications.repository.local.NotificationsLocalDataSource
+import me.khruslan.cryptograph.data.notifications.repository.local.NotificationsLocalDataSourceImpl
 import me.khruslan.cryptograph.data.rules.ObjectBoxRule
 import org.junit.Before
 import org.junit.Rule

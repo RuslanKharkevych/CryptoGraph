@@ -9,8 +9,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import me.khruslan.cryptograph.data.core.DataException
-import me.khruslan.cryptograph.data.notifications.Notification
-import me.khruslan.cryptograph.data.notifications.NotificationsRepository
+import me.khruslan.cryptograph.data.notifications.repository.Notification
+import me.khruslan.cryptograph.data.notifications.repository.NotificationsRepository
 import me.khruslan.cryptograph.ui.R
 import me.khruslan.cryptograph.ui.coins.shared.CoinInfo
 import me.khruslan.cryptograph.ui.util.UiState

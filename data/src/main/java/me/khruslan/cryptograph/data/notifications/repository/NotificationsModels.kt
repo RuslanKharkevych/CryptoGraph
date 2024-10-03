@@ -1,4 +1,4 @@
-package me.khruslan.cryptograph.data.notifications
+package me.khruslan.cryptograph.data.notifications.repository
 
 import java.time.LocalDate
 import java.time.OffsetDateTime

@@ -1,7 +1,7 @@
 package me.khruslan.cryptograph.ui.fakes
 
-import me.khruslan.cryptograph.data.interactors.notifications.completed.CompletedNotification
-import me.khruslan.cryptograph.data.interactors.notifications.completed.CompletedNotificationsInteractor
+import me.khruslan.cryptograph.data.notifications.interactors.completed.CompletedNotification
+import me.khruslan.cryptograph.data.notifications.interactors.completed.CompletedNotificationsInteractor
 
 internal class FakeCompletedNotificationsInteractor : CompletedNotificationsInteractor {
     var notificationsRefreshed = false

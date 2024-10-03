@@ -1,13 +1,13 @@
-package me.khruslan.cryptograph.data.notifications.mapper
+package me.khruslan.cryptograph.data.notifications.repository.mapper
 
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import me.khruslan.cryptograph.base.Logger
 import me.khruslan.cryptograph.data.core.DataValidationException
-import me.khruslan.cryptograph.data.notifications.Notification
-import me.khruslan.cryptograph.data.notifications.NotificationStatus
-import me.khruslan.cryptograph.data.notifications.NotificationTrigger
-import me.khruslan.cryptograph.data.notifications.local.NotificationDto
+import me.khruslan.cryptograph.data.notifications.repository.Notification
+import me.khruslan.cryptograph.data.notifications.repository.NotificationStatus
+import me.khruslan.cryptograph.data.notifications.repository.NotificationTrigger
+import me.khruslan.cryptograph.data.notifications.repository.local.NotificationDto
 import java.time.Clock
 import java.time.LocalDate
 import java.time.OffsetDateTime

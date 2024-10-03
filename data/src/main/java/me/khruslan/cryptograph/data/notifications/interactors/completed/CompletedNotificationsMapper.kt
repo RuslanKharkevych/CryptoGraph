@@ -1,6 +1,6 @@
-package me.khruslan.cryptograph.data.interactors.notifications.completed
+package me.khruslan.cryptograph.data.notifications.interactors.completed
 
-import me.khruslan.cryptograph.data.notifications.Notification
+import me.khruslan.cryptograph.data.notifications.repository.Notification
 import java.time.Clock
 import java.time.LocalDate
 

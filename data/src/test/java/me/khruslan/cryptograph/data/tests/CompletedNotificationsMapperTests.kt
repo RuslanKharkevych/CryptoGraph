@@ -3,8 +3,8 @@ package me.khruslan.cryptograph.data.tests
 import com.google.common.truth.Truth.assertThat
 import me.khruslan.cryptograph.data.fixtures.STUB_COIN_NOTIFICATIONS
 import me.khruslan.cryptograph.data.fixtures.STUB_NOTIFICATIONS
-import me.khruslan.cryptograph.data.interactors.notifications.completed.CompletedNotification
-import me.khruslan.cryptograph.data.interactors.notifications.completed.CompletedNotificationsMapper
+import me.khruslan.cryptograph.data.notifications.interactors.completed.CompletedNotification
+import me.khruslan.cryptograph.data.notifications.interactors.completed.CompletedNotificationsMapper
 import org.junit.Before
 import org.junit.Test
 import java.time.Clock

@@ -11,7 +11,7 @@ import kotlinx.coroutines.launch
 import me.khruslan.cryptograph.data.coins.Coin
 import me.khruslan.cryptograph.data.coins.CoinsRepository
 import me.khruslan.cryptograph.data.core.DataException
-import me.khruslan.cryptograph.data.interactors.notifications.completed.CompletedNotificationsInteractor
+import me.khruslan.cryptograph.data.notifications.interactors.completed.CompletedNotificationsInteractor
 import me.khruslan.cryptograph.ui.util.UiState
 import me.khruslan.cryptograph.ui.util.displayMessageRes
 

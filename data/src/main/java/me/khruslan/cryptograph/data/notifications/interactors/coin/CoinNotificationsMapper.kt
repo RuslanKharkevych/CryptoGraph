@@ -1,10 +1,10 @@
-package me.khruslan.cryptograph.data.interactors.notifications.coin
+package me.khruslan.cryptograph.data.notifications.interactors.coin
 
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import me.khruslan.cryptograph.base.Logger
 import me.khruslan.cryptograph.data.coins.Coin
-import me.khruslan.cryptograph.data.notifications.Notification
+import me.khruslan.cryptograph.data.notifications.repository.Notification
 
 private const val LOG_TAG = "CoinNotificationsMapper"
 

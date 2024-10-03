@@ -1,4 +1,4 @@
-package me.khruslan.cryptograph.data.notifications.local
+package me.khruslan.cryptograph.data.notifications.repository.local
 
 import io.objectbox.Box
 import io.objectbox.exception.DbException

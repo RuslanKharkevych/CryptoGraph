@@ -55,8 +55,8 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import me.khruslan.cryptograph.data.fixtures.PREVIEW_COINS
 import me.khruslan.cryptograph.data.fixtures.PREVIEW_NOTIFICATIONS
-import me.khruslan.cryptograph.data.notifications.Notification
-import me.khruslan.cryptograph.data.notifications.NotificationStatus
+import me.khruslan.cryptograph.data.notifications.repository.Notification
+import me.khruslan.cryptograph.data.notifications.repository.NotificationStatus
 import me.khruslan.cryptograph.ui.R
 import me.khruslan.cryptograph.ui.coins.shared.CoinInfo
 import me.khruslan.cryptograph.ui.core.CryptoGraphTheme

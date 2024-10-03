@@ -4,7 +4,7 @@ import androidx.lifecycle.SavedStateHandle
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.test.runTest
 import me.khruslan.cryptograph.data.fixtures.STUB_NOTIFICATIONS
-import me.khruslan.cryptograph.data.notifications.NotificationStatus
+import me.khruslan.cryptograph.data.notifications.repository.NotificationStatus
 import me.khruslan.cryptograph.ui.R
 import me.khruslan.cryptograph.ui.fakes.FakeNotificationsRepository
 import me.khruslan.cryptograph.ui.notifications.report.NotificationReportArgKeys

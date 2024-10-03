@@ -1,9 +1,9 @@
-package me.khruslan.cryptograph.data.interactors.notifications.coin
+package me.khruslan.cryptograph.data.notifications.interactors.coin
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import me.khruslan.cryptograph.data.coins.CoinsRepository
-import me.khruslan.cryptograph.data.notifications.NotificationsRepository
+import me.khruslan.cryptograph.data.notifications.repository.NotificationsRepository
 
 interface CoinNotificationsInteractor {
     fun getCoinNotifications(coinId: String? = null): Flow<List<CoinNotification>>

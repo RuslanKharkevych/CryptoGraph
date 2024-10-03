@@ -10,9 +10,9 @@ import androidx.compose.runtime.saveable.mapSaver
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.text.input.TextFieldValue
-import me.khruslan.cryptograph.data.notifications.Notification
-import me.khruslan.cryptograph.data.notifications.NotificationStatus
-import me.khruslan.cryptograph.data.notifications.NotificationTrigger
+import me.khruslan.cryptograph.data.notifications.repository.Notification
+import me.khruslan.cryptograph.data.notifications.repository.NotificationStatus
+import me.khruslan.cryptograph.data.notifications.repository.NotificationTrigger
 import me.khruslan.cryptograph.ui.coins.shared.CoinInfo
 import java.time.Clock
 import java.time.LocalDate

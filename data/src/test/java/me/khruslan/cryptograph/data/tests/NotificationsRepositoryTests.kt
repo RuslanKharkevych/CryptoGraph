@@ -7,9 +7,9 @@ import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
 import me.khruslan.cryptograph.data.fakes.FakeNotificationsLocalDataSource
 import me.khruslan.cryptograph.data.fixtures.STUB_NOTIFICATIONS
-import me.khruslan.cryptograph.data.notifications.NotificationsRepository
-import me.khruslan.cryptograph.data.notifications.NotificationsRepositoryImpl
-import me.khruslan.cryptograph.data.notifications.mapper.NotificationsMapper
+import me.khruslan.cryptograph.data.notifications.repository.NotificationsRepository
+import me.khruslan.cryptograph.data.notifications.repository.NotificationsRepositoryImpl
+import me.khruslan.cryptograph.data.notifications.repository.mapper.NotificationsMapper
 import org.junit.Before
 import org.junit.Test
 import java.time.Clock

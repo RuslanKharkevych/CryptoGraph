@@ -4,8 +4,8 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
-import me.khruslan.cryptograph.data.notifications.local.NotificationDto
-import me.khruslan.cryptograph.data.notifications.local.NotificationsLocalDataSource
+import me.khruslan.cryptograph.data.notifications.repository.local.NotificationDto
+import me.khruslan.cryptograph.data.notifications.repository.local.NotificationsLocalDataSource
 
 internal class FakeNotificationsLocalDataSource : NotificationsLocalDataSource {
 

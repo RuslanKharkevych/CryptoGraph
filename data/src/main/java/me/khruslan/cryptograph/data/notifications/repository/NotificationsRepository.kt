@@ -1,9 +1,9 @@
-package me.khruslan.cryptograph.data.notifications
+package me.khruslan.cryptograph.data.notifications.repository
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import me.khruslan.cryptograph.data.notifications.local.NotificationsLocalDataSource
-import me.khruslan.cryptograph.data.notifications.mapper.NotificationsMapper
+import me.khruslan.cryptograph.data.notifications.repository.local.NotificationsLocalDataSource
+import me.khruslan.cryptograph.data.notifications.repository.mapper.NotificationsMapper
 
 interface NotificationsRepository {
     fun getNotifications(coinId: String? = null): Flow<List<Notification>>
