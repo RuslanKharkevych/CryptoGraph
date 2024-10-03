@@ -10,13 +10,11 @@ import me.khruslan.cryptograph.data.core.DataException
 import me.khruslan.cryptograph.data.notifications.Notification
 import me.khruslan.cryptograph.data.notifications.NotificationTrigger
 import me.khruslan.cryptograph.data.notifications.NotificationsRepository
-import java.time.Clock
-import java.time.LocalDate
 
 private const val LOG_TAG = "UpdateNotificationsInteractor"
 
 interface CompletedNotificationsInteractor {
-    suspend fun getCompletedNotifications(): List<Notification>
+    suspend fun getCompletedNotifications(): List<CompletedNotification>
     suspend fun tryRefreshCompletedNotifications()
 }
 
@@ -24,22 +22,27 @@ interface CompletedNotificationsInteractor {
 internal class CompletedNotificationsInteractorImpl(
     private val notificationsRepository: NotificationsRepository,
     private val coinsRepository: CoinsRepository,
-    private val clock: Clock,
+    private val mapper: CompletedNotificationsMapper,
 ) : CompletedNotificationsInteractor {
 
-    override suspend fun getCompletedNotifications(): List<Notification> {
+    override suspend fun getCompletedNotifications(): List<CompletedNotification> {
         val pendingNotifications = loadPendingNotifications().ifEmpty {
             Logger.info(LOG_TAG, "No pending notifications found")
             return emptyList()
         }
 
         val coins = loadCoins()
-        val completedNotifications = mutableListOf<Notification>()
+        val completedNotifications = mutableListOf<CompletedNotification>()
 
         pendingNotifications.forEach { notification ->
             val coin = coins.findCoin(notification) ?: return@forEach
             if (isNotificationCompleted(notification, coin)) {
-                completeNotification(notification) { completedNotifications += it }
+                completeNotification(notification) {
+                    completedNotifications += mapper.mapCompletedNotification(
+                        notification = notification,
+                        coinName = coin.name
+                    )
+                }
             }
         }
 
@@ -70,12 +73,12 @@ internal class CompletedNotificationsInteractorImpl(
 
     private suspend fun completeNotification(
         notification: Notification,
-        onSuccess: (notification: Notification) -> Unit,
+        onSuccess: () -> Unit,
     ) {
-        val completedNotification = notification.copy(completedAt = LocalDate.now(clock))
+        val completedNotification = mapper.completeNotification(notification)
         try {
             notificationsRepository.addOrUpdateNotification(completedNotification)
-            onSuccess(completedNotification)
+            onSuccess()
         } catch (_: DataException) {
             Logger.info(LOG_TAG, "Failed to complete $notification")
         }

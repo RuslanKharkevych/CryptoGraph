@@ -10,6 +10,7 @@ plugins {
 android {
     namespace = "me.khruslan.cryptograph.data"
     compileSdk = 34
+    resourcePrefix = "data_"
 
     defaultConfig {
         minSdk = 23

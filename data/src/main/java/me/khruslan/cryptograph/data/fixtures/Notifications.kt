@@ -1,5 +1,6 @@
 package me.khruslan.cryptograph.data.fixtures
 
+import me.khruslan.cryptograph.data.interactors.notifications.coin.CoinNotification
 import me.khruslan.cryptograph.data.notifications.Notification
 import me.khruslan.cryptograph.data.notifications.NotificationStatus
 import me.khruslan.cryptograph.data.notifications.NotificationTrigger
@@ -74,6 +75,16 @@ val STUB_NOTIFICATIONS
             status = NotificationStatus.Pending,
         )
     )
+
+val PREVIEW_COIN_NOTIFICATIONS
+    get() = PREVIEW_NOTIFICATIONS.mapIndexed { index, notification ->
+        CoinNotification(PREVIEW_COINS[index], notification)
+    }
+
+val STUB_COIN_NOTIFICATIONS
+    get() = STUB_NOTIFICATIONS.mapIndexed { index, notification ->
+        CoinNotification(STUB_COINS[index], notification)
+    }
 
 internal val STUB_DTO_NOTIFICATIONS
     get() = listOf(

@@ -124,6 +124,8 @@ private class MutableNotificationPermissionState(
         launcher.launch(NOTIFICATION_PERMISSION)
     }
 
+    // TODO: Improve to always check areNotificationsEnabled();
+    //  also check if channel is not disabled
     private fun getPermissionStatus(): PermissionStatus {
         if (runtimePermissionSupported()) {
             return getRuntimePermissionStatus()

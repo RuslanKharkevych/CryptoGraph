@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- region Push notifications -->
+    <string name="data_notification_channel_name">Coin price changes</string>
+    <string name="data_notification_channel_desc">Sent when coin price satisfies the configured condition</string>
+    <string name="data_notification_trigger_price_less_than_desc">%1$s price is now less than %2$s$</string>
+    <string name="data_notification_trigger_price_more_than_desc">%1$s price is now more than %2$s$</string>
+    <string name="data_summary_notification_title">%d new notifications</string>
+    <string name="data_summary_notification_text">Click to see details</string>
+    <!-- endregion Push notifications -->
+</resources>

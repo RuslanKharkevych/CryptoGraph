@@ -4,8 +4,14 @@ import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.test.runTest
 import me.khruslan.cryptograph.data.fakes.FakeCoinsRepository
 import me.khruslan.cryptograph.data.fakes.FakeNotificationsRepository
+import me.khruslan.cryptograph.data.fixtures.STUB_COINS
+import me.khruslan.cryptograph.data.fixtures.STUB_NOTIFICATIONS
+import me.khruslan.cryptograph.data.interactors.notifications.completed.CompletedNotification
 import me.khruslan.cryptograph.data.interactors.notifications.completed.CompletedNotificationsInteractor
 import me.khruslan.cryptograph.data.interactors.notifications.completed.CompletedNotificationsInteractorImpl
+import me.khruslan.cryptograph.data.interactors.notifications.completed.CompletedNotificationsMapper
+import me.khruslan.cryptograph.data.notifications.NotificationStatus
+import me.khruslan.cryptograph.data.notifications.NotificationTrigger
 import org.junit.Before
 import org.junit.Test
 import java.time.Clock
@@ -31,7 +37,7 @@ internal class CompletedNotificationsInteractorTests {
         interactor = CompletedNotificationsInteractorImpl(
             notificationsRepository = fakeNotificationsRepository,
             coinsRepository = fakeCoinsRepository,
-            clock = CLOCK
+            mapper = CompletedNotificationsMapper(CLOCK)
         )
     }
 
@@ -46,9 +52,9 @@ internal class CompletedNotificationsInteractorTests {
     @Test
     fun `Update notifications - no pending notifications found`() = runTest {
         fakeNotificationsRepository.deleteAllNotifications()
-        val result = runCatching { interactor.getCompletedNotifications() }
+        val completedNotifications = interactor.getCompletedNotifications()
 
-        assertThat(result.isSuccess).isTrue()
+        assertThat(completedNotifications).isEmpty()
     }
 
     @Test
@@ -60,8 +66,29 @@ internal class CompletedNotificationsInteractorTests {
     }
 
     @Test
-    fun `Update notifications - updated successfully`() = runTest {
-        val result = runCatching { interactor.getCompletedNotifications() }
-        assertThat(result.isSuccess).isTrue()
+    fun `Get completed notifications - completed successfully`() = runTest {
+        val notification = STUB_NOTIFICATIONS[0].copy(
+            status = NotificationStatus.Pending,
+            completedAt = null,
+            trigger = NotificationTrigger.PriceMoreThan(100.0)
+        )
+        fakeNotificationsRepository.addOrUpdateNotification(notification)
+
+        val completedNotifications = interactor.getCompletedNotifications()
+        val expectedCompletedNotification = CompletedNotification(
+            title = notification.title,
+            coinName = STUB_COINS[0].name,
+            trigger = notification.trigger
+        )
+
+        assertThat(completedNotifications).containsExactly(expectedCompletedNotification)
+    }
+
+    @Test
+    fun `Try refresh completed notifications`() = runTest {
+        fakeCoinsRepository.isNetworkReachable = true
+        val result = runCatching { interactor.tryRefreshCompletedNotifications() }
+
+        assertThat(result.isSuccess)
     }
 }

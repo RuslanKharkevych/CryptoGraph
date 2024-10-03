@@ -3,7 +3,7 @@ package me.khruslan.cryptograph
 import android.app.Application
 import coil.ImageLoader
 import coil.ImageLoaderFactory
-import me.khruslan.cryptograph.data.workers.TriggerNotificationsWorker
+import me.khruslan.cryptograph.data.workers.PostCompletedNotificationsWorker
 import me.khruslan.cryptograph.data.dataModule
 import me.khruslan.cryptograph.ui.core.buildImageLoader
 import me.khruslan.cryptograph.ui.uiModule
@@ -25,7 +25,7 @@ internal class CryptoGraphApplication : Application(), ImageLoaderFactory {
             modules(appModule, dataModule, uiModule)
         }
 
-        TriggerNotificationsWorker.launch(this)
+        PostCompletedNotificationsWorker.launch(this)
     }
 
     override fun newImageLoader(): ImageLoader {
