@@ -10,6 +10,7 @@ import me.khruslan.cryptograph.data.common.DataException
 import me.khruslan.cryptograph.data.notifications.Notification
 import me.khruslan.cryptograph.data.notifications.NotificationTrigger
 import me.khruslan.cryptograph.data.notifications.NotificationsRepository
+import java.time.Clock
 import java.time.LocalDate
 
 private const val LOG_TAG = "UpdateNotificationsInteractor"
@@ -23,6 +24,7 @@ interface CompletedNotificationsInteractor {
 internal class CompletedNotificationsInteractorImpl(
     private val notificationsRepository: NotificationsRepository,
     private val coinsRepository: CoinsRepository,
+    private val clock: Clock,
 ) : CompletedNotificationsInteractor {
 
     override suspend fun getCompletedNotifications(): List<Notification> {
@@ -70,7 +72,7 @@ internal class CompletedNotificationsInteractorImpl(
         notification: Notification,
         onSuccess: (notification: Notification) -> Unit,
     ) {
-        val completedNotification = notification.copy(completedAt = LocalDate.now())
+        val completedNotification = notification.copy(completedAt = LocalDate.now(clock))
         try {
             notificationsRepository.addOrUpdateNotification(completedNotification)
             onSuccess(completedNotification)

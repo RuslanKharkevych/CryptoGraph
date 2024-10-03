@@ -8,6 +8,14 @@ import me.khruslan.cryptograph.data.interactors.notifications.completed.Complete
 import me.khruslan.cryptograph.data.interactors.notifications.completed.CompletedNotificationsInteractorImpl
 import org.junit.Before
 import org.junit.Test
+import java.time.Clock
+import java.time.Instant
+import java.time.ZoneId
+
+private val CLOCK: Clock = Clock.fixed(
+    Instant.parse("2024-10-03T14:05:25.00Z"),
+    ZoneId.of("America/Phoenix")
+)
 
 internal class CompletedNotificationsInteractorTests {
 
@@ -22,7 +30,8 @@ internal class CompletedNotificationsInteractorTests {
 
         interactor = CompletedNotificationsInteractorImpl(
             notificationsRepository = fakeNotificationsRepository,
-            coinsRepository = fakeCoinsRepository
+            coinsRepository = fakeCoinsRepository,
+            clock = CLOCK
         )
     }
 

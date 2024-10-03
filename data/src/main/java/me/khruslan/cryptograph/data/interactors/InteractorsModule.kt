@@ -9,6 +9,7 @@ import me.khruslan.cryptograph.data.interactors.notifications.completed.Complete
 import me.khruslan.cryptograph.data.interactors.notifications.completed.CompletedNotificationsInteractorImpl
 import me.khruslan.cryptograph.data.notifications.NotificationsRepository
 import org.koin.dsl.module
+import java.time.Clock
 
 internal val interactorsModule = module {
     single<CoinNotificationsInteractor> {
@@ -23,7 +24,8 @@ internal val interactorsModule = module {
     single<CompletedNotificationsInteractor> {
         CompletedNotificationsInteractorImpl(
             notificationsRepository = get<NotificationsRepository>(),
-            coinsRepository = get<CoinsRepository>()
+            coinsRepository = get<CoinsRepository>(),
+            clock = Clock.systemDefaultZone()
         )
     }
 }
