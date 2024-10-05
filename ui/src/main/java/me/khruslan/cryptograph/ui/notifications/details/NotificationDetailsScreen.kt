@@ -77,7 +77,6 @@ import me.khruslan.cryptograph.ui.coins.shared.CoinInfo
 import me.khruslan.cryptograph.ui.core.CryptoGraphTheme
 import me.khruslan.cryptograph.ui.notifications.details.confirmation.ConfirmationAlertDialog
 import me.khruslan.cryptograph.ui.notifications.details.date.ExpirationDatePickerDialog
-import me.khruslan.cryptograph.ui.notifications.shared.deniedOrNeverAsked
 import me.khruslan.cryptograph.ui.notifications.shared.rememberNotificationPermissionState
 import me.khruslan.cryptograph.ui.util.CurrencyBitcoin
 import me.khruslan.cryptograph.ui.util.UiState

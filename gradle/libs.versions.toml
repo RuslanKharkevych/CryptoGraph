@@ -5,6 +5,7 @@ coil = "2.7.0"
 compose = "1.7.1"
 composeCompiler = "1.5.15"
 composeMaterial3 = "1.3.0"
+core = "1.13.1"
 coroutines = "1.8.1"
 desugaring = "2.1.2"
 junit = "4.13.2"
@@ -34,6 +35,7 @@ compose-runtime = { group = "androidx.compose.runtime", name = "runtime", versio
 compose-ui = { group = "androidx.compose.ui", name = "ui", version.ref = "compose" }
 compose-uiTooling = { group = "androidx.compose.ui", name = "ui-tooling", version.ref = "compose" }
 compose-uiToolingPreview = { group = "androidx.compose.ui", name = "ui-tooling-preview", version.ref = "compose" }
+core = { group = "androidx.core", name = "core", version.ref = "core" }
 coroutines = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "coroutines" }
 coroutinesTest = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "coroutines" }
 desugaring = { group = "com.android.tools", name = "desugar_jdk_libs", version.ref = "desugaring" }

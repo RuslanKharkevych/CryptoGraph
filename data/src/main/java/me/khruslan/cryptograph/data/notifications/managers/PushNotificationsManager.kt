@@ -1,5 +1,6 @@
 package me.khruslan.cryptograph.data.notifications.managers
 
+import android.annotation.SuppressLint
 import android.app.Notification
 import android.app.PendingIntent
 import android.content.Context
@@ -7,8 +8,9 @@ import androidx.core.app.NotificationChannelCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.app.NotificationManagerCompat.IMPORTANCE_DEFAULT
-import me.khruslan.cryptograph.base.Logger
 import me.khruslan.cryptograph.base.LaunchOptions
+import me.khruslan.cryptograph.base.Logger
+import me.khruslan.cryptograph.base.NotificationUtil
 import me.khruslan.cryptograph.data.R
 import me.khruslan.cryptograph.data.notifications.interactors.completed.CompletedNotification
 import me.khruslan.cryptograph.data.notifications.repository.NotificationTrigger
@@ -16,7 +18,6 @@ import kotlin.random.Random
 
 private const val LOG_TAG = "PushNotificationsManager"
 
-private const val COIN_PRICE_CHANGES_CHANNEL_ID = "CoinPriceChanges"
 private const val COMPLETED_NOTIFICATIONS_GROUP_KEY = "CompletedNotifications"
 private const val COMPLETED_NOTIFICATIONS_SUMMARY_ID = 1
 private const val PENDING_INTENT_REQUEST_CODE = 0
@@ -25,12 +26,11 @@ internal class PushNotificationsManager(
     private val context: Context,
     private val launchOptions: LaunchOptions
 ) {
-
     private val notificationManager = NotificationManagerCompat.from(context)
 
+    @SuppressLint("MissingPermission")
     fun postCompletedNotifications(completedNotifications: List<CompletedNotification>) {
-        // TODO: Also check if permission and channel are enabled
-        if (!notificationManager.areNotificationsEnabled()) {
+        if (!NotificationUtil.notificationsEnabled(context)) {
             Logger.info(LOG_TAG, "Push notifications disabled")
             return
         }
@@ -52,7 +52,7 @@ internal class PushNotificationsManager(
     }
 
     private fun buildNotificationChannel(): NotificationChannelCompat {
-        return NotificationChannelCompat.Builder(COIN_PRICE_CHANGES_CHANNEL_ID, IMPORTANCE_DEFAULT)
+        return NotificationChannelCompat.Builder(NotificationUtil.CHANNEL_ID, IMPORTANCE_DEFAULT)
             .setName(context.getString(R.string.data_notification_channel_name))
             .setDescription(context.getString(R.string.data_notification_channel_desc))
             .build()
@@ -64,7 +64,7 @@ internal class PushNotificationsManager(
         pendingIntent: PendingIntent,
     ): List<Notification> {
         return completedNotifications.map { notification ->
-            NotificationCompat.Builder(context, COIN_PRICE_CHANGES_CHANNEL_ID)
+            NotificationCompat.Builder(context, NotificationUtil.CHANNEL_ID)
                 .setSmallIcon(R.drawable.data_ic_push_notification)
                 .setContentTitle(notification.title)
                 .setContentText(notification.text)
@@ -82,7 +82,7 @@ internal class PushNotificationsManager(
         val contentText = getSummaryNotificationText(completedNotifications)
         val style = getSummaryNotificationStyle(completedNotifications)
 
-        return NotificationCompat.Builder(context, COIN_PRICE_CHANGES_CHANNEL_ID)
+        return NotificationCompat.Builder(context, NotificationUtil.CHANNEL_ID)
             .setSmallIcon(R.drawable.data_ic_push_notification)
             .setContentTitle(contentTitle)
             .setContentText(contentText)

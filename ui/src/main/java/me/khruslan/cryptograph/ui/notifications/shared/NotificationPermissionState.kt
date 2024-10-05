@@ -1,12 +1,9 @@
 package me.khruslan.cryptograph.ui.notifications.shared
 
 import android.Manifest
-import android.app.Activity
 import android.content.ActivityNotFoundException
 import android.content.Context
-import android.content.ContextWrapper
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.os.Build
 import android.provider.Settings
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -22,25 +19,22 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
-import androidx.core.app.ActivityCompat
-import androidx.core.app.NotificationManagerCompat
-import androidx.core.content.ContextCompat
+import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import me.khruslan.cryptograph.base.Logger
+import me.khruslan.cryptograph.base.NotificationPermissionStatus
+import me.khruslan.cryptograph.base.NotificationUtil
 import me.khruslan.cryptograph.ui.R
 
 private const val LOG_TAG = "NotificationPermissionState"
 
-@RequiresApi(Build.VERSION_CODES.TIRAMISU)
-private const val NOTIFICATION_PERMISSION = Manifest.permission.POST_NOTIFICATIONS
-
 @Stable
 internal interface NotificationPermissionState {
-    val status: PermissionStatus
+    val status: NotificationPermissionStatus
     fun launchPermissionRequest()
-    fun openNotificationSettings()
+    fun openNotificationSettings(channelBlocked: Boolean)
 }
 
 private class MutableNotificationPermissionState(
@@ -59,7 +53,7 @@ private class MutableNotificationPermissionState(
     var launcher: ActivityResultLauncher<String>? = null
 
     override fun launchPermissionRequest() {
-        if (!runtimePermissionSupported()) {
+        if (!NotificationUtil.runtimePermissionSupported()) {
             Logger.info(LOG_TAG, "Runtime permission not supported, skipping request")
             result = false
             return
@@ -75,16 +69,16 @@ private class MutableNotificationPermissionState(
         }
     }
 
-    override fun openNotificationSettings() {
-        val intent = Intent()
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            intent.setAction(Settings.ACTION_APP_NOTIFICATION_SETTINGS)
-                .putExtra(Settings.EXTRA_APP_PACKAGE, context.packageName)
+    override fun openNotificationSettings(channelBlocked: Boolean) {
+        val intent = if (channelBlocked) {
+            try {
+                createNotificationChannelSettingsIntent()
+            } catch (e: IllegalStateException) {
+                Logger.error(LOG_TAG, "Failed to open notification channel settings", e)
+                createNotificationSettingsIntent()
+            }
         } else {
-            intent.setAction("android.settings.APP_NOTIFICATION_SETTINGS")
-                .putExtra("app_package", context.packageName)
-                .putExtra("app_uid", context.applicationInfo.uid)
+            createNotificationSettingsIntent()
         }
 
         try {
@@ -106,10 +100,6 @@ private class MutableNotificationPermissionState(
         refreshPermissionStatus()
     }
 
-    fun runtimePermissionGranted(): Boolean {
-        return runtimePermissionSupported() && status == PermissionStatus.Granted
-    }
-
     fun resultDispatched() {
         result = null
     }
@@ -121,34 +111,41 @@ private class MutableNotificationPermissionState(
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     private fun launchRuntimePermissionRequest(launcher: ActivityResultLauncher<String>?) {
         checkNotNull(launcher)
-        launcher.launch(NOTIFICATION_PERMISSION)
+        launcher.launch(Manifest.permission.POST_NOTIFICATIONS)
     }
 
-    // TODO: Improve to always check areNotificationsEnabled();
-    //  also check if channel is not disabled
-    private fun getPermissionStatus(): PermissionStatus {
-        if (runtimePermissionSupported()) {
-            return getRuntimePermissionStatus()
-        }
+    private fun getPermissionStatus(): NotificationPermissionStatus {
+        return NotificationUtil.getPermissionStatus(context)
+    }
 
-        val notificationManager = NotificationManagerCompat.from(context)
-        return if (notificationManager.areNotificationsEnabled()) {
-            PermissionStatus.Granted
+    private fun createNotificationSettingsIntent(): Intent {
+        val intent = Intent()
+
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            intent.setAction(Settings.ACTION_APP_NOTIFICATION_SETTINGS)
+                .putExtra(Settings.EXTRA_APP_PACKAGE, context.packageName)
         } else {
-            PermissionStatus.Denied(shouldShowRationale = false)
+            intent.setAction("android.settings.APP_NOTIFICATION_SETTINGS")
+                .putExtra("app_package", context.packageName)
+                .putExtra("app_uid", context.applicationInfo.uid)
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
-    private fun getRuntimePermissionStatus(): PermissionStatus {
-        val hasPermission = context.checkRuntimeNotificationPermission()
-        return if (hasPermission) {
-            PermissionStatus.Granted
-        } else {
-            val shouldShowRationale = context.shouldShowRationale()
-            PermissionStatus.Denied(shouldShowRationale)
+    private fun createNotificationChannelSettingsIntent(): Intent {
+        if (!NotificationUtil.notificationChannelsSupported()) {
+            throw IllegalStateException("Notification channels are not supported")
         }
+
+        return Intent(Settings.ACTION_CHANNEL_NOTIFICATION_SETTINGS)
+            .putExtra(Settings.EXTRA_APP_PACKAGE, context.packageName)
+            .putExtra(Settings.EXTRA_CHANNEL_ID, NotificationUtil.CHANNEL_ID)
     }
+}
+
+private object StubNotificationPermissionState : NotificationPermissionState {
+    override val status = NotificationPermissionStatus.Granted
+    override fun launchPermissionRequest() {}
+    override fun openNotificationSettings(channelBlocked: Boolean) {}
 }
 
 @Composable
@@ -156,6 +153,10 @@ internal fun rememberNotificationPermissionState(
     onResult: ((Boolean) -> Unit)? = null,
     onError: ((Int) -> Unit)? = null,
 ): NotificationPermissionState {
+    if (LocalInspectionMode.current) {
+        return StubNotificationPermissionState
+    }
+
     val context = LocalContext.current
     val permissionState = remember { MutableNotificationPermissionState(context) }
     val launcher = rememberPermissionLauncher { result ->
@@ -178,9 +179,7 @@ internal fun rememberNotificationPermissionState(
     }
 
     OnResumeEffect(permissionState) {
-        if (!permissionState.runtimePermissionGranted()) {
-            permissionState.refreshPermissionStatus()
-        }
+        permissionState.refreshPermissionStatus()
     }
 
     DisposableEffect(permissionState, launcher) {
@@ -191,22 +190,11 @@ internal fun rememberNotificationPermissionState(
     return permissionState
 }
 
-internal sealed class PermissionStatus {
-    data object Granted : PermissionStatus()
-    data class Denied(val shouldShowRationale: Boolean) : PermissionStatus()
-}
-
-internal val PermissionStatus.shouldShowRationale
-    get() = this is PermissionStatus.Denied && shouldShowRationale
-
-internal val PermissionStatus.deniedOrNeverAsked
-    get() = this is PermissionStatus.Denied && !shouldShowRationale
-
 @Composable
 private fun rememberPermissionLauncher(
     onResult: (Boolean) -> Unit,
 ): ActivityResultLauncher<String>? {
-    if (!runtimePermissionSupported()) return null
+    if (!NotificationUtil.runtimePermissionSupported()) return null
 
     return rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission(),
@@ -229,35 +217,4 @@ private fun OnResumeEffect(key: Any?, onResume: () -> Unit) {
         lifecycle.addObserver(observer)
         onDispose { lifecycle.removeObserver(observer) }
     }
-}
-
-private fun runtimePermissionSupported(): Boolean {
-    return Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
-}
-
-@RequiresApi(Build.VERSION_CODES.TIRAMISU)
-private fun Context.checkRuntimeNotificationPermission(): Boolean {
-    val permissionResult = ContextCompat.checkSelfPermission(this, NOTIFICATION_PERMISSION)
-    return permissionResult == PackageManager.PERMISSION_GRANTED
-}
-
-@RequiresApi(Build.VERSION_CODES.TIRAMISU)
-private fun Context.shouldShowRationale(): Boolean {
-    val activity = try {
-        findActivity()
-    } catch (e: IllegalStateException) {
-        Logger.error(LOG_TAG, "Failed to get permission rationale status", e)
-        return false
-    }
-
-    return ActivityCompat.shouldShowRequestPermissionRationale(activity, NOTIFICATION_PERMISSION)
-}
-
-private fun Context.findActivity(): Activity {
-    var context = this
-    while (context is ContextWrapper) {
-        if (context is Activity) return context
-        context = context.baseContext
-    }
-    throw IllegalStateException("Activity not found")
 }

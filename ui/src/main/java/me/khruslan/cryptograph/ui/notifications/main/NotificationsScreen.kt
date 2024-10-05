@@ -46,6 +46,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import me.khruslan.cryptograph.base.NotificationPermissionStatus
 import me.khruslan.cryptograph.data.coins.Coin
 import me.khruslan.cryptograph.data.fixtures.PREVIEW_COIN_NOTIFICATIONS
 import me.khruslan.cryptograph.data.notifications.interactors.coin.CoinNotification
@@ -53,10 +54,8 @@ import me.khruslan.cryptograph.data.notifications.repository.Notification
 import me.khruslan.cryptograph.ui.R
 import me.khruslan.cryptograph.ui.core.CryptoGraphTheme
 import me.khruslan.cryptograph.ui.notifications.shared.NotificationPermissionState
-import me.khruslan.cryptograph.ui.notifications.shared.PermissionStatus
 import me.khruslan.cryptograph.ui.notifications.shared.description
 import me.khruslan.cryptograph.ui.notifications.shared.rememberNotificationPermissionState
-import me.khruslan.cryptograph.ui.notifications.shared.shouldShowRationale
 import me.khruslan.cryptograph.ui.util.ArrowDown
 import me.khruslan.cryptograph.ui.util.CurrencyBitcoin
 import me.khruslan.cryptograph.ui.util.UiState
@@ -212,7 +211,7 @@ private fun NotificationsList(
     scrollBehavior: TopAppBarScrollBehavior,
     onNotificationClick: (notification: CoinNotification) -> Unit,
 ) {
-    val permissionBannerVisible = permissionState.status is PermissionStatus.Denied
+    val permissionBannerVisible = permissionState.status is NotificationPermissionStatus.Denied
 
     Column {
         AnimatedVisibility(permissionBannerVisible) {
@@ -319,9 +318,9 @@ private fun NotificationCard(
 @Composable
 private fun PermissionStatusBanner(
     scrollBehavior: TopAppBarScrollBehavior,
-    status: PermissionStatus,
+    status: NotificationPermissionStatus,
     onEnableButtonClick: () -> Unit,
-    onSettingsButtonClick: () -> Unit,
+    onSettingsButtonClick: (channelBlocked: Boolean) -> Unit,
 ) {
     Surface(
         color = MaterialTheme.colorScheme.surfaceContainerHigh,
@@ -345,9 +344,9 @@ private fun PermissionStatusBanner(
                         .padding(horizontal = 16.dp),
                     onClick = {
                         when {
-                            status == PermissionStatus.Granted -> {}
+                            status !is NotificationPermissionStatus.Denied -> {}
                             status.shouldShowRationale -> onEnableButtonClick()
-                            else -> onSettingsButtonClick()
+                            else -> onSettingsButtonClick(status.channelBlocked)
                         }
                     }
                 ) {
@@ -372,13 +371,14 @@ private fun getTopBarTitle(coinName: String?): String {
 }
 
 private fun isTopBarShadowAlwaysVisible(
-    permissionStatus: PermissionStatus,
+    permissionStatus: NotificationPermissionStatus,
     listState: UiState<List<CoinNotification>>,
 ): Boolean {
-    if (permissionStatus is PermissionStatus.Granted) return false
+    if (permissionStatus == NotificationPermissionStatus.Granted) return false
     return listState is UiState.Data && listState.data.isNotEmpty()
 }
 
+// TODO: Show completed at date if it exists
 private val Notification.dateLabel: String
     @Composable
     get() {
@@ -392,20 +392,28 @@ private val Notification.dateLabel: String
         return "$createdAtDateString - $expirationDateString"
     }
 
-private val PermissionStatus.message
+private val NotificationPermissionStatus.message
     @Composable
     get() = stringResource(
-        when {
-            this == PermissionStatus.Granted -> R.string.notification_permission_banner_enabled_msg
-            shouldShowRationale -> R.string.notification_permission_banner_rationale_msg
-            else -> R.string.notification_permission_banner_disabled_msg
+        when (this) {
+            NotificationPermissionStatus.Granted -> {
+                R.string.notification_permission_banner_enabled_msg
+            }
+
+            is NotificationPermissionStatus.Denied -> {
+                if (shouldShowRationale) {
+                    R.string.notification_permission_banner_rationale_msg
+                } else {
+                    R.string.notification_permission_banner_disabled_msg
+                }
+            }
         }
     )
 
-private val PermissionStatus.buttonLabel
+private val NotificationPermissionStatus.buttonLabel
     @Composable
     get() = when {
-        this == PermissionStatus.Granted -> ""
+        this !is NotificationPermissionStatus.Denied -> ""
         shouldShowRationale -> stringResource(R.string.notification_permission_banner_enable_btn)
         else -> stringResource(R.string.notification_permission_banner_settings_btn)
     }

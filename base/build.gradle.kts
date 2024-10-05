@@ -35,3 +35,7 @@ android {
         buildConfig = true
     }
 }
+
+dependencies {
+    implementation(libs.core)
+}
