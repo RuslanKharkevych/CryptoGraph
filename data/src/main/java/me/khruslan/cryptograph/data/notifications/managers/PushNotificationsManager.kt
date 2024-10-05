@@ -58,7 +58,6 @@ internal class PushNotificationsManager(
             .build()
     }
 
-    // TODO: Set notification color as coin color
     private fun buildNotifications(
         completedNotifications: List<CompletedNotification>,
         pendingIntent: PendingIntent,

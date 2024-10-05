@@ -18,7 +18,6 @@ interface CompletedNotificationsInteractor {
     suspend fun tryRefreshCompletedNotifications()
 }
 
-// TODO: Improve performance with bulk update instead of a loop
 internal class CompletedNotificationsInteractorImpl(
     private val notificationsRepository: NotificationsRepository,
     private val coinsRepository: CoinsRepository,
