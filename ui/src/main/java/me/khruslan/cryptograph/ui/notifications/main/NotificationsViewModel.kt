@@ -8,12 +8,15 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
+import me.khruslan.cryptograph.base.Logger
 import me.khruslan.cryptograph.data.core.DataException
 import me.khruslan.cryptograph.data.notifications.interactors.coin.CoinNotification
 import me.khruslan.cryptograph.data.notifications.interactors.coin.CoinNotificationsInteractor
 import me.khruslan.cryptograph.data.notifications.interactors.completed.CompletedNotificationsInteractor
 import me.khruslan.cryptograph.ui.util.UiState
 import me.khruslan.cryptograph.ui.util.displayMessageRes
+
+private const val LOG_TAG = "NotificationsViewModel"
 
 internal class NotificationsViewModel(
     savedStateHandle: SavedStateHandle,
@@ -41,6 +44,7 @@ internal class NotificationsViewModel(
                 coinNotificationsInteractor
                     .getCoinNotifications(args.coinId)
                     .collect { notifications ->
+                        Logger.info(LOG_TAG, "Observed ${notifications.count()} notification(s)")
                         _notificationsState.listState = UiState.Data(notifications)
                         refreshNotifications()
                     }

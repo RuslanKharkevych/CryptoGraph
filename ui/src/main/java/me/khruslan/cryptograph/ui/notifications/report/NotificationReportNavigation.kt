@@ -10,6 +10,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavType
 import androidx.navigation.compose.dialog
 import androidx.navigation.navArgument
+import me.khruslan.cryptograph.base.Logger
 import me.khruslan.cryptograph.data.notifications.repository.Notification
 import me.khruslan.cryptograph.data.notifications.repository.NotificationStatus
 import me.khruslan.cryptograph.ui.coins.shared.CoinInfo
@@ -26,6 +27,7 @@ import me.khruslan.cryptograph.ui.util.navigation.rememberNavInterceptor
 import me.khruslan.cryptograph.ui.util.navigation.route
 import org.koin.androidx.compose.koinViewModel
 
+private const val LOG_TAG = "NotificationReportNavigation"
 private const val NOTIFICATION_REPORT_ROUTE = "notification-report"
 
 @VisibleForTesting
@@ -58,7 +60,9 @@ internal data class NotificationReportArgs(
                 coinPrice = savedStateHandle[COIN_PRICE_ARG],
                 coinIconUrl = savedStateHandle[COIN_ICON_URL_ARG],
                 coinEditable = checkNotNull(savedStateHandle[COIN_EDITABLE_ARG])
-            )
+            ).also { args ->
+                Logger.info(LOG_TAG, "Received $args")
+            }
         }
 
         fun fromNavBackStackEntry(navBackStackEntry: NavBackStackEntry): NotificationReportArgs {

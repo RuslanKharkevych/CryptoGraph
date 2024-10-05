@@ -1,8 +1,13 @@
 package me.khruslan.cryptograph.ui.core
 
+import android.os.Bundle
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.navigation.NavController
+import androidx.navigation.NavDestination
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
+import me.khruslan.cryptograph.base.Logger
 import me.khruslan.cryptograph.ui.coins.history.coinHistoryScreen
 import me.khruslan.cryptograph.ui.coins.history.navigateToCoinHistory
 import me.khruslan.cryptograph.ui.coins.main.COINS_ROUTE
@@ -20,9 +25,20 @@ import me.khruslan.cryptograph.ui.preferences.main.navigateToPreferences
 import me.khruslan.cryptograph.ui.preferences.main.preferencesScreen
 import me.khruslan.cryptograph.ui.util.navigation.Transitions
 
+private const val LOG_TAG = "CryptoGraphNavHost"
+
 @Composable
 internal fun CryptoGraphNavHost() {
     val navController = rememberNavController()
+
+    DisposableEffect(navController) {
+        val listener = DestinationListener()
+        navController.addOnDestinationChangedListener(listener)
+
+        onDispose {
+            navController.removeOnDestinationChangedListener(listener)
+        }
+    }
 
     NavHost(
         navController = navController,
@@ -69,5 +85,16 @@ internal fun CryptoGraphNavHost() {
         preferencesScreen(
             onBackActionClick = navController::popBackStack
         )
+    }
+}
+
+private class DestinationListener : NavController.OnDestinationChangedListener {
+    override fun onDestinationChanged(
+        controller: NavController,
+        destination: NavDestination,
+        arguments: Bundle?,
+    ) {
+        val route = destination.route?.substringBefore('?')
+        Logger.info(LOG_TAG, "Destination changed: $route")
     }
 }

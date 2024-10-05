@@ -8,12 +8,15 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
+import me.khruslan.cryptograph.base.Logger
 import me.khruslan.cryptograph.data.coins.Coin
 import me.khruslan.cryptograph.data.coins.CoinsRepository
 import me.khruslan.cryptograph.data.core.DataException
 import me.khruslan.cryptograph.data.notifications.interactors.completed.CompletedNotificationsInteractor
 import me.khruslan.cryptograph.ui.util.UiState
 import me.khruslan.cryptograph.ui.util.displayMessageRes
+
+private const val LOG_TAG = "CoinPickerViewModel"
 
 internal class CoinPickerViewModel(
     savedStateHandle: SavedStateHandle,
@@ -39,6 +42,7 @@ internal class CoinPickerViewModel(
         viewModelScope.launch {
             try {
                 coinsRepository.getCoins().collect { coins ->
+                    Logger.info(LOG_TAG, "Observed ${coins.count()} coins")
                     _coinsState.listState = UiState.Data(coins)
                     refreshNotifications()
                 }

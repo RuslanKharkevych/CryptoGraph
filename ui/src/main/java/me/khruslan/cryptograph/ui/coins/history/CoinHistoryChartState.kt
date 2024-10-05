@@ -86,10 +86,12 @@ internal class CoinHistoryChartStateImpl(
         get() = filteredData.map { entryOf(it.key, it.value.price) }
 
     override fun updateStyle(style: ChartStyle) {
+        Logger.info(LOG_TAG, "Updated chart style: $style")
         this.style = style
     }
 
     override fun updatePeriod(period: ChartPeriod) {
+        Logger.info(LOG_TAG, "Updated chart period: $period")
         this.period = period
         updateEntries()
     }

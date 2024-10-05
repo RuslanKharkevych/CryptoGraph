@@ -8,6 +8,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
+import me.khruslan.cryptograph.base.Logger
 import me.khruslan.cryptograph.data.core.DataException
 import me.khruslan.cryptograph.data.notifications.repository.Notification
 import me.khruslan.cryptograph.data.notifications.repository.NotificationsRepository
@@ -15,6 +16,8 @@ import me.khruslan.cryptograph.ui.R
 import me.khruslan.cryptograph.ui.coins.shared.CoinInfo
 import me.khruslan.cryptograph.ui.util.UiState
 import me.khruslan.cryptograph.ui.util.displayMessageRes
+
+private const val LOG_TAG = "NotificationDetailsViewModel"
 
 internal class NotificationDetailsViewModel(
     savedStateHandle: SavedStateHandle,
@@ -73,6 +76,7 @@ internal class NotificationDetailsViewModel(
     }
 
     fun updateCoinInfo(coinInfo: CoinInfo) {
+        Logger.info(LOG_TAG, "Updated $coinInfo")
         _notificationDetailsState.coinInfo = coinInfo
     }
 

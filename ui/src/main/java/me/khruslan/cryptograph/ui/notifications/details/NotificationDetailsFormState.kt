@@ -10,6 +10,7 @@ import androidx.compose.runtime.saveable.mapSaver
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.text.input.TextFieldValue
+import me.khruslan.cryptograph.base.Logger
 import me.khruslan.cryptograph.data.notifications.repository.Notification
 import me.khruslan.cryptograph.data.notifications.repository.NotificationStatus
 import me.khruslan.cryptograph.data.notifications.repository.NotificationTrigger
@@ -17,6 +18,8 @@ import me.khruslan.cryptograph.ui.coins.shared.CoinInfo
 import java.time.Clock
 import java.time.LocalDate
 import java.time.OffsetDateTime
+
+private const val LOG_TAG = "NotificationDetailsFormState"
 
 internal interface NotificationDetailsFormState {
     val coinInfo: CoinInfo
@@ -131,19 +134,24 @@ internal class NotificationDetailsFormStateImpl(
     }
 
     override fun updateExpirationDate(date: LocalDate?) {
+        Logger.info(LOG_TAG, "Updated expiration date: $date")
         expirationDate = date
         expirationDateState = getExpirationDateState(date)
     }
 
     override fun showExpirationDatePicker() {
         expirationDatePickerVisible = true
+        Logger.info(LOG_TAG, "Expiration date picker shown")
     }
 
     override fun dismissExpirationDatePicker() {
         expirationDatePickerVisible = false
+        Logger.info(LOG_TAG, "Expiration date picker dismissed")
     }
 
     override fun buildNotification(onSuccess: (notification: Notification) -> Unit) {
+        Logger.debug(LOG_TAG, "Building notification")
+
         val notificationTitle = notificationTitle.text
         val triggerPrice = triggerPrice.text
         val triggerType = triggerType
@@ -160,7 +168,10 @@ internal class NotificationDetailsFormStateImpl(
         if (!notificationTitleState.isValid
             || !triggerPriceState.isValid
             || !expirationDateState.isValid
-        ) return
+        ) {
+            Logger.info(LOG_TAG, "Failed to build notification. Validation error")
+            return
+        }
 
         val notification = Notification(
             id = notificationId ?: 0L,
@@ -173,59 +184,74 @@ internal class NotificationDetailsFormStateImpl(
             status = NotificationStatus.Pending,
         )
 
+        Logger.info(LOG_TAG, "Successfully built $notification")
         onSuccess(notification)
     }
 
     private fun getNotificationTitleState(
-        titleText: String = notificationTitle.text
+        titleText: String = notificationTitle.text,
     ): NotificationTitleState {
+        Logger.debug(LOG_TAG, "Validating notification title: \"$titleText\"")
+
         return if (titleText.isBlank()) {
             NotificationTitleState.Blank
         } else {
             NotificationTitleState.Default
+        }.also { state ->
+            Logger.debug(LOG_TAG, "Validated title: ${state.name}")
         }
     }
 
     private fun getTriggerPriceState(
         priceText: String = triggerPrice.text,
-        triggerType: NotificationTriggerType = this.triggerType
+        triggerType: NotificationTriggerType = this.triggerType,
     ): NotificationTriggerPriceState {
-        if (priceText.isEmpty()) {
-            return NotificationTriggerPriceState.Empty
-        }
+        Logger.debug(LOG_TAG, "Validating trigger. Type: $triggerType. Price: \"$priceText\"")
 
-        val price = priceText.toDoubleOrNull()
-            ?: return NotificationTriggerPriceState.InvalidFormat
-
-        val currentCoinPrice = coinInfo.price?.removePrefix("$")?.toDoubleOrNull()
-            ?: return NotificationTriggerPriceState.Default
-
-        return when (triggerType) {
-            NotificationTriggerType.PriceLessThan -> {
-                if (price <= currentCoinPrice) {
-                    NotificationTriggerPriceState.Default
-                } else {
-                    NotificationTriggerPriceState.PriceTooBig
-                }
+        return run {
+            if (priceText.isEmpty()) {
+                return@run NotificationTriggerPriceState.Empty
             }
 
-            NotificationTriggerType.PriceMoreThan -> {
-                if (price >= currentCoinPrice) {
-                    NotificationTriggerPriceState.Default
-                } else {
-                    NotificationTriggerPriceState.PriceTooSmall
+            val price = priceText.toDoubleOrNull()
+                ?: return@run NotificationTriggerPriceState.InvalidFormat
+
+            val currentCoinPrice = coinInfo.price?.removePrefix("$")?.toDoubleOrNull()
+                ?: return@run NotificationTriggerPriceState.Default
+
+            when (triggerType) {
+                NotificationTriggerType.PriceLessThan -> {
+                    if (price <= currentCoinPrice) {
+                        NotificationTriggerPriceState.Default
+                    } else {
+                        NotificationTriggerPriceState.PriceTooBig
+                    }
+                }
+
+                NotificationTriggerType.PriceMoreThan -> {
+                    if (price >= currentCoinPrice) {
+                        NotificationTriggerPriceState.Default
+                    } else {
+                        NotificationTriggerPriceState.PriceTooSmall
+                    }
                 }
             }
+        }.also { state ->
+            Logger.debug(LOG_TAG, "Validated trigger: ${state.name}")
         }
     }
 
     private fun getExpirationDateState(
-        expirationDate: LocalDate? = this.expirationDate
+        expirationDate: LocalDate? = this.expirationDate,
     ): NotificationExpirationDateState {
+        Logger.debug(LOG_TAG, "Validating expiration date: $expirationDate")
+
         return if (expirationDate?.isBefore(LocalDate.now(clock)) == true) {
             NotificationExpirationDateState.DateInThePast
         } else {
             NotificationExpirationDateState.Default
+        }.also { state ->
+            Logger.debug(LOG_TAG, "Validated expiration date: ${state.name}")
         }
     }
 

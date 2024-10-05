@@ -7,6 +7,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.listSaver
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import me.khruslan.cryptograph.base.Logger
+
+private const val LOG_TAG = "AlertState"
 
 internal interface AlertState {
     val isVisible: Boolean
@@ -16,31 +19,39 @@ internal interface AlertState {
 }
 
 @VisibleForTesting
-internal class AlertStateImpl(isVisible: Boolean = false) : AlertState {
+internal class AlertStateImpl(val tag: String, isVisible: Boolean = false) : AlertState {
     override var isVisible by mutableStateOf(isVisible)
 
     override fun show() {
         isVisible = true
+        Logger.info(LOG_TAG, "$tag alert shown")
     }
 
     override fun dismiss() {
         isVisible = false
+        Logger.info(LOG_TAG, "$tag alert dismissed")
     }
 }
 
 @Composable
-internal fun rememberAlertState(): AlertState {
+internal fun rememberAlertState(tag: String): AlertState {
     return rememberSaveable(saver = alertStateSaver) {
-        AlertStateImpl()
+        AlertStateImpl(tag)
     }
 }
 
 private val alertStateSaver
     get() = listSaver(
         save = { alertState ->
-            listOf(alertState.isVisible)
+            listOf(
+                alertState.tag,
+                alertState.isVisible
+            )
         },
         restore = { list ->
-            AlertStateImpl(list[0] as Boolean)
+            AlertStateImpl(
+                list[0] as String,
+                list[1] as Boolean
+            )
         }
     )

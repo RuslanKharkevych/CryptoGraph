@@ -1,5 +1,7 @@
 plugins {
     alias(libs.plugins.androidApplication)
+    alias(libs.plugins.firebaseCrashlytics)
+    alias(libs.plugins.googleServices)
     alias(libs.plugins.kotlinAndroid)
 }
 
@@ -52,6 +54,7 @@ dependencies {
 
     implementation(libs.coil.compose)
     coreLibraryDesugaring(libs.desugaring)
+    implementation(libs.firebase.analytics)
     implementation(libs.koin.android)
     implementation(libs.koin.workManager)
     implementation(libs.material)

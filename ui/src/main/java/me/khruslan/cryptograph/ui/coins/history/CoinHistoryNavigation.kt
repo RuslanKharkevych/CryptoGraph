@@ -8,6 +8,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import me.khruslan.cryptograph.base.Logger
 import me.khruslan.cryptograph.data.coins.Coin
 import me.khruslan.cryptograph.ui.coins.history.CoinHistoryArgKeys.COIN_ICON_URL_ARG
 import me.khruslan.cryptograph.ui.coins.history.CoinHistoryArgKeys.COIN_ID_ARG
@@ -21,6 +22,7 @@ import me.khruslan.cryptograph.ui.util.navigation.rememberNavInterceptor
 import me.khruslan.cryptograph.ui.util.navigation.route
 import org.koin.androidx.compose.koinViewModel
 
+private const val LOG_TAG = "CoinHistoryNavigation"
 private const val COIN_HISTORY_ROUTE = "coin-history"
 
 @VisibleForTesting
@@ -50,7 +52,9 @@ internal data class CoinHistoryArgs(
                 coinIconUrl = savedStateHandle[COIN_ICON_URL_ARG],
                 colorHex = savedStateHandle[COLOR_HEX_ARG],
                 isPinned = checkNotNull(savedStateHandle[IS_PINNED_ARG])
-            )
+            ).also { args ->
+                Logger.info(LOG_TAG, "Received $args")
+            }
         }
 
         fun fromNavBackStackEntry(navBackStackEntry: NavBackStackEntry): CoinHistoryArgs {

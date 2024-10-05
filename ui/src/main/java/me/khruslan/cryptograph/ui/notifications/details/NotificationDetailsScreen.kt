@@ -104,8 +104,8 @@ internal fun NotificationDetailsScreen(
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
     val topBarScrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
-    val deleteNotificationAlertState = rememberAlertState()
-    val discardChangesAlertState = rememberAlertState()
+    val deleteNotificationAlertState = rememberAlertState(tag = "DeleteNotification")
+    val discardChangesAlertState = rememberAlertState(tag = "DiscardChanges")
     val permissionState = rememberNotificationPermissionState(onResult = { onCloseScreen() })
 
     if (notificationDetailsState.notificationSaved) {

@@ -7,8 +7,11 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewLightDark
+import me.khruslan.cryptograph.base.Logger
 import me.khruslan.cryptograph.ui.R
 import me.khruslan.cryptograph.ui.core.CryptoGraphTheme
+
+private const val LOG_TAG = "ConfirmationAlertDialog"
 
 @Composable
 internal fun ConfirmationAlertDialog(
@@ -17,6 +20,7 @@ internal fun ConfirmationAlertDialog(
     onDismiss: () -> Unit,
 ) {
     fun confirmAndDismiss() {
+        Logger.info(LOG_TAG, "Confirmed")
         onConfirm()
         onDismiss()
     }

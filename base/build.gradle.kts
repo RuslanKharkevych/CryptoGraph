@@ -38,4 +38,5 @@ android {
 
 dependencies {
     implementation(libs.core)
+    implementation(libs.firebase.crashlytics)
 }

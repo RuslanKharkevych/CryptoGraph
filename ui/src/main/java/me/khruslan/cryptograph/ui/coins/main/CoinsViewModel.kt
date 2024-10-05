@@ -8,6 +8,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
+import me.khruslan.cryptograph.base.Logger
 import me.khruslan.cryptograph.data.coins.Coin
 import me.khruslan.cryptograph.data.coins.CoinsRepository
 import me.khruslan.cryptograph.data.core.DataException
@@ -16,6 +17,8 @@ import me.khruslan.cryptograph.data.notifications.repository.NotificationsReposi
 import me.khruslan.cryptograph.ui.R
 import me.khruslan.cryptograph.ui.util.UiState
 import me.khruslan.cryptograph.ui.util.displayMessageRes
+
+private const val LOG_TAG = "CoinsViewModel"
 
 internal class CoinsViewModel(
     private val coinsRepository: CoinsRepository,
@@ -64,6 +67,7 @@ internal class CoinsViewModel(
         viewModelScope.launch {
             try {
                 coinsRepository.getCoins().collect { coins ->
+                    Logger.info(LOG_TAG, "Observed ${coins.count()} coins")
                     _coinsState.listState = UiState.Data(coins)
                     refreshNotifications()
                 }

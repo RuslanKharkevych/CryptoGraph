@@ -12,7 +12,7 @@ internal class AlertStateTests {
 
     @Before
     fun setUp() {
-        alertState = AlertStateImpl()
+        alertState = AlertStateImpl(tag = "Test")
     }
 
     @Test

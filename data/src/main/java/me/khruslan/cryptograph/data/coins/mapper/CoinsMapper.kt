@@ -86,7 +86,7 @@ internal class CoinsMapper(private val dispatcher: CoroutineDispatcher) {
         return if (color != null && Regex(COLOR_HEX_PATTERN).matches(color)) {
             color
         } else {
-            Logger.info(LOG_TAG, "Failed to map color HEX: $color")
+            Logger.debug(LOG_TAG, "Failed to map color HEX: $color")
             null
         }
     }

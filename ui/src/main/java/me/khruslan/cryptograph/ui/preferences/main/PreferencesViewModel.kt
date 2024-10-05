@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import me.khruslan.cryptograph.base.AppVersion
+import me.khruslan.cryptograph.base.Logger
 import me.khruslan.cryptograph.data.core.DataException
 import me.khruslan.cryptograph.data.preferences.ChartPeriod
 import me.khruslan.cryptograph.data.preferences.ChartStyle
@@ -14,6 +15,8 @@ import me.khruslan.cryptograph.data.preferences.Preferences
 import me.khruslan.cryptograph.data.preferences.PreferencesRepository
 import me.khruslan.cryptograph.data.preferences.Theme
 import me.khruslan.cryptograph.ui.R
+
+private const val LOG_TAG = "PreferencesViewModel"
 
 internal class PreferencesViewModel(
     appVersion: AppVersion,
@@ -64,6 +67,7 @@ internal class PreferencesViewModel(
     private fun loadPreferences() {
         viewModelScope.launch {
             preferencesRepository.preferencesFlow.collect { preferences ->
+                Logger.info(LOG_TAG, "Observed $preferences")
                 _preferencesState.preferences = preferences
             }
         }

@@ -2,12 +2,11 @@ package me.khruslan.cryptograph.data.preferences.local
 
 import io.objectbox.Box
 import io.objectbox.exception.DbException
-import io.objectbox.kotlin.toFlow
+import io.objectbox.kotlin.flow
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.withContext
 import me.khruslan.cryptograph.base.Logger
 import me.khruslan.cryptograph.data.core.DatabaseException
@@ -29,18 +28,16 @@ internal class PreferencesLocalDataSourceImpl(
 
     @OptIn(ExperimentalCoroutinesApi::class)
     override val preferencesFlow: Flow<PreferencesDto>
-        get() {
-            return box.query().build().subscribe().toFlow().map { preferences ->
-                preferences.firstOrDefault()
-            }.onEach { preferences ->
-                Logger.info(LOG_TAG, "Observed preferences: $preferences")
-            }
+        get() = box.query().build().flow().map { preferences ->
+            preferences.firstOrDefault()
         }
 
     override suspend fun getPreferences(): PreferencesDto {
         return withContext(dispatcher) {
             try {
-                getPreferencesInternal()
+                getPreferencesInternal().also { preferences ->
+                    Logger.info(LOG_TAG, "Fetched $preferences")
+                }
             } catch (e: DbException) {
                 Logger.error(LOG_TAG, "Failed to load preferences", e)
                 PreferencesDto()

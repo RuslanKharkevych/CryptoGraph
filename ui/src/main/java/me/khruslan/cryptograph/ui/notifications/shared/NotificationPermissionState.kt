@@ -160,7 +160,7 @@ internal fun rememberNotificationPermissionState(
     val context = LocalContext.current
     val permissionState = remember { MutableNotificationPermissionState(context) }
     val launcher = rememberPermissionLauncher { result ->
-        Logger.info(LOG_TAG, "Received permission result: $result")
+        Logger.info(LOG_TAG, "Received runtime permission result: $result")
         permissionState.setPermissionResult(result)
     }
 

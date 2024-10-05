@@ -31,6 +31,7 @@ class PostCompletedNotificationsWorker internal constructor(
             if (completedNotifications.isNotEmpty()) {
                 postCompletedNotifications(completedNotifications)
             }
+            Logger.info(LOG_TAG, "Work completed successfully")
             Result.success()
         } catch (_: DataException) {
             Logger.info(LOG_TAG, "Failed to load completed notifications")

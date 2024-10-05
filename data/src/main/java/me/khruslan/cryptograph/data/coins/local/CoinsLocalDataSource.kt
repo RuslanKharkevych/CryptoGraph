@@ -2,11 +2,10 @@ package me.khruslan.cryptograph.data.coins.local
 
 import io.objectbox.Box
 import io.objectbox.exception.DbException
-import io.objectbox.kotlin.toFlow
+import io.objectbox.kotlin.flow
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.withContext
 import me.khruslan.cryptograph.base.Logger
 import me.khruslan.cryptograph.data.core.DatabaseException
@@ -26,9 +25,7 @@ internal class CoinsLocalDataSourceImpl(
 
     @OptIn(ExperimentalCoroutinesApi::class)
     override val pinnedCoins: Flow<List<PinnedCoinDto>>
-        get() = box.query().build().subscribe().toFlow().onEach { coins ->
-            Logger.info(LOG_TAG, "Observed pinned coins: ${coins.map { it.coinUuid }}")
-        }
+        get() = box.query().build().flow()
 
     override suspend fun pinCoin(uuid: String) {
         return withContext(dispatcher) {

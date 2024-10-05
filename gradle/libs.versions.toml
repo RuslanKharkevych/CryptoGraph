@@ -8,6 +8,10 @@ composeMaterial3 = "1.3.0"
 core = "1.13.1"
 coroutines = "1.8.1"
 desugaring = "2.1.2"
+firebaseAnalytics = "22.1.2"
+firebaseCrashlytics = "19.2.0"
+firebaseCrashlyticsPlugin = "3.0.2"
+googleServices = "4.4.2"
 junit = "4.13.2"
 koin = "3.5.6"
 kotlin = "2.0.20"
@@ -39,6 +43,8 @@ core = { group = "androidx.core", name = "core", version.ref = "core" }
 coroutines = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "coroutines" }
 coroutinesTest = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "coroutines" }
 desugaring = { group = "com.android.tools", name = "desugar_jdk_libs", version.ref = "desugaring" }
+firebase-analytics = { group = "com.google.firebase", name = "firebase-analytics", version.ref = "firebaseAnalytics" }
+firebase-crashlytics = { group = "com.google.firebase", name = "firebase-crashlytics", version.ref = "firebaseCrashlytics" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 koin-android = { group = "io.insert-koin", name = "koin-android", version.ref = "koin" }
 koin-composeNavigation = { group = "io.insert-koin", name = "koin-androidx-compose-navigation", version.ref = "koin" }
@@ -61,6 +67,8 @@ workRuntime = { group = "androidx.work", name = "work-runtime-ktx", version.ref 
 androidApplication = { id = "com.android.application", version.ref = "agp" }
 androidLibrary = { id = "com.android.library", version.ref = "agp" }
 composeCompiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+googleServices = { id = "com.google.gms.google-services", version.ref = "googleServices"}
+firebaseCrashlytics = { id = "com.google.firebase.crashlytics", version.ref = "firebaseCrashlyticsPlugin" }
 kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin" }
 kotlinAndroid = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlinSerialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }

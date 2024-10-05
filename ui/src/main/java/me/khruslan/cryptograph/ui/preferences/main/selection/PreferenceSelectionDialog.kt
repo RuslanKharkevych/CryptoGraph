@@ -36,11 +36,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
+import me.khruslan.cryptograph.base.Logger
 import me.khruslan.cryptograph.data.preferences.Theme
 import me.khruslan.cryptograph.ui.R
 import me.khruslan.cryptograph.ui.core.CryptoGraphTheme
 import me.khruslan.cryptograph.ui.util.ChoiceItem
 import me.khruslan.cryptograph.ui.util.ChoiceItems
+
+private const val LOG_TAG = "PreferenceSelectionDialog"
 
 @Composable
 internal fun <T> PreferenceSelectionDialog(
@@ -51,6 +54,7 @@ internal fun <T> PreferenceSelectionDialog(
     onDismiss: () -> Unit,
 ) {
     fun selectItemAndDismiss(item: T) {
+        Logger.info(LOG_TAG, "Item selected: $item")
         onItemSelected(item)
         onDismiss()
     }

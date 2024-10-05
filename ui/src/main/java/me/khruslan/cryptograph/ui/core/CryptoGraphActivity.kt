@@ -1,5 +1,6 @@
 package me.khruslan.cryptograph.ui.core
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -7,6 +8,9 @@ import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.LifecycleOwner
 import me.khruslan.cryptograph.base.Logger
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -29,9 +33,11 @@ class CryptoGraphActivity : AppCompatActivity() {
             }
         }
 
+        lifecycle.addObserver(CryptoGraphLifecycleObserver())
         handleIntent(intent)
     }
 
+    @SuppressLint("MissingSuperCall")
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         handleIntent(intent)
@@ -50,5 +56,11 @@ class CryptoGraphActivity : AppCompatActivity() {
                 .addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
                 .putExtra(EXTRA_CANCEL_NOTIFICATIONS, true)
         }
+    }
+}
+
+private class CryptoGraphLifecycleObserver : LifecycleEventObserver {
+    override fun onStateChanged(source: LifecycleOwner, event: Lifecycle.Event) {
+        Logger.info(LOG_TAG, "State changed: ${event.name}")
     }
 }

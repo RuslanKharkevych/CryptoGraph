@@ -7,12 +7,14 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavType
 import androidx.navigation.compose.dialog
 import androidx.navigation.navArgument
+import me.khruslan.cryptograph.base.Logger
 import me.khruslan.cryptograph.data.coins.Coin
 import me.khruslan.cryptograph.ui.coins.picker.CoinPickerArgKeys.SELECTED_COIN_ID_ARG
 import me.khruslan.cryptograph.ui.util.navigation.rememberNavInterceptor
 import me.khruslan.cryptograph.ui.util.navigation.route
 import org.koin.androidx.compose.koinViewModel
 
+private const val LOG_TAG = "CoinPickerNavigation"
 private const val COIN_PICKER_ROUTE = "coin-picker"
 
 private object CoinPickerArgKeys {
@@ -22,7 +24,11 @@ private object CoinPickerArgKeys {
 internal data class CoinPickerArgs(val selectedCoinId: String?) {
     companion object {
         fun fromSavedStateHandle(savedStateHandle: SavedStateHandle): CoinPickerArgs {
-            return CoinPickerArgs(selectedCoinId = savedStateHandle[SELECTED_COIN_ID_ARG])
+            return CoinPickerArgs(
+                selectedCoinId = savedStateHandle[SELECTED_COIN_ID_ARG]
+            ).also { args ->
+                Logger.info(LOG_TAG, "Received $args")
+            }
         }
     }
 }

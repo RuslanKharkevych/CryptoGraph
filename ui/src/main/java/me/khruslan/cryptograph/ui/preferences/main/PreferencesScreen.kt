@@ -121,9 +121,9 @@ private fun PreferencesList(
     onChartStyleSelected: (chartStyle: ChartStyle) -> Unit,
     onChartPeriodSelected: (chartPeriod: ChartPeriod) -> Unit,
 ) {
-    val themeAlertState = rememberAlertState()
-    val chartStyleAlertState = rememberAlertState()
-    val chartPeriodAlertState = rememberAlertState()
+    val themeAlertState = rememberAlertState(tag = "Theme")
+    val chartStyleAlertState = rememberAlertState(tag = "ChartStyle")
+    val chartPeriodAlertState = rememberAlertState(tag = "ChartPeriod")
 
     if (themeAlertState.isVisible) {
         PreferenceSelectionDialog(

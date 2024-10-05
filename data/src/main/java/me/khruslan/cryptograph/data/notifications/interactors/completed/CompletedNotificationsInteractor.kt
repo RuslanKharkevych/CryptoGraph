@@ -45,7 +45,7 @@ internal class CompletedNotificationsInteractorImpl(
             }
         }
 
-        Logger.info(LOG_TAG, "Completed ${completedNotifications.count()} notifications")
+        Logger.info(LOG_TAG, "Completed ${completedNotifications.count()} notification(s)")
         return completedNotifications
     }
 
