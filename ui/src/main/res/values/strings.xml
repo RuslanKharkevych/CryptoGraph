@@ -51,7 +51,7 @@
     <string name="coin_notifications_empty_placeholder">Your notifications list is empty. Create one to get notified of %s price changes!</string>
     <string name="notification_trigger_price_less_than_desc">Price less than %s$</string>
     <string name="notification_trigger_price_more_than_desc">Price more than %s$</string>
-    <string name="notification_expiration_date_not_applicable_label">N/A</string>
+    <string name="notification_end_date_not_applicable_label">N/A</string>
     <string name="add_notification_btn_desc">Add new notification</string>
     <string name="notification_permission_banner_enabled_msg">Push notifications are enabled. You will now get notified about price updates</string>
     <string name="notification_permission_banner_disabled_msg">Push notifications are disabled. You won\'t get notified about price updates</string>

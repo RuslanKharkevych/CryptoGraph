@@ -378,18 +378,18 @@ private fun isTopBarShadowAlwaysVisible(
     return listState is UiState.Data && listState.data.isNotEmpty()
 }
 
-// TODO: Show completed at date if it exists
 private val Notification.dateLabel: String
     @Composable
     get() {
         val locale = getCurrentLocale()
         val dateFormatter = DateTimeFormatter.ofPattern(DATE_PATTERN, locale)
 
-        val createdAtDateString = createdAt.format(dateFormatter)
-        val expirationDateString = expirationDate?.format(dateFormatter)
-            ?: stringResource(R.string.notification_expiration_date_not_applicable_label)
+        val startDate = createdAt.format(dateFormatter)
+        val endDate = completedAt?.format(dateFormatter)
+            ?: expirationDate?.format(dateFormatter)
+            ?: stringResource(R.string.notification_end_date_not_applicable_label)
 
-        return "$createdAtDateString - $expirationDateString"
+        return "$startDate - $endDate"
     }
 
 private val NotificationPermissionStatus.message
