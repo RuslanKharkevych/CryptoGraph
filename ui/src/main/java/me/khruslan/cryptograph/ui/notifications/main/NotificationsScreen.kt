@@ -268,6 +268,7 @@ private fun NotificationCard(
         Card(
             modifier = modifier,
             colors = CardDefaults.cardColors().copy(
+                // FIXME: Improve contrast of dark cards in night mode
                 containerColor = coin.colorHex.toColor().copy(alpha = 0.2f)
             ),
             onClick = onClick

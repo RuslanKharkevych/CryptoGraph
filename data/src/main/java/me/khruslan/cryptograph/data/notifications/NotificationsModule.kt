@@ -19,45 +19,54 @@ import me.khruslan.cryptograph.data.notifications.repository.mapper.Notification
 import me.khruslan.cryptograph.data.notifications.workers.PostCompletedNotificationsWorker
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.workmanager.dsl.workerOf
+import org.koin.core.scope.Scope
 import org.koin.dsl.module
 import java.time.Clock
 
 internal val notificationsModule = module {
-    single<NotificationsRepository> {
-        NotificationsRepositoryImpl(
-            localDataSource = NotificationsLocalDataSourceImpl(
-                box = get<BoxStore>().boxFor(),
-                dispatcher = Dispatchers.IO
-            ),
-            mapper = NotificationsMapper(
-                dispatcher = Dispatchers.Default,
-                clock = Clock.systemDefaultZone(),
-            )
-        )
-    }
-    single<CoinNotificationsInteractor> {
-        CoinNotificationsInteractorImpl(
-            coinsRepository = get<CoinsRepository>(),
-            notificationsRepository = get<NotificationsRepository>(),
-            mapper = CoinNotificationsMapper(
-                dispatcher = Dispatchers.Default
-            )
-        )
-    }
-    single<CompletedNotificationsInteractor> {
-        CompletedNotificationsInteractorImpl(
-            notificationsRepository = get<NotificationsRepository>(),
-            coinsRepository = get<CoinsRepository>(),
-            mapper = CompletedNotificationsMapper(
-                clock = Clock.systemDefaultZone()
-            )
-        )
-    }
-    single {
-        PushNotificationsManager(
-            context = androidContext(),
-            launchOptions = get<LaunchOptions>()
-        )
-    }
+    single { notificationsRepository() }
+    single { coinNotificationsInteractor() }
+    single { completedNotificationsInteractor() }
+    single { pushNotificationsManager() }
     workerOf(::PostCompletedNotificationsWorker)
+}
+
+private fun Scope.notificationsRepository(): NotificationsRepository {
+    return NotificationsRepositoryImpl(
+        localDataSource = NotificationsLocalDataSourceImpl(
+            box = get<BoxStore>().boxFor(),
+            dispatcher = Dispatchers.IO
+        ),
+        mapper = NotificationsMapper(
+            dispatcher = Dispatchers.Default,
+            clock = Clock.systemDefaultZone(),
+        )
+    )
+}
+
+private fun Scope.coinNotificationsInteractor(): CoinNotificationsInteractor {
+    return CoinNotificationsInteractorImpl(
+        coinsRepository = get<CoinsRepository>(),
+        notificationsRepository = get<NotificationsRepository>(),
+        mapper = CoinNotificationsMapper(
+            dispatcher = Dispatchers.Default
+        )
+    )
+}
+
+private fun Scope.completedNotificationsInteractor(): CompletedNotificationsInteractor {
+    return CompletedNotificationsInteractorImpl(
+        notificationsRepository = get<NotificationsRepository>(),
+        coinsRepository = get<CoinsRepository>(),
+        mapper = CompletedNotificationsMapper(
+            clock = Clock.systemDefaultZone()
+        )
+    )
+}
+
+private fun Scope.pushNotificationsManager(): PushNotificationsManager {
+    return PushNotificationsManager(
+        context = androidContext(),
+        launchOptions = get<LaunchOptions>()
+    )
 }

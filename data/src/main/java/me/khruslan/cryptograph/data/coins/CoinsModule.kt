@@ -9,24 +9,27 @@ import me.khruslan.cryptograph.data.coins.remote.CoinsRemoteDataSourceImpl
 import me.khruslan.cryptograph.data.coins.remote.interceptors.CoinsCacheInterceptor
 import okhttp3.OkHttpClient
 import org.koin.android.ext.koin.androidContext
+import org.koin.core.scope.Scope
 import org.koin.dsl.module
 
 internal val coinsModule = module {
-    single<CoinsRepository> {
-        CoinsRepositoryImpl(
-            localDataSource = CoinsLocalDataSourceImpl(
-                box = get<BoxStore>().boxFor(),
-                dispatcher = Dispatchers.IO
-            ),
-            remoteDataSource = CoinsRemoteDataSourceImpl(
-                client = get<OkHttpClient>().newBuilder()
-                    .addInterceptor(CoinsCacheInterceptor(androidContext()))
-                    .build(),
-                dispatcher = Dispatchers.IO
-            ),
-            mapper = CoinsMapper(
-                dispatcher = Dispatchers.Default
-            )
+    single { coinsRepository() }
+}
+
+private fun Scope.coinsRepository(): CoinsRepository {
+    return CoinsRepositoryImpl(
+        localDataSource = CoinsLocalDataSourceImpl(
+            box = get<BoxStore>().boxFor(),
+            dispatcher = Dispatchers.IO
+        ),
+        remoteDataSource = CoinsRemoteDataSourceImpl(
+            client = get<OkHttpClient>().newBuilder()
+                .addInterceptor(CoinsCacheInterceptor(androidContext()))
+                .build(),
+            dispatcher = Dispatchers.IO
+        ),
+        mapper = CoinsMapper(
+            dispatcher = Dispatchers.Default
         )
-    }
+    )
 }
