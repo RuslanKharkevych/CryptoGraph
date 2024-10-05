@@ -10,4 +10,7 @@ internal val coreModule = module {
             .androidContext(androidContext())
             .build()
     }
+    single {
+        buildHttpClient(androidContext())
+    }
 }
