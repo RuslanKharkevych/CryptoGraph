@@ -3,10 +3,12 @@ package me.khruslan.cryptograph.ui.notifications.main
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.foundation.background
 import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -19,7 +21,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Badge
 import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -40,6 +41,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -265,12 +267,9 @@ private fun NotificationCard(
             visible = !notification.isPending,
             content = { Badge() }
         )
-        Card(
+        NotificationCardContainer(
             modifier = modifier,
-            colors = CardDefaults.cardColors().copy(
-                // FIXME: Improve contrast of dark cards in night mode
-                containerColor = coin.colorHex.toColor().copy(alpha = 0.2f)
-            ),
+            containerColor = coin.colorHex.toColor().copy(alpha = 0.2f),
             onClick = onClick
         ) {
             Row(
@@ -312,6 +311,24 @@ private fun NotificationCard(
                 )
             }
         }
+    }
+}
+
+@Composable
+private fun NotificationCardContainer(
+    modifier: Modifier,
+    containerColor: Color,
+    onClick: () -> Unit,
+    content: @Composable ColumnScope.() -> Unit,
+) {
+    Card(
+        modifier = modifier,
+        onClick = onClick
+    ) {
+        Column(
+            modifier = Modifier.background(containerColor),
+            content = content
+        )
     }
 }
 
