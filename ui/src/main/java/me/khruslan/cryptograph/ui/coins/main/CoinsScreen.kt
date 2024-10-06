@@ -2,7 +2,9 @@ package me.khruslan.cryptograph.ui.coins.main
 
 import androidx.annotation.StringRes
 import androidx.compose.animation.Crossfade
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.updateTransition
 import androidx.compose.foundation.background
 import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.layout.Column
@@ -71,7 +73,7 @@ import me.khruslan.cryptograph.ui.util.components.FullScreenError
 import me.khruslan.cryptograph.ui.util.components.FullScreenLoader
 import me.khruslan.cryptograph.ui.util.toColor
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalAnimationApi::class)
 @Composable
 internal fun CoinsScreen(
     coinsState: CoinsState,
@@ -108,12 +110,16 @@ internal fun CoinsScreen(
             SnackbarHost(snackbarHostState)
         }
     ) { contentPadding ->
-        Crossfade(
+        val listStateTransition = updateTransition(
+            targetState = coinsState.listState,
+            label = "CoinsListStateTransition"
+        )
+
+        listStateTransition.Crossfade(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(contentPadding),
-            targetState = coinsState.listState,
-            label = "CoinsListStateCrossfade"
+            contentKey = { it::class },
         ) { state ->
             when (state) {
                 is UiState.Loading -> FullScreenLoader()
