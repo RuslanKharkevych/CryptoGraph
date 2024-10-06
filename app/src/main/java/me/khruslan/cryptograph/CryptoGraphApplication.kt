@@ -3,10 +3,12 @@ package me.khruslan.cryptograph
 import android.app.Application
 import coil.ImageLoader
 import coil.ImageLoaderFactory
+import me.khruslan.cryptograph.data.core.DataConfig
 import me.khruslan.cryptograph.data.notifications.workers.PostCompletedNotificationsWorker
 import me.khruslan.cryptograph.data.dataModule
 import me.khruslan.cryptograph.ui.core.buildImageLoader
 import me.khruslan.cryptograph.ui.uiModule
+import org.koin.android.ext.android.get
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.androidx.workmanager.koin.workManagerFactory
@@ -25,7 +27,8 @@ internal class CryptoGraphApplication : Application(), ImageLoaderFactory {
             modules(appModule, dataModule, uiModule)
         }
 
-        PostCompletedNotificationsWorker.launch(this)
+        val dataConfig = get<DataConfig>()
+        PostCompletedNotificationsWorker.launch(this, dataConfig)
     }
 
     override fun newImageLoader(): ImageLoader {

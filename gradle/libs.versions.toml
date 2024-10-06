@@ -9,6 +9,7 @@ core = "1.13.1"
 coroutines = "1.8.1"
 desugaring = "2.1.2"
 firebaseAnalytics = "22.1.2"
+firebaseConfig = "22.0.0"
 firebaseCrashlytics = "19.2.0"
 firebaseCrashlyticsPlugin = "3.0.2"
 googleServices = "4.4.2"
@@ -44,6 +45,7 @@ coroutines = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-andro
 coroutinesTest = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "coroutines" }
 desugaring = { group = "com.android.tools", name = "desugar_jdk_libs", version.ref = "desugaring" }
 firebase-analytics = { group = "com.google.firebase", name = "firebase-analytics", version.ref = "firebaseAnalytics" }
+firebase-config = { group = "com.google.firebase", name = "firebase-config", version.ref = "firebaseConfig" }
 firebase-crashlytics = { group = "com.google.firebase", name = "firebase-crashlytics", version.ref = "firebaseCrashlytics" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 koin-android = { group = "io.insert-koin", name = "koin-android", version.ref = "koin" }

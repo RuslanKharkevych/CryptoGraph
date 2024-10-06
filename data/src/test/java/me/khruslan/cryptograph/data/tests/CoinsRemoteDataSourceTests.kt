@@ -9,6 +9,7 @@ import me.khruslan.cryptograph.data.coins.remote.CoinsRemoteDataSource
 import me.khruslan.cryptograph.data.core.NetworkConnectionException
 import me.khruslan.cryptograph.data.core.ResponseDeserializationException
 import me.khruslan.cryptograph.data.core.UnsuccessfulResponseException
+import me.khruslan.cryptograph.data.fakes.FakeDataConfig
 import okhttp3.HttpUrl
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
@@ -51,7 +52,8 @@ internal class CoinsRemoteDataSourceTests {
             .addInterceptor(hostInterceptor)
             .build()
         val dispatcher = UnconfinedTestDispatcher()
-        dataSource = CoinsRemoteDataSourceImpl(client, dispatcher)
+        val config = FakeDataConfig()
+        dataSource = CoinsRemoteDataSourceImpl(client, config, dispatcher)
     }
 
     @After

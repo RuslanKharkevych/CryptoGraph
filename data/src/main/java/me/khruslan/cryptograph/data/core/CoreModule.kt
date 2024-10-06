@@ -8,8 +8,13 @@ import org.koin.core.scope.Scope
 import org.koin.dsl.module
 
 internal val coreModule = module {
+    single { dataConfig() }
     single { boxStore() }
     single { okHttpClient() }
+}
+
+private fun dataConfig(): DataConfig {
+    return DataConfigImpl()
 }
 
 private fun Scope.boxStore(): BoxStore {

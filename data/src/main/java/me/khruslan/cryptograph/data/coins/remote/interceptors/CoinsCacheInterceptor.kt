@@ -3,6 +3,7 @@ package me.khruslan.cryptograph.data.coins.remote.interceptors
 import android.content.Context
 import androidx.core.content.edit
 import me.khruslan.cryptograph.base.Logger
+import me.khruslan.cryptograph.data.core.DataConfig
 import okhttp3.CacheControl
 import okhttp3.Interceptor
 import okhttp3.Response
@@ -10,14 +11,16 @@ import java.util.concurrent.TimeUnit
 
 private const val LOG_TAG = "CoinsCacheInterceptor"
 
-private const val CACHE_MAX_STALE_SECONDS = 60 * 60
 private const val CACHE_PREFERENCES_NAME = "coins_cache"
 private const val CACHE_PREFERENCES_RESET_TIMESTAMP_KEY = "reset_timestamp"
 
 private const val HEADER_RATE_LIMIT = "RateLimit-Limit"
 private const val HEADER_RATE_LIMIT_RESET = "RateLimit-Reset"
 
-internal class CoinsCacheInterceptor(context: Context): Interceptor {
+internal class CoinsCacheInterceptor(
+    context: Context,
+    private val config: DataConfig
+): Interceptor {
 
     private val cachePreferences = context.getSharedPreferences(
         CACHE_PREFERENCES_NAME,
@@ -38,7 +41,7 @@ internal class CoinsCacheInterceptor(context: Context): Interceptor {
             CacheControl.FORCE_CACHE
         } else {
             CacheControl.Builder()
-                .maxStale(CACHE_MAX_STALE_SECONDS, TimeUnit.SECONDS)
+                .maxStale(config.cacheMaxStaleSeconds, TimeUnit.SECONDS)
                 .build()
         }
 

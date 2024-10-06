@@ -5,6 +5,7 @@ import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
 import me.khruslan.cryptograph.base.Logger
 import me.khruslan.cryptograph.data.BuildConfig
+import me.khruslan.cryptograph.data.core.DataConfig
 import me.khruslan.cryptograph.data.core.NetworkConnectionException
 import me.khruslan.cryptograph.data.core.ResponseDeserializationException
 import me.khruslan.cryptograph.data.core.UnsuccessfulResponseException
@@ -37,6 +38,7 @@ internal interface CoinsRemoteDataSource {
 
 internal class CoinsRemoteDataSourceImpl(
     private val client: OkHttpClient,
+    private val config: DataConfig,
     private val dispatcher: CoroutineDispatcher,
 ) : CoinsRemoteDataSource {
 
@@ -49,7 +51,7 @@ internal class CoinsRemoteDataSourceImpl(
             val requestUrlBuilder = GET_COINS_REQUEST_URL.toHttpUrl()
                 .newBuilder()
                 .addQueryParameter(LIMIT_QUERY_PARAM, LIMIT_QUERY_VALUE)
-            if (uuid != null) {
+            if (uuid != null && !config.rateLimitingModeEnabled) {
                 requestUrlBuilder.addQueryParameter(UUIDS_QUERY_PARAM, uuid)
             }
             val requestUrl = requestUrlBuilder.build()

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<defaults>
+  <entry>
+    <key>cache_max_stale_seconds</key>
+    <value>3600</value>
+  </entry>
+  <entry>
+    <key>post_notifications_interval_minutes</key>
+    <value>720</value>
+  </entry>
+  <entry>
+    <key>rate_limiting_mode_enabled</key>
+    <value>true</value>
+  </entry>
+</defaults>

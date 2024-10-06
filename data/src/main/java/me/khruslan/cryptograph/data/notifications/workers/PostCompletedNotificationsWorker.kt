@@ -7,6 +7,7 @@ import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
 import me.khruslan.cryptograph.base.Logger
+import me.khruslan.cryptograph.data.core.DataConfig
 import me.khruslan.cryptograph.data.core.DataException
 import me.khruslan.cryptograph.data.notifications.interactors.completed.CompletedNotification
 import me.khruslan.cryptograph.data.notifications.interactors.completed.CompletedNotificationsInteractor
@@ -14,9 +15,7 @@ import me.khruslan.cryptograph.data.notifications.managers.PushNotificationsMana
 import java.util.concurrent.TimeUnit
 
 private const val LOG_TAG = "PostCompletedNotificationsWorker"
-
 private const val WORK_NAME = "PostCompletedNotifications"
-private const val REPEAT_INTERVAL_MINUTES = 12L * 60L
 
 class PostCompletedNotificationsWorker internal constructor(
     appContext: Context,
@@ -48,14 +47,14 @@ class PostCompletedNotificationsWorker internal constructor(
     }
 
     companion object {
-        fun launch(context: Context) {
+        fun launch(context: Context, config: DataConfig) {
             val workManager = WorkManager.getInstance(context)
 
             val workRequest = PeriodicWorkRequestBuilder<PostCompletedNotificationsWorker>(
-                repeatInterval = REPEAT_INTERVAL_MINUTES,
+                repeatInterval = config.postNotificationsIntervalMinutes,
                 repeatIntervalTimeUnit = TimeUnit.MINUTES
             ).setInitialDelay(
-                duration = REPEAT_INTERVAL_MINUTES,
+                duration = config.postNotificationsIntervalMinutes,
                 timeUnit = TimeUnit.MINUTES
             ).build()
 

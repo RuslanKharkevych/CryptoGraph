@@ -47,6 +47,7 @@ dependencies {
 
     implementation(libs.coroutines)
     coreLibraryDesugaring(libs.desugaring)
+    implementation(libs.firebase.config)
     implementation(libs.koin.android)
     implementation(libs.koin.workManager)
     implementation(libs.okhttp)
