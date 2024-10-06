@@ -10,4 +10,6 @@
 .kotlin
 local.properties
 secrets.properties
+keystore.properties
 app/google-services.json
+crypto-graph-keystore.jks
